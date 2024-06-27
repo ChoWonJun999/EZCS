@@ -12,3 +12,6 @@ test-JinSeongjin
 
 
 김준휘
+test-myeongseon
+싸우지 말아요
+
