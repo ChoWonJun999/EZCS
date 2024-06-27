@@ -33,16 +33,10 @@ class User(models.Model):
         db_comment="ID to use when login for the user"
     )
     
-    first_name = models.CharField(
+    name = models.CharField(
         max_length=30,
-        verbose_name="First Name",
-        db_comment="The user's first name"
-    )
-    
-    last_name = models.CharField(
-        max_length=30,
-        verbose_name="Last Name",
-        db_comment="The user's last name"
+        verbose_name="Real Name",
+        db_comment="The user's real name"
     )
     
     email = models.EmailField(
