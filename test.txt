@@ -10,3 +10,4 @@ test입니다
 test2입니다
 test-JinSeongjin
 test-myeongseon
+싸우지 말아요
