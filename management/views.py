@@ -1,4 +1,4 @@
 from django.shortcuts import render
 
-def list(request):
-    return render(request, 'management/index.html')
+def manager_dashboard(request):
+    return render(request, 'main/manager_dashboard.html')
