@@ -1,7 +1,7 @@
 from django.db import models
 
 class User(models.Model):
-    # 유저 정보(사용자/관리자
+    # 유저 정보(사용자/관리자)
     id = models.AutoField(
         primary_key=True,
         verbose_name="Auto created ID",
