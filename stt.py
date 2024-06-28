@@ -46,4 +46,3 @@ class STTModel():
             self.text = "Error : " + self.response.text
         
         return self.text
-    
