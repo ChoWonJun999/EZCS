@@ -1,7 +1,9 @@
 from django.db import models
 from django.core.serializers.json import DjangoJSONEncoder
 from json import JSONDecoder
+from accounts.models import User
 
+# 상담원의 상담 내역
 class CounselLog(models.Model):
     username = models.CharField(
         max_length=16,
@@ -46,7 +48,7 @@ class CounselLog(models.Model):
     def __str__(self):
         return self.body
 
-
+# 상담원이 응대한 고객의 정보
 class CustomerInfo(models.Model):
     phone_number = models.CharField(
         primary_key=True,
@@ -67,6 +69,62 @@ class CustomerInfo(models.Model):
         db_table = "customer_info"
         verbose_name = "Customer Info"
         verbose_name_plural = "Customer Info"
+
+    def __str__(self):
+        return self.name
+
+# 상담원이 사용할 응대 매뉴얼
+class CounselManual(models.Model):
+    category = models.CharField(
+        max_length=24,
+        verbose_name="Counsel Manual Category",
+        db_comment="Counsel Manual Category"
+    )
+    
+    body = models.JSONField(
+        encoder=DjangoJSONEncoder,
+        decoder=JSONDecoder,
+        verbose_name="Counsel Manual body for Counselor",
+        db_comment="Counsel Manual body for Counselor",
+        null=True,
+    )
+
+    class Meta:
+        db_table = "counsel_manual"
+        verbose_name = "Counsel Manual"
+        verbose_name_plural = "Counsel Manual"
+
+    def __str__(self):
+        return self.name
+
+# 상담원의 챗봇 이용 기록
+class CounselChatbotLog(models.Model):
+    user_id = models.ForeignKey(
+        "User",
+        on_delete=models.CASCADE,
+        verbose_name="User's ID",
+        db_comment="User's ID",
+        db_column='user_id'
+    )
+    
+    body = models.JSONField(
+        encoder=DjangoJSONEncoder,
+        decoder=JSONDecoder,
+        verbose_name="Chatbot body for Counselor",
+        db_comment="Chatbot body body for Counselor",
+        null=True,
+    )
+    
+    create_time = models.DateTimeField(
+        auto_now_add=True,  # Insert된 시간이 저장
+        verbose_name="Created Time",
+        db_comment="Created Time",
+    )
+    
+    class Meta:
+        db_table = "counsel_chatbot_log"
+        verbose_name = "Counsel Chatbot Log"
+        verbose_name_plural = "Counsel Chatbot Log"
 
     def __str__(self):
         return self.name
