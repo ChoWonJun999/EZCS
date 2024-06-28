@@ -84,7 +84,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'EZCS',
         'USER': 'root',
-        'PASSWORD': 'gmltmdas001!',
+        'PASSWORD': '',
         # 'USER': os.environ['MySQL_ID'],
         # 'PASSWORD': os.environ['MySQL_PW'],
         'HOST': 'localhost',
