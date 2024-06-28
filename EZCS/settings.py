@@ -53,7 +53,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "account.middleware.BlockedMiddleware",
+    # "accounts.middleware.BlockedMiddleware",
 ]
 
 ROOT_URLCONF = "EZCS.urls"
@@ -134,3 +134,6 @@ STATICFILES_DIRS = [ BASE_DIR / 'static', ]
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_REDIRECT_URL = '/accounts/'
+LOGOUT_REDIRECT_URL = '/accounts/'
