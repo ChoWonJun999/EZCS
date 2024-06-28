@@ -3,8 +3,8 @@ from django.core.serializers.json import DjangoJSONEncoder
 from json import JSONDecoder
 from accounts.models import User
 
-# 상담원의 상담 내역
 class CounselLog(models.Model):
+    # 상담원의 상담 내역
     username = models.CharField(
         max_length=16,
         verbose_name="Account's Username",
@@ -48,8 +48,8 @@ class CounselLog(models.Model):
     def __str__(self):
         return self.body
 
-# 상담원이 응대한 고객의 정보
 class CustomerInfo(models.Model):
+    # 상담원이 응대한 고객의 정보
     phone_number = models.CharField(
         primary_key=True,
         max_length=11,
@@ -73,8 +73,8 @@ class CustomerInfo(models.Model):
     def __str__(self):
         return self.name
 
-# 상담원이 사용할 응대 매뉴얼
 class CounselManual(models.Model):
+    # 상담원이 사용할 응대 매뉴얼
     category = models.CharField(
         max_length=24,
         verbose_name="Counsel Manual Category",
@@ -95,12 +95,12 @@ class CounselManual(models.Model):
         verbose_name_plural = "Counsel Manual"
 
     def __str__(self):
-        return self.name
+        return self.category
 
-# 상담원의 챗봇 이용 기록
 class CounselChatbotLog(models.Model):
+    # 상담원의 챗봇 이용 기록
     user_id = models.ForeignKey(
-        "User",
+        User,
         on_delete=models.CASCADE,
         verbose_name="User's ID",
         db_comment="User's ID",
@@ -127,4 +127,4 @@ class CounselChatbotLog(models.Model):
         verbose_name_plural = "Counsel Chatbot Log"
 
     def __str__(self):
-        return self.name
+        return self.create_time
