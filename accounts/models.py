@@ -1,6 +1,7 @@
 from django.db import models
 
 class User(models.Model):
+    # 유저 정보(사용자/관리자)
     id = models.AutoField(
         primary_key=True,
         verbose_name="Auto created ID",
@@ -33,16 +34,10 @@ class User(models.Model):
         db_comment="ID to use when login for the user"
     )
     
-    first_name = models.CharField(
+    name = models.CharField(
         max_length=30,
-        verbose_name="First Name",
-        db_comment="The user's first name"
-    )
-    
-    last_name = models.CharField(
-        max_length=30,
-        verbose_name="Last Name",
-        db_comment="The user's last name"
+        verbose_name="The user's real name",
+        db_comment="The user's real name"
     )
     
     email = models.EmailField(
@@ -70,4 +65,4 @@ class User(models.Model):
         verbose_name_plural = 'Users'
 
     def __str__(self):
-        return str(self.first_name + self.last_name)
+        return self.name

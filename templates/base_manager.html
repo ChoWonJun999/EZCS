@@ -1,0 +1,38 @@
+<!-- templates/base_admin.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/management.css' %}">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="company-name">관리자 대시보드</div>
+            <div class="header-right">
+                <div class="profile-info">안녕하세요, 관리자님.</div>
+                <div class="logout">로그아웃</div>
+            </div>
+        </div>
+        <div class="main-content-wrapper">
+            <div class="sidebar">
+                <div class="logo">AdminPanel</div>
+                <ul>
+                    <li>대시보드</li>
+                    <li>사용자 관리</li>
+                    <li>통계</li>
+                    <li>설정</li>
+                </ul>
+            </div>
+            <div class="main-content">
+                {% block content %}
+                <!-- 관리자 대시보드 내용 -->
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
