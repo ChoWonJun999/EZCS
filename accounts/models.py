@@ -1,7 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
-#class User(AbstractUser):
 class User(models.Model):
     """
     유저 정보(사용자/관리자)

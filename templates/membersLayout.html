@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>{% block title %}로그인 페이지{% endblock %}</title>
+    <!-- 공통 CSS 파일 포함 -->
+    <link rel="stylesheet" href="../static/css/bootstrap.min.css">
+    <!-- 필요한 다른 공통 스타일시트 추가 -->
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="../static/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+    <header>
+        <h1>로그인 페이지</h1>
+        <nav>
+            <ul>
+                <li><a href="/">홈</a></li>
+                <!-- 필요에 따라 추가 네비게이션 링크 포함 -->
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        <!-- 여기에 자식 템플릿에서 오는 콘텐츠가 삽입됩니다 -->
+        {% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2024 21조.</p>
+    </footer>
+
+    <!-- 공통 JavaScript 및 다른 스크립트는 여기에 포함할 수 있습니다 -->
+    <script src="../static/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

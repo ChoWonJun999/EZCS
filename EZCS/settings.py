@@ -28,7 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -90,6 +89,7 @@ DATABASES = {
     }
 }
 
+# AUTH_USER_MODEL = 'accounts.User'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -134,4 +134,23 @@ STATICFILES_DIRS = [ BASE_DIR / 'static', ]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-#AUTH_USER_MODEL = 'accounts.User'
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    }
+}
+
+SESSION_COOKIE_SECURE = True
+
+CSRF_COOKIE_SECURE = True
