@@ -1,8 +1,6 @@
-from django.contrib.auth.hashers import check_password
 from django.shortcuts import render
 from django.http import JsonResponse
 from .models import User
-from django.contrib.auth import authenticate
 
 def login2(request):
     if request.method == 'POST':
