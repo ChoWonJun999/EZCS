@@ -1,13 +1,7 @@
-# from django.shortcuts import render
-
-# def list(request):
-#     return render(request, 'accounts/Login.html')
-
-from django.contrib.auth import login, authenticate, logout
 from django.shortcuts import render, redirect
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.http import JsonResponse
-
+from .models import User
+'''
 def signup(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
@@ -18,6 +12,7 @@ def signup(request):
     else:
         form = UserCreationForm()
     return render(request, 'accounts/signup.html', {'form': form})
+'''
 
 def login(request):
     if request.method == 'GET':

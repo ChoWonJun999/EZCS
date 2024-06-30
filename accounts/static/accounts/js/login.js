@@ -1,18 +1,18 @@
 function check_login(event) {
-    event.preventDefault(); // 폼 제출 방지
-
     let param = {
         username: $("#loginUsername").val(),
         password: $("#loginPassword").val()
     };
-
+    var from = $("#loginForm");
+    var url = from.data("url");
+    var csrf = from.data("csrf");
     $.ajax({
-        url: "{% url 'accounts:login' %}",
+        url: url,
         type: "post",
         data: param,
         dataType: "json",
         headers: {
-            "X-CSRFToken": "{{ csrf_token }}"
+            "X-CSRFToken": csrf
         },
         success: function (data) {
             if (data.result != "success") {
