@@ -16,8 +16,16 @@
         <div class="header">
             <div class="company-name">Company name</div>
             <div class="header-right">
-                <div class="profile-info">안녕하세요, 홍길동님.</div>
-                <div class="logout">로그아웃</div>
+                {% if user %}
+                <div class="profile-info">안녕하세요, {{ user }}님.</div>
+                <div class="logout">
+                    <a href="{% url 'accounts:logout' %}">로그아웃</a>
+                </div>
+                {% else %}
+                <div class="logout">
+                    <a href="{% url 'accounts:login' %}">로그인</a>
+                </div>
+                {% endif %}
             </div>
         </div>
         <div class="main-content-wrapper">
