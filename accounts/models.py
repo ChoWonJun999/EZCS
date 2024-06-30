@@ -1,7 +1,11 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
+#class User(AbstractUser):
 class User(models.Model):
-    # 유저 정보(사용자/관리자)
+    """
+    유저 정보(사용자/관리자)
+    """
     id = models.AutoField(
         primary_key=True,
         verbose_name="Auto created ID",
@@ -9,7 +13,7 @@ class User(models.Model):
     )
     
     password = models.CharField(
-        max_length=64,
+        max_length=128,
         verbose_name="Password",
         db_comment="User Password"
     )

@@ -6,29 +6,35 @@
     <title>Login</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $('#loginForm').on('submit', function(e) {
-                e.preventDefault();
-                var formData = $(this).serialize();
-                $.ajax({
-                    type: 'POST',
-                    url: '/',
-                    data: formData,
-                    success: function(response) {
-                        if (response.result === 'success') {
-                            // 로그인 성공 시 처리할 코드
-                            alert('로그인 성공!');
-                            window.location.href = '/main/';  // 메인 페이지로 이동
-                        } else {
-                            // 로그인 실패 시 처리할 코드
-                            alert('아이디 혹은 비밀번호가 맞지 않습니다.');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX Error:', status, error);
+        function check_login(event){
+            event.preventDefault(); // 폼 제출 방지
+
+            let param = {
+                username: $("#id").val(),
+                password: $("#password").val()
+            };
+
+            $.ajax({
+                url: "{% url 'accounts:login' %}",
+                type: 'post',
+                data: param,
+                dataType: "json",
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                success: function(data){
+                    if(data.result != 'success'){
+                        alert(data.result);
                     }
-                });
+                    else{
+                        location.href = "/";
+                    }
+                }
             });
+        }
+
+        $(document).ready(function(){
+            $("#loginForm").on("submit", check_login);
         });
     </script>
 </head>
@@ -36,8 +42,8 @@
     <h2>Login</h2>
     <form id="loginForm">
         {% csrf_token %}
-        <label for="username">Username:</label><br>
-        <input type="text" id="username" name="username"><br>
+        <label for="id">id:</label><br>
+        <input type="text" id="id" name="username"><br>
         <label for="password">Password:</label><br>
         <input type="password" id="password" name="password"><br><br>
         <input type="submit" value="Login">

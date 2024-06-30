@@ -1,20 +1,21 @@
-from django.contrib.auth import login, authenticate, logout
-from django.shortcuts import render, redirect 
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.hashers import check_password
+from django.shortcuts import render
 from django.http import JsonResponse
-from accounts.models import User
+from .models import User
+from django.contrib.auth import authenticate
+def login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        try:
+            user = User.objects.get(username=username)
+            print(user.password)
+            if password == user.password:
+                result = 'success'
+            else:
+                result = 'Incorrect password'
+        except User.DoesNotExist:
+            result = 'User does not exist'
 
-def login_view(request):
-    if request.method == 'POST' and request.is_ajax():
-        result = 'success'        
-        user = User.objects.filter(id=request.POST['id'], pw=request.Post['pw'])
-        
-        if not user.exists():
-            result = 'No Exists'
-            context = {'result': result}
-            return JsonResponse(context, status=401)
-        else:
-            response = JsonResponse({'result': result})
-            return response
-    
+        return JsonResponse({'result': result})
     return render(request, 'accounts/login.html')
