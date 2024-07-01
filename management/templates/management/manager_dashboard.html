@@ -26,7 +26,7 @@
             </thead>
             <tbody>
                 {% for item in data %}
-                <tr data-url="{% url 'management:management_detail' item.id %}">
+                <tr data-url="{% url 'management:management_detail' item.id %}" style="cursor: pointer;">
                     <td>{{ forloop.counter }}</td>
                     <td>{{ item.username }}</td>
                     <td>{{ item.name }}</td>

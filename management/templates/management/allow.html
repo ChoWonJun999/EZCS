@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Allow Users</title>
+    <style>
+        .dashboard {
+            width: 80%;
+            margin: 0 auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <form action="" method="GET">
+        <div class="dashboard">
+            <input type="text" placeholder="..." style="width:100%;">
+            <button type="submit">검색</button>
+            <br><br>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Index</th>
+                        <th>Username</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>가입승인</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in data %}
+                    {% comment %} <tr data-url="{% url 'allow:allow_detail' item.id %}" style="cursor: pointer;"> {% endcomment %}
+                    <tr>    
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.username }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.email }}</td>
+                        <td>
+                            <a href="{% url 'management:approve_user' item.id %}" class="approve-btn">승인</a>
+                            {% comment %} <a href="{% url 'management:reject_user' item.id %}" class="reject-btn">거부</a> {% endcomment %}
+                        </td>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </form>
+</body>
+</html>

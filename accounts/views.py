@@ -42,6 +42,6 @@ def login(request):
 def logout(request):
     request.session.pop('user')
     return redirect('/')
-  
+
 def signup(request):
     return render(request, 'accounts/signup.html')
