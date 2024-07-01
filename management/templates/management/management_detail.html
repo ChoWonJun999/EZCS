@@ -1,0 +1,16 @@
+{% comment %} {% extends "layout.html" %} {% endcomment %}
+{% block title %}
+Post 상세보기
+{% endblock %}
+{% block content %}
+<form action="" method="POST">
+    <h1>{{user.name}}</h1>
+    제목 : {{user.username}}<br>
+    이메일 : {{user.email}}<br>
+    <br>
+    <div>
+        <a href="{% url 'management:manager_dashboard' %}">사용자 리스트로 돌아가기</a>
+        <a href="{% url 'management:management_edit' user.id %}">수정하기</a>
+    </div>
+</form>
+{% endblock %}

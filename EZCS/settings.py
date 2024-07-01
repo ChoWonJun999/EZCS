@@ -52,7 +52,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    # "accounts.middleware.BlockedMiddleware",
+    "accounts.middleware.BlockedMiddleware",
+    "accounts.middleware.LoginSessionMiddleware",
 ]
 
 ROOT_URLCONF = "EZCS.urls"
@@ -154,3 +155,7 @@ LOGGING = {
 SESSION_COOKIE_SECURE = True
 
 CSRF_COOKIE_SECURE = True
+
+SESSION_COOKIE_AGE = 60 * 60 * 3
+
+SESSION_SAVE_EVERY_REQUEST = True
