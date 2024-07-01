@@ -1,7 +1,7 @@
 function check_login(event) {
     let param = {
         username: $("#loginUsername").val(),
-        password: $("#loginPassword").val()
+        password: $("#loginPassword").val(),
     };
     var from = $("#loginForm");
     var url = from.data("url");
@@ -26,6 +26,36 @@ function check_login(event) {
 
 $(document).ready(function () {
     $("#loginForm").on("submit", check_login);
+});
+
+function check_admin_login(event) {
+    let param = {
+        username: $("#loginUsername").val(),
+        password: $("#loginPassword").val(),
+    };
+    var from = $("#loginForm");
+    var url = from.data("url");
+    var csrf = from.data("csrf");
+    $.ajax({
+        url: url,
+        type: "post",
+        data: param,
+        dataType: "json",
+        headers: {
+            "X-CSRFToken": csrf
+        },
+        success: function (data) {
+            if (data.result != "success") {
+                alert(data.result);
+            } else {
+                location.href = "/management/";
+            }
+        }
+    });
+}
+
+$(document).ready(function () {
+    $("#loginForm").on("submit", check_admin_login);
 });
 
 function showSignupForm() {

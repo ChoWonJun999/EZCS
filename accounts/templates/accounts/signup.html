@@ -1,14 +1,94 @@
-<!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
-    <title>Sign Up</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>회원가입</title>
+    <style>
+        .error-message {
+            color: red;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h2>Sign Up</h2>
-    <form method="post">
+    <h2>회원가입</h2>
+    <form method="post" id="signup-form">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Sign Up</button>
+        <div>
+            <label for="username">사용자명:</label>
+            <input type="text" id="username" name="username" required>
+            <p id="username-error" class="error-message">이미 존재하는 사용자명입니다.</p>
+        </div>
+        <div>
+            <label for="password">비밀번호:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <div>
+            <label for="password_confirm">비밀번호 확인:</label>
+            <input type="password" id="password_confirm" name="password_confirm" required>
+            <p id="password-error" class="error-message">입력된 비밀번호가 다릅니다.</p>
+        </div>
+        <div>
+            <label for="name">이름:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+            <label for="email">이메일:</label>
+            <input type="email" id="email" name="email" required>
+            <p id="email-error" class="error-message">이미 존재하는 이메일입니다.</p>
+        </div>
+        <button type="submit">가입</button>
     </form>
+
+    <script>
+        document.getElementById('password_confirm').addEventListener('input', function() {
+            var password = document.getElementById('password').value;
+            var passwordConfirm = document.getElementById('password_confirm').value;
+            var passwordError = document.getElementById('password-error');
+            if (password !== passwordConfirm) {
+                passwordError.style.display = 'block';
+            } else {
+                passwordError.style.display = 'none';
+            }
+        });
+
+        document.getElementById('username').addEventListener('input', function() {
+            var username = document.getElementById('username').value;
+            var usernameError = document.getElementById('username-error');
+            // AJAX call to check if username exists
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', `/check_username/?username=${username}`, true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.exists) {
+                        usernameError.style.display = 'block';
+                    } else {
+                        usernameError.style.display = 'none';
+                    }
+                }
+            };
+            xhr.send();
+        });
+
+        document.getElementById('email').addEventListener('input', function() {
+            var email = document.getElementById('email').value;
+            var emailError = document.getElementById('email-error');
+            // AJAX call to check if email exists
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', `/check_email/?email=${email}`, true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.exists) {
+                        emailError.style.display = 'block';
+                    } else {
+                        emailError.style.display = 'none';
+                    }
+                }
+            };
+            xhr.send();
+        });
+    </script>
 </body>
 </html>
