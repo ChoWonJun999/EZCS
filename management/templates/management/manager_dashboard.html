@@ -4,7 +4,37 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-<div class="dashboard">
-    <!-- 관리자 대시보드 내용 -->
-</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("tr[data-url]").click(function () {
+            var url = $(this).data("url");
+            window.location.href = url;
+        });
+    });
+</script>
+<form action="" method="GET">
+    <div class="dashboard">
+        <input type="text" placeholder="..." style="width:100%;">
+        <button>검색</button>
+        <br><br>
+        <table>
+            <thead>
+                <th>index</th>
+                <th>username</th>
+                <th>name</th>
+                <th>email</th>
+            </thead>
+            <tbody>
+                {% for item in data %}
+                <tr data-url="{% url 'management:management_detail' item.id %}">
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ item.username }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.email }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</form>
 {% endblock %}
