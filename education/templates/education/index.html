@@ -1,0 +1,60 @@
+<!-- education/templates/education/dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Education Dashboard{% endblock %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'education/css/styles.css' %}">
+
+<div class="dashboard">
+    <div class="top-section">
+        <div class="top-block">제목</div>
+        <div class="top-block">제목</div>
+    </div>
+    <div class="sections">
+        <div class="section chat-section">
+            <div class="chat-header">채팅창</div>
+            <div class="chat-messages" id="chat-messages">
+                <!-- 채팅 메시지들이 여기에 표시됩니다. -->
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chat-input" placeholder="메시지를 입력하세요..." onkeydown="sendMessage(event)" />
+                <button onclick="sendMessage()">전송</button>
+            </div>
+        </div>
+        <div class="section chat-section-readonly">
+            <div class="chat-header">읽기 전용 채팅창</div>
+            <div class="chat-messages" id="chat-messages-readonly">
+                <!-- 채팅 메시지들이 여기에 표시됩니다. -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function sendMessage(event) {
+        if (event && event.key !== 'Enter') return;
+
+        const input = document.getElementById('chat-input');
+        const message = input.value.trim();
+
+        if (message) {
+            const chatMessages = document.getElementById('chat-messages');
+            const newMessage = document.createElement('div');
+            newMessage.textContent = message;
+            newMessage.className = 'chat-message';
+            chatMessages.appendChild(newMessage);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            input.value = '';
+
+            // 동일한 메시지를 읽기 전용 채팅창에도 추가
+            const chatMessagesReadonly = document.getElementById('chat-messages-readonly');
+            const newMessageReadonly = newMessage.cloneNode(true);
+            chatMessagesReadonly.appendChild(newMessageReadonly);
+            chatMessagesReadonly.scrollTop = chatMessagesReadonly.scrollHeight;
+        }
+    }
+</script>
+
+{% endblock %}

@@ -1,0 +1,63 @@
+<!-- education/templates/education/history.html -->
+{% extends 'base.html' %}
+
+{% block title %}Education History{% endblock %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'education/css/history.css' %}">
+
+<div class="dashboard">
+    <h1>교육 이력</h1>
+    <div class="tabs">
+        <button class="tab-button active">교육 이력</button>
+        <button class="tab-button">퀴즈 이력</button>
+    </div>
+    <div class="filters">
+        <select class="filter-dropdown">
+            <option value="전체">전체</option>
+            <option value="검색">검색</option>
+        </select>
+        <input type="text" class="filter-search" placeholder="검색">
+        <button class="filter-button">검색</button>
+    </div>
+    <table class="history-table">
+        <thead>
+            <tr>
+                <th>번호</th>
+                <th>카테고리</th>
+                <th>주제</th>
+                <th>평가 지표</th>
+                <th>수강 일자</th>
+                <th>확인</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>---</td>
+                <td>강의 내용1</td>
+                <td>평가 지표1</td>
+                <td>2024.02.02 09:00:00</td>
+                <td><a href="edu_history_detail.html" class="confirm-button">확인</a></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>---</td>
+                <td>강의 내용2</td>
+                <td>평가 지표2</td>
+                <td>2024.02.02 12:24:45</td>
+                <td><a href="#" class="confirm-button">확인</a></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>---</td>
+                <td>강의 내용3</td>
+                <td>평가 지표3</td>
+                <td>2024.02.03 09:15:13</td>
+                <td><a href="#" class="confirm-button">확인</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}

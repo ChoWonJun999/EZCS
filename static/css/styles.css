@@ -1,7 +1,9 @@
+/* css/styles.css */
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px; /* 페이지 전체와의 간격 추가 */
+    padding: 0;
     background-color: #f4f5f7;
     display: flex;
     flex-direction: column;
@@ -11,8 +13,7 @@ body {
 .container {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* 헤더와 사이드바 사이의 간격 */
-    height: 100%;
+    flex: 1;
 }
 
 .header {
@@ -33,7 +34,7 @@ body {
 .header-right {
     display: flex;
     align-items: center;
-    gap: 20px; /* 요소 사이에 간격 추가 */
+    gap: 20px;
 }
 
 .header-right .profile-info {
@@ -56,7 +57,8 @@ body {
 .main-content-wrapper {
     display: flex;
     flex: 1;
-    gap: 20px; /* 사이드바와 메인 콘텐츠 사이의 간격 */
+    gap: 20px;
+    padding: 20px;
 }
 
 .sidebar {
@@ -67,31 +69,99 @@ body {
     border-radius: 8px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between; /* 변경된 부분 */
 }
 
 .logo {
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 10px; /* 공백을 줄이기 위해 margin-bottom 값을 줄임 */
+    text-align: center;
 }
 
-.sidebar ul {
+.menu {
     list-style: none;
     padding: 0;
-    flex: 1;
+    margin: 0;
+}
+
+.settings {
+    list-style: none;
+    padding: 0;
+    margin-top: auto; /* 환경설정을 하단으로 밀어내기 위해 auto 사용 */
 }
 
 .sidebar ul li {
-    margin: 10px 0;
     padding: 10px;
     background-color: #f4f5f7;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
+    text-align: center;
+    position: relative;
+    margin-bottom: 10px;
 }
 
 .sidebar ul li:hover {
     background-color: #e0e0e0;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.sidebar ul li.active {
+    background-color: #eef2ff;
+    color: #4c51bf;
+    font-weight: bold;
+}
+
+.sidebar ul li.active a {
+    color: #4c51bf;
+}
+
+.icon {
+    margin-right: 10px;
+}
+
+.dropdown-content {
+    display: none;
+    background-color: #ffffff;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    z-index: 1;
+    flex-direction: column;
+    border-radius: 8px;
+    padding: 0;
+    margin-top: 10px;
+}
+
+.dropdown-content.show {
+    display: flex;
+}
+
+.dropdown-content li {
+    padding: 10px;
+    text-align: center;
+    margin: 0;
+    list-style: none;
+}
+
+.dropdown-content li:not(:last-child) {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.dropdown-content li a {
+    color: black;
+    text-decoration: none;
+    display: block;
+    padding: 10px;
+    border-radius: 0;
+}
+
+.dropdown-content li a:hover {
+    background-color: #eef2ff;
 }
 
 .main-content {
@@ -117,4 +187,26 @@ body {
     font-size: 24px;
     font-weight: bold;
     color: #007bff;
+}
+
+ul.menu, ul.dropdown-content, ul.settings, .dropdown-content li {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* Footer 스타일 추가 */
+.footer {
+    background-color: #333;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
 }

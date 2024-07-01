@@ -36,12 +36,12 @@ def login(request):
                 result = 'User does not exist'
     else:
         result = 'request.method != POST'
-
     return JsonResponse({'result': result})
+
 
 def logout(request):
     request.session.pop('user')
     return redirect('/')
-
+  
 def signup(request):
     return render(request, 'accounts/signup.html')
