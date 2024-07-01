@@ -1,0 +1,52 @@
+/* education/static/education/css/detail.css */
+
+body {
+              font-family: Arial, sans-serif;
+          }
+          
+          .dashboard {
+              padding: 20px;
+          }
+          
+          .detail-container {
+              background-color: #f9f9f9;
+              padding: 20px;
+              border-radius: 8px;
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+              margin-top: 20px;
+          }
+          
+          .detail-header {
+              display: flex;
+              justify-content: space-between;
+              margin-bottom: 20px;
+          }
+          
+          .detail-info {
+              font-size: 16px;
+              font-weight: bold;
+          }
+          
+          .detail-content {
+              display: flex;
+              gap: 20px;
+          }
+          
+          .scenario,
+          .evaluation {
+              flex: 1;
+              padding: 20px;
+              background-color: white;
+              border: 1px solid #ddd;
+              border-radius: 8px;
+          }
+          
+          .block {
+              padding: 10px;
+              margin-bottom: 10px;
+              background-color: #d0e1f9;
+              border-radius: 4px;
+              text-align: center;
+              font-weight: bold;
+          }
+          

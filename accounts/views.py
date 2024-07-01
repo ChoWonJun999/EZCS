@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import User
 import re
 from django.http import HttpResponse
+
 def login(request):
     if request.method == 'GET':
         return render(request, 'accounts/login.html')
@@ -26,8 +27,8 @@ def login(request):
                 result = '해당 사용자가 존재하지 않습니다'
     else:
         result = 'request.method != POST'
-
     return JsonResponse({'result': result})
+
 
 def logout(request):
     request.session.pop('user')
@@ -91,3 +92,4 @@ def check_email(request):
     email = request.GET.get('email')
     exists = User.objects.filter(email=email).exists()
     return JsonResponse({'exists': exists})
+

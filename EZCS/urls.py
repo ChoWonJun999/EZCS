@@ -21,6 +21,8 @@ from django.shortcuts import render
 def test(request):
     return render(request, 'test.html')
 
+
+
 urlpatterns = [
     path('test/', test),
     path("admin/", admin.site.urls),

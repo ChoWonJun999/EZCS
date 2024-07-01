@@ -1,0 +1,57 @@
+<!-- main/templates/main/admin_dashboard.html -->
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- 직원용 대시보드 내용 -->
+    <h1>상담페이지</h1>
+    <link rel="stylesheet" href="{% static 'education/css/styles.css' %}">
+
+    <div class="dashboard">
+        <h1>상담 페이지</h1>
+        <div class="consultation-container">
+            <div class="customer-info">
+                <h2>고객 정보</h2>
+                <ul>
+                    <li>고객명</li>
+                    <li>핸드폰</li>
+                    <li>이메일</li>
+                    <li>기타</li>
+                    <li>고객 메모</li>
+                    <li>등록일</li>
+                    <li>추천인</li>
+                </ul>
+                <div class="buttons">
+                    <button class="save-button">저장</button>
+                    <button class="cancel-button">취소</button>
+                </div>
+            </div>
+            <div class="consultation-content">
+                <h2>상담내용 변환 창</h2>
+                <div class="sst">SST</div>
+                <div class="recommended-answer">추천 응대 멘트</div>
+            </div>
+            <div class="memo-section">
+                <h2>메모창</h2>
+                <div class="memo-content">
+                    <div class="memo-block">문의 내용</div>
+                    <div class="memo-block">조치 내용</div>
+                </div>
+            </div>
+            <div class="task-status">
+                <h2>업무 상태 선택 창</h2>
+                <div class="task-menu">
+                    <div class="task-item">메뉴 항목</div>
+                    <div class="task-item">...</div>
+                    <div class="task-item">...</div>
+                </div>
+                <button class="save-button">저장</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

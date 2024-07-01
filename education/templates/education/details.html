@@ -1,0 +1,36 @@
+<!-- education/templates/education/detail.html -->
+{% extends 'base.html' %}
+
+{% block title %}Education Detail{% endblock %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'education/css/detail.css' %}">
+
+<div class="dashboard">
+    <h1>교육 상세</h1>
+    <div class="detail-container">
+        <div class="detail-header">
+            <div class="detail-info">
+                <span>카테고리:</span> 카테고리
+            </div>
+            <div class="detail-info">
+                <span>수강일자:</span> 2024.06.24
+            </div>
+        </div>
+        <div class="detail-content">
+            <div class="scenario">
+                <div class="block">고객 멘트</div>
+                <div class="block">상담사 답변</div>
+                <div class="block">상담사 답변</div>
+                <div class="block">상담사 답변</div>
+            </div>
+            <div class="evaluation">
+                <div class="block">상담사 답변</div>
+                <div class="block">평가</div>
+                <div class="block">적절성 평가 혹은 모범답안 출력</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

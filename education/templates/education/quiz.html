@@ -1,0 +1,33 @@
+<!-- education/templates/education/dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Education Dashboard{% endblock %}
+{% block content %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'education/css/quiz.css' %}">
+
+<div class="dashboard">
+    <h1>퀴즈페이지</h1>
+    <div class="quiz-container">
+        <div class="question">
+            <p>질문 1</p>
+            <img src="{% static 'images/matrix_question.png' %}" alt="Matrix Question">
+            <p>다음 식에서 a₁₃에 들어갈 값을 쓰세요.</p>
+            <input type="text" class="answer-input" value="-3" readonly>
+        </div>
+        <div class="feedback">
+            <span class="feedback-correct">정답입니다.</span>
+        </div>
+        <div class="explanation">
+            <div class="explanation-title">퀴즈 해설</div>
+            <div class="explanation-content">
+                a₁₃은 앞에 있는 행렬의 1행 3열의 원소와 뒤에 있는 행렬의 1행 3열의 원소를 더한 값:
+                <br>-1 + -2 = -3 입니다.
+            </div>
+        </div>
+        
+    </div>
+    <button class="submit-button">제출하기</button>
+</div>
+{% endblock %}
