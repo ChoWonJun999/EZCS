@@ -88,6 +88,14 @@ class CounselManual(models.Model):
         db_comment="Counsel Manual body for Counselor",
         null=True,
     )
+    
+    vector = models.JSONField(
+        encoder=DjangoJSONEncoder,
+        decoder=JSONDecoder,
+        verbose_name="Counsel Manual Vector body for Counselor",
+        db_comment="Counsel Manual Vector body for Counselor",
+        null=True,
+    )
 
     class Meta:
         db_table = "counsel_manual"
