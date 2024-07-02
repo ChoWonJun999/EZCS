@@ -108,7 +108,7 @@ class CounselManual(models.Model):
 class CounselChatbotLog(models.Model):
     # 상담원의 챗봇 이용 기록
     user_id = models.ForeignKey(
-        User,
+        "accounts.User",
         on_delete=models.CASCADE,
         verbose_name="User's ID",
         db_comment="User's ID",

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "management",
     "education",
     "counseling",
+    "linker",
 ]
 
 MIDDLEWARE = [
