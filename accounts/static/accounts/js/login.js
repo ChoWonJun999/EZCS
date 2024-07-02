@@ -97,4 +97,3 @@ function enableDirectInput() {
     $("#emailadd").css("font-family", "#000");
     $("#emailadd").focus();
 }
-*/
