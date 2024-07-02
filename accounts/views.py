@@ -21,13 +21,14 @@ def login(request):
                     result = '관리자의 승인이 필요합니다.'
                 elif password == user.password:
                     request.session['user'] = username
-                    result = 'success'
+                    if user.is_superuser == 0:
+                        result = 'user'
+                    else:
+                        result = 'manager'
                 else:
                     result = '비밀번호가 올바르지 않습니다'
             except User.DoesNotExist:
                 result = '해당 사용자가 존재하지 않습니다'
-    else:
-        result = 'request.method != POST'
     return JsonResponse({'result': result})
 
 

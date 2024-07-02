@@ -1,4 +1,4 @@
-function check_login(event) {
+function check_login(obj) {
     let param = {
         username: $("#loginUsername").val(),
         password: $("#loginPassword").val()
@@ -15,10 +15,16 @@ function check_login(event) {
             "X-CSRFToken": csrf
         },
         success: function (data) {
-            if (data.result != "success") {
+            if (data.result != "user" && data.result != "manager") {
                 alert(data.result);
             } else {
-                location.href = "/";
+                if (obj == 0 && data.result == "user") {
+                    location.href = "/";
+                } else if (obj == 1 && data.result == "manager") {
+                    location.href = "/management";
+                } else {
+                    alert("ERROR");
+                }
             }
         }
     });
