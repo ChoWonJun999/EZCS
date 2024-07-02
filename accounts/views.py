@@ -7,11 +7,18 @@ from django.http import HttpResponse
 
 def login(request):
     if request.method == 'GET':
-        return render(request, 'accounts/login.html')
+        # 추가
+        context = {}
+        if 'remember_me' in request.COOKIES:
+            context['username'] = request.COOKIES['remember_me']
+            context['remember_me'] = True  
+        return render(request, 'accounts/login.html', context)
+
     elif request.method == 'POST':
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
-
+        remember_me = request.POST.get('remember_me', None)
+      
         if not (username and password):
             result = '아이디와 비밀번호를 입력하세요'
         else:
@@ -25,6 +32,13 @@ def login(request):
                         result = 'manager'
                     else:
                         result = 'user'
+                    # 수정
+                    response = JsonResponse({'result' : result})
+                    if remember_me == 'on':
+                        response.set_cookie('remember_me', username, max_age=2592000)
+                    else:
+                        response.delete_cookie('remember_me')
+                    return response
                 else:
                     result = '비밀번호가 올바르지 않습니다'
             except User.DoesNotExist:

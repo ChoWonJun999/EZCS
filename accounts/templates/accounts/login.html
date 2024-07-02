@@ -11,16 +11,18 @@
             <h2>로그인</h2>
         </div>
         <div class="form-floating mb-3 my-form">
-            <input type="text" class="form-control" id="loginUsername" name="loginUsername">
+            <!--<input type="text" class="form-control" id="loginUsername" name="loginUsername"> 수정-->
+            <input type="text" class="form-control" id="loginUsername" name="username" {% if username %} value="{{ username }}" {% endif %} maxlength="41">
             <label for="loginUsername">ID</label>
         </div>
         <div class="form-floating mb-3 my-form">
-            <input type="password" class="form-control" id="loginPassword" name="loginPassword">
+            <input type="password" class="form-control" id="loginPassword" name="loginPassword"  maxlength="64">
             <label for="loginPassword">Password</label>
         </div>
         <div class="form-check form-switch my-form">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexCheckDefault">
-            <label class="form-check-label" for="flexCheckDefault">로그인 정보 저장</label>
+            <!--<input class="form-check-input" type="checkbox" role="switch" id="rememberMe" name="remember_me"> 수정-->
+            <input class="form-check-input" type="checkbox" role="switch" id="rememberMe" name="remember_me" {% if remember_me %} checked {% endif %}>
+            <label class="form-check-label" for="rememberMe">로그인 정보 저장</label>
         </div>
         <div>
             <input type="button" value="로그인" class="btn btn-outline-primary" style="width: 5cm;" onclick="check_login('0')">

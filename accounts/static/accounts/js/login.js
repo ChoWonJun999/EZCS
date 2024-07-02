@@ -1,7 +1,8 @@
 function check_login(obj) {
     let param = {
         username: $("#loginUsername").val(),
-        password: $("#loginPassword").val()
+        password: $("#loginPassword").val(),
+        remember_me: $("#rememberMe").is(":checked") ? "on" : "off"
     };
     var from = $("#loginForm");
     var url = from.data("url");
@@ -25,12 +26,21 @@ function check_login(obj) {
                 else if (obj == 1 && data.result == "manager") {
                     location.href = "/management";
                 } else {
-                    alert("ERROR");
+                    alert("관리자 권한이 없습니다.");
                 }
             }
         }
     });
 }
+
+$(document).ready(function() {
+    $('#loginUsername').focus();
+    $('#loginPassword').keypress(function(event) {
+        if (event.which == 13) { 
+            check_login(0);
+        }
+    });
+});
 /*
 function execDaumPostcode() {
     new daum.Postcode({
