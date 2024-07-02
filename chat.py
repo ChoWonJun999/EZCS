@@ -51,10 +51,6 @@ class Chatbot:
     def search(self, query, k=3):
         sim_docs = self.database.similarity_search_with_score(query, k=k, filter={"category":self.category}) if self.category else self.database.similarity_search_with_score(query, k=k)
        
-        # for doc, score in sim_docs:
-        #     print(f"score: {score}, page_content: {doc.page_content}")
-        #     print()
-       
         return sim_docs
    
     def prompting(self, query, similarity_docs):
