@@ -10,7 +10,10 @@ __pycache__/
 
 **/__pycache__/
 
-migrations/
+# Ignore only the compiled migration files, not the migration directories
+**/migrations/*.pyc
+**/migrations/__pycache__/
+**/migrations/*.py[cod]
 
 local_settings.py
 
@@ -20,6 +23,8 @@ chat_test.py
 
 db.sqlite3
 
-db.sqlite3-journal media
+db.sqlite3-journal
+
+media
 
 .env
