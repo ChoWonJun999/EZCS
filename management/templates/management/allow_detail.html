@@ -1,0 +1,15 @@
+{% block title %}
+allow 상세보기
+{% endblock %}
+{% block content %}
+<form action="" method="POST">
+    <h1>{{user.name}}</h1>
+    제목 : {{user.username}}<br>
+    이메일 : {{user.email}}<br>
+    <br>
+    <div>
+        <a href="{% url 'management:allow' %}">사용자 리스트로 돌아가기</a>
+        <a href="{% url 'management:approve_user' user.id %}">승인</a>
+    </div>
+</form>
+{% endblock %}

@@ -6,6 +6,7 @@ import os
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware.csrf import get_token
+from .models import EducationChatbotLog
 
 def list(request):
     return render(request, 'education/index.html')
@@ -16,7 +17,9 @@ def quiz(request):
 
 # 교육이력페이지
 def edu_history(request):
-    return render(request, 'education/edu_history.html')
+    logs = EducationChatbotLog.objects.all()
+
+    return render(request, 'education/edu_history.html', {'logs': logs})
 
 # 교육이력 상세페이지
 def details(request):
@@ -75,3 +78,46 @@ def chat_view(request):
 
     return render(request, 'education/index.html')
 
+def chat_view_test(request):
+    global chatbot
+    if request.method == 'POST':
+        print('request.POST:', request.POST)
+        if 'category' in request.POST:
+            # 카테고리 선택 및 챗봇 초기화
+            category = request.POST.get('category')
+            print("####################################")
+            print('category:', category)
+            print("####################################")
+
+            api_key = os.environ['OPENAI_API_KEY']
+            db_path = '../db'
+
+            # Chatbot 객체 초기화
+            behavior_policy = "너는 고객이고, 나는 상담사야. 너는 나에게 고객상담을 위한 질문을 해야해. 그에 대한 답변은 내가 할거야. 너는 나에게 '상담사님'이라고 해야해. 내가 답변할 수 있는 내용은 참고자료의 내용으로 답변할 수 있어."
+            chatbot = Chatbot(api_key=api_key, db_path=db_path, behavior_policy=behavior_policy, category=category, THRESHOLD=2)
+
+            # 첫 질문 생성
+            initial_question = chatbot.chat("나에게 아무런 고객상담을 위한 질문을 해줄래?")
+
+            return JsonResponse({'status': 'success', 'initial_question': initial_question})
+
+        elif 'message' in request.POST:
+            # 사용자 메시지 처리
+            message = request.POST.get('message')
+            print("####################################")
+            print('Received message:', message)
+            print("####################################")
+
+            if chatbot is None:
+                return JsonResponse({'response': 'Chatbot is not initialized. Please select a category first.'})
+
+            # 사용자 메시지에 대한 응답 생성
+            output = chatbot.chat(message)
+            print("####################################")
+            print('message:', message)
+            print('output:', output)
+            print("####################################")
+
+            return JsonResponse({'response': output})
+
+    return render(request, 'education/chat.html')

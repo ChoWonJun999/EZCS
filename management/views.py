@@ -35,7 +35,11 @@ def manager_edit(request, id):
 # 가입승인페이지
 def allow(request):
     data = User.objects.filter(active_status = 0)
+    print('='*20)
+    print(data)
+    print('='*20)
     return render(request, 'management/allow.html',{'data':data})
+
 
 # 가입승인페이지
 def manager_user(request):
@@ -46,14 +50,26 @@ def manager_user(request):
 #     user = User.objects.get(id=id)
 #     return render(request, 'management/management_detail.html', {'user':user})   
 
+def allow_detail(request, id):
+    user = get_object_or_404(User, id=id)
+    print(user)
+    return render(request, 'management/allow_detail.html', {'user':user})   
+
+
 #승인
 def approve_user(request, id):
     user = get_object_or_404(User, id=id)
-    print('hi')
     print(user.active_status)
     user.active_status = 1
     user.save()
     return redirect('management:allow')
+
+def active(request, id):
+    user = get_object_or_404(User, id=id)
+    print(user.active_status)
+    user.active_status = 1
+    user.save()
+    return redirect('management:reject')
 
 
 #거부
@@ -64,7 +80,53 @@ def approve_user(request, id):
 #     return render(request, 'management/allow.html',{'user':user})
 
 
-#퇴사자 및 휴직자 페이지
-def quitter(request):
-    data = User.objects.filter(Q(active_status = 2) | Q(active_status = 3)) #여기서 사용하는 Q는 장고에서 쓰는 or
-    return render(request, 'management/quitter.html', {'data':data})
+#활동중인 인원 비활성화 시키기 위한 페이지
+def inactive(request):
+    data = User.objects.filter(~Q(active_status = 0)) #여기서 사용하는 Q는 장고에서 쓰는 or
+    return render(request, 'management/inactive.html', {'data':data})
+
+def inactive_detail(request, id):
+    data = get_object_or_404(User, id=id)
+    print(data.active_status)
+    return render(request, 'management/inactive_detail.html', {'data':data})   
+
+
+#퇴사자
+def retire(request):
+    data = User.objects.filter(Q(active_status = 2)) #여기서 사용하는 Q는 장고에서 쓰는 or
+    return render(request, 'management/retire.html', {'data':data})
+
+def retire_detail(request, id):
+    data = get_object_or_404(User, id=id)
+    print(data.active_status)
+    return render(request, 'management/retire_detail.html', {'data':data})
+
+#퇴사자 페이지
+def retire(request):
+    data = User.objects.filter(Q(active_status = 3)) #여기서 사용하는 Q는 장고에서 쓰는 or
+    return render(request, 'management/retire.html', {'data':data})
+
+def retire_detail(request, id):
+    data = get_object_or_404(User, id=id)
+    print(data.active_status)
+    return render(request, 'management/retire_detail.html', {'data':data})
+
+#휴직자 페이지
+def leave(request):
+    data = User.objects.filter(Q(active_status = 2)) #여기서 사용하는 Q는 장고에서 쓰는 or
+    return render(request, 'management/retire.html', {'data':data})
+
+def leave_detail(request, id):
+    data = get_object_or_404(User, id=id)
+    print(data.active_status)
+    return render(request, 'management/retire_detail.html', {'data':data})
+
+#휴직자 페이지
+def reject(request):
+    data = User.objects.filter(Q(active_status = 4)) #여기서 사용하는 Q는 장고에서 쓰는 or
+    return render(request, 'management/reject.html', {'data':data})
+
+def reject_detail(request, id):
+    data = get_object_or_404(User, id=id)
+    print(data.active_status)
+    return render(request, 'management/reject_detail.html', {'data':data})            
