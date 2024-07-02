@@ -1,11 +1,13 @@
 function check_login(obj) {
     let param = {
         username: $("#loginUsername").val(),
-        password: $("#loginPassword").val()
+        password: $("#loginPassword").val(),
+        remember_me: $("#rememberMe").is(":checked") ? "on" : "off"
     };
     var from = $("#loginForm");
     var url = from.data("url");
     var csrf = from.data("csrf");
+    
     $.ajax({
         url: url,
         type: "post",
@@ -18,17 +20,27 @@ function check_login(obj) {
             if (data.result != "user" && data.result != "manager") {
                 alert(data.result);
             } else {
-                if (obj == 0 && data.result == "user") {
+                if ((obj == 0 && data.result == "user") || (obj == 0 && data.result == "manager")) {
                     location.href = "/";
-                } else if (obj == 1 && data.result == "manager") {
+                } 
+                else if (obj == 1 && data.result == "manager") {
                     location.href = "/management";
                 } else {
-                    alert("ERROR");
+                    alert("관리자 권한이 없습니다.");
                 }
             }
         }
     });
 }
+
+$(document).ready(function() {
+    $('#loginUsername').focus();
+    $('#loginPassword').keypress(function(event) {
+        if (event.which == 13) { 
+            check_login(0);
+        }
+    });
+});
 
 function execDaumPostcode() {
     new daum.Postcode({
@@ -85,3 +97,4 @@ function enableDirectInput() {
     $("#emailadd").css("font-family", "#000");
     $("#emailadd").focus();
 }
+*/

@@ -7,11 +7,18 @@ from django.http import HttpResponse
 
 def login(request):
     if request.method == 'GET':
-        return render(request, 'accounts/login.html')
+        # 추가
+        context = {}
+        if 'remember_me' in request.COOKIES:
+            context['username'] = request.COOKIES['remember_me']
+            context['remember_me'] = True  
+        return render(request, 'accounts/login.html', context)
+
     elif request.method == 'POST':
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
-
+        remember_me = request.POST.get('remember_me', None)
+      
         if not (username and password):
             result = '아이디와 비밀번호를 입력하세요'
         else:
@@ -21,10 +28,18 @@ def login(request):
                     result = '관리자의 승인이 필요합니다.'
                 elif password == user.password:
                     request.session['user'] = username
-                    if user.is_superuser == 0:
-                        result = 'user'
-                    else:
+                    if user.is_superuser == True:
                         result = 'manager'
+                    else:
+                        result = 'user'
+                    # 수정
+                    response = JsonResponse({'result' : result})
+                    if remember_me == 'on':
+                        response.set_cookie('remember_me', username, max_age=2592000)
+                    else:
+                        response.delete_cookie('remember_me')
+                    return response
+
                 else:
                     result = '비밀번호가 올바르지 않습니다'
             except User.DoesNotExist:
@@ -36,10 +51,15 @@ def logout(request):
     request.session.pop('user')
     return redirect('/')
 
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from .models import User
+
+def adminLogin(request):
+    return render(request, 'accounts/adminlogin.html')
 
 def searchPW(request):
     return render(request, 'accounts/searchpw.html')
-
 
 def signup(request):
     errors = {}
@@ -77,12 +97,13 @@ def signup(request):
                 password=password,
                 name=name,
                 email=email,
-                is_active=False
+                #is_active=0
             )
-            return redirect('/')
+            return JsonResponse({'success': True})
 
-    return render(request, 'accounts/signup.html', {'errors': errors})
+        return JsonResponse({'success': False, 'errors': errors})
 
+    return render(request, 'accounts/signup.html')
 
 def check_username(request):
     username = request.GET.get('username')

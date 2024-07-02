@@ -33,22 +33,18 @@ messages ="너는 친절하고 상냥하고 유능한 고객센터 상담원을 
 
 chatbot = Chatbot(os.getenv("OPENAI_API_KEY"), 'database/chroma.sqlite3', messages) # chatbot 객체 생성
 
-@csrf_exempt
+
 def chat_view(request):
     global chatbot
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-        except json.JSONDecodeError:
-            return JsonResponse({'error': 'Invalid JSON'}, status=400)
-
-        if 'category' in data:
+        print('request.POST:', request.POST)
+        if 'category' in request.POST:
             # 카테고리 선택 및 챗봇 초기화
-            category = data.get('category')
+            category = request.POST.get('category')
             print("####################################")
             print('category:', category)
             print("####################################")
-            
+
             api_key = os.environ['OPENAI_API_KEY']
             db_path = '../db'
 
@@ -61,9 +57,9 @@ def chat_view(request):
 
             return JsonResponse({'status': 'success', 'initial_question': initial_question})
 
-        elif 'message' in data:
+        elif 'message' in request.POST:
             # 사용자 메시지 처리
-            message = data.get('message')
+            message = request.POST.get('message')
             print("####################################")
             print('Received message:', message)
             print("####################################")
@@ -80,8 +76,5 @@ def chat_view(request):
 
             return JsonResponse({'response': output})
 
-    elif request.method == 'GET':
-        csrf_token = get_token(request)
-        return render(request, 'education/index.html', {'csrf_token': csrf_token})
+    return render(request, 'education/index.html')
 
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
