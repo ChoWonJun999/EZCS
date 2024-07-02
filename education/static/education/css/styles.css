@@ -1,0 +1,106 @@
+/* education/static/education/css/styles.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f5f7;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.dashboard {
+    flex: 1; /* 풋터를 제외한 전체 공간 채우기 */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.top-section {
+    display: flex;
+    gap: 20px;
+}
+
+.sections {
+    display: flex;
+    gap: 20px;
+    flex-grow: 1;
+}
+
+.section {
+    flex: 1;
+    padding: 20px;
+    background-color: yellow;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+}
+
+.top-block {
+    padding: 10px;
+    background-color: #d0e1f9;
+    border-radius: 5px;
+    height: 50px;
+    flex: 1;
+}
+
+.chat-section,
+.chat-section-readonly {
+    background-color: #fff;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-header {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 10px;
+    overflow-y: auto;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.chat-input {
+    display: flex;
+    border-top: 1px solid #ddd;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+
+.chat-input button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.chat-input button:hover {
+    background-color: #0056b3;
+}
+
+.chat-section-readonly .chat-input {
+    display: none;
+}
+
+.chat-message {
+    padding: 5px;
+    margin-bottom: 5px;
+    background-color: #f1f1f1;
+    border-radius: 4px;
+}

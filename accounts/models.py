@@ -84,13 +84,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         (1, 'Active'),
         (2, 'On Leave'),
         (3, 'Retired'),
+        (4, 'Rejection')
     ]
     
     active_status = models.IntegerField(
         default=0,
         choices=ACTIVE_STATUS_CHOICES,
-        verbose_name="In-service status(0:inactive, 1:active, 2:on leave, 3:retired)",
-        db_comment="In-service status(0:inactive, 1:active, 2:on leave, 3:retired)"
+        verbose_name="In-service status(0:inactive, 1:active, 2:on leave, 3:retired, 4:rejection)",
+        db_comment="In-service status(0:inactive, 1:active, 2:on leave, 3:retired, 4:rejection)"
     )
     
     date_joined = models.DateTimeField(
