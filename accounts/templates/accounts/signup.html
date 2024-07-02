@@ -9,8 +9,15 @@
             <h2>회원가입</h2>
         </div>
         <div class="form-floating mb-3 my-form">
+            <input type="text" class="form-control" id="loginUsername" name="loginUsername">
+            <label for="loginUsername">ID</label>
+            <!--추가-->
+            <div id="usernameError" class="error-message"></div>
+        </div>
+        <div class="form-floating mb-3 my-form">
             <input type="text" class="form-control" id="name" name="name">
             <label for="name">사용자 이름</label>
+
         </div>
         <div>
             <input type="date" id="birthdate" name="birthdate">
@@ -22,6 +29,8 @@
         <div class="form-floating mb-3 my-form">
             <input type="password" class="form-control" id="pwChk" name="pwChk">
             <label for="pwChk">비밀번호 확인</label>
+            <!--추가-->
+            <div id="passwordError" class="error-message"></div>
         </div>
 
         <div style="display: flex;">

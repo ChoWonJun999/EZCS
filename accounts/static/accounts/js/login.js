@@ -6,6 +6,7 @@ function check_login(obj) {
     var from = $("#loginForm");
     var url = from.data("url");
     var csrf = from.data("csrf");
+    
     $.ajax({
         url: url,
         type: "post",
@@ -18,9 +19,10 @@ function check_login(obj) {
             if (data.result != "user" && data.result != "manager") {
                 alert(data.result);
             } else {
-                if (obj == 0 && data.result == "user") {
+                if ((obj == 0 && data.result == "user") || (obj == 0 && data.result == "manager")) {
                     location.href = "/";
-                } else if (obj == 1 && data.result == "manager") {
+                } 
+                else if (obj == 1 && data.result == "manager") {
                     location.href = "/management";
                 } else {
                     alert("ERROR");
@@ -29,7 +31,7 @@ function check_login(obj) {
         }
     });
 }
-
+/*
 function execDaumPostcode() {
     new daum.Postcode({
         oncomplete: function (data) {
@@ -85,3 +87,4 @@ function enableDirectInput() {
     $("#emailadd").css("font-family", "#000");
     $("#emailadd").focus();
 }
+*/

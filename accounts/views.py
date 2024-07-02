@@ -21,10 +21,10 @@ def login(request):
                     result = '관리자의 승인이 필요합니다.'
                 elif password == user.password:
                     request.session['user'] = username
-                    if user.is_superuser == 0:
-                        result = 'user'
-                    else:
+                    if user.is_superuser == True:
                         result = 'manager'
+                    else:
+                        result = 'user'
                 else:
                     result = '비밀번호가 올바르지 않습니다'
             except User.DoesNotExist:
@@ -77,12 +77,13 @@ def signup(request):
                 password=password,
                 name=name,
                 email=email,
-                is_active=False
+                #is_active=0
             )
-            return redirect('/')
+            return JsonResponse({'success': True})
 
-    return render(request, 'accounts/signup.html', {'errors': errors})
+        return JsonResponse({'success': False, 'errors': errors})
 
+    return render(request, 'accounts/signup.html')
 
 def check_username(request):
     username = request.GET.get('username')
