@@ -6,6 +6,7 @@ import os
 import json
 from django.views.decorators.csrf import csrf_exempt
 from django.middleware.csrf import get_token
+from .models import EducationChatbotLog
 
 def list(request):
     return render(request, 'education/index.html')
@@ -16,7 +17,9 @@ def quiz(request):
 
 # 교육이력페이지
 def edu_history(request):
-    return render(request, 'education/edu_history.html')
+    logs = EducationChatbotLog.objects.all()
+
+    return render(request, 'education/edu_history.html', {'logs': logs})
 
 # 교육이력 상세페이지
 def details(request):
