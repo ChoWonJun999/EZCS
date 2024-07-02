@@ -8,10 +8,10 @@ from langchain_community.vectorstores import Chroma
  
 class Chatbot:
     def __init__(self,
-                model_id,
                 api_key,
                 db_path,
                 category=None,
+                model_id='gpt-3.5-turbo',
                 THRESHOLD=0.4
                 ):
         """
