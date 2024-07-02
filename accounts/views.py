@@ -39,6 +39,7 @@ def login(request):
                     else:
                         response.delete_cookie('remember_me')
                     return response
+
                 else:
                     result = '비밀번호가 올바르지 않습니다'
             except User.DoesNotExist:
@@ -50,10 +51,15 @@ def logout(request):
     request.session.pop('user')
     return redirect('/')
 
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from .models import User
+
+def adminLogin(request):
+    return render(request, 'accounts/adminlogin.html')
 
 def searchPW(request):
     return render(request, 'accounts/searchpw.html')
-
 
 def signup(request):
     errors = {}
@@ -109,3 +115,4 @@ def check_email(request):
     email = request.GET.get('email')
     exists = User.objects.filter(email=email).exists()
     return JsonResponse({'exists': exists})
+

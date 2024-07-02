@@ -41,7 +41,7 @@ $(document).ready(function() {
         }
     });
 });
-/*
+
 function execDaumPostcode() {
     new daum.Postcode({
         oncomplete: function (data) {

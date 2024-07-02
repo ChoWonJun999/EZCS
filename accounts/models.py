@@ -115,7 +115,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     @property
     def is_active(self):
         return self.active_status == 1
-    
+
 class UserSession(models.Model):
     """
     중복로그인 제어 테이블

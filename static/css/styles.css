@@ -115,6 +115,10 @@ body {
 .sidebar ul li.active {
     background-color: #eef2ff;
     color: #4c51bf;
+<<<<<<< HEAD
+>>>>>>> 307b05c8221d89bfb6c303c85b6296ecde256078
+=======
+>>>>>>> 4932debc6af146815f64f908b4fd7ed960345a88
     font-weight: bold;
 }
 
@@ -210,3 +214,4 @@ ul.menu, ul.dropdown-content, ul.settings, .dropdown-content li {
     max-width: 1200px;
     margin: 0 auto;
 }
+
