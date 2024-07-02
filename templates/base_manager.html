@@ -16,23 +16,32 @@
 <body>
     <div class="container">
         <div class="header">
-            <div class="company-name">관리자 대시보드</div>
+            <div class="company-name">관리자 페이지</div>
             <div class="header-right">
                 <div class="profile-info">안녕하세요, 관리자님.</div>
-                <div class="logout">로그아웃</div>
+                <div><a class="logout" href="{% url 'accounts:logout' %}">로그아웃</a></div>
             </div>
         </div>
+        <div>
+            <nav class="nev-form">
+                <a class="btn btn-outline-primary" type="button" href="{% url 'management:manager_dashboard' %}">직원 관리</a>
+                <a class="btn btn-outline-primary" type="button" href="{% url 'management:manager_user' %}">가입 승인</a>
+                <a class="btn btn-outline-primary" type="button" href="{% url 'management:quitter' %}">퇴사 및 휴직 관리</a>
+            </nav>
+        </div>
         <div class="main-content-wrapper">
+            <!-- 
             <div class="sidebar">
                 <div class="logo">AdminPanel</div>
                 <ul>
-                    <li>대시보드</li>
-                    <li>사용자 관리</li>
+                    <li>1</li>
+                    <li>2</li>
                     <li>통계</li>
                     <li>설정</li>
                     {% comment %} <li><a href="management/blog">가입 승인</a></li> {% endcomment %}
                 </ul>
             </div>
+             -->
             <div class="main-content">
                 {% block content %}
                 <!-- 관리자 대시보드 내용 -->

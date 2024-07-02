@@ -1,4 +1,3 @@
-<!-- education/templates/education/dashboard.html -->
 {% extends 'base.html' %}
 
 {% block title %}Education Dashboard{% endblock %}
@@ -8,53 +7,50 @@
 <link rel="stylesheet" href="{% static 'education/css/styles.css' %}">
 
 <div class="dashboard">
-    <div class="top-section">
-        <div class="top-block">제목</div>
-        <div class="top-block">제목</div>
-    </div>
-    <div class="sections">
-        <div class="section chat-section">
-            <div class="chat-header">채팅창</div>
-            <div class="chat-messages" id="chat-messages">
-                <!-- 채팅 메시지들이 여기에 표시됩니다. -->
-            </div>
-            <div class="chat-input">
-                <input type="text" id="chat-input" placeholder="메시지를 입력하세요..." onkeydown="sendMessage(event)" />
-                <button onclick="sendMessage()">전송</button>
-            </div>
+    {% comment %} 카테고리 선택 페이지 {% endcomment %}
+    <div id="category-selection" class="top-section">
+        <h3 class="menu-header">카테고리를 선택하세요:</h3>
+        <div class="category-buttons">
+            <button class="category-button" onclick="selectCategory('모바일 > 부가서비스')">부가서비스</button>
+            <button class="category-button" onclick="selectCategory('모바일 > 서비스정책')">서비스정책</button>
+            <button class="category-button" onclick="selectCategory('모바일 > 요금관련')">요금관련</button>
         </div>
-        <div class="section chat-section-readonly">
-            <div class="chat-header">읽기 전용 채팅창</div>
-            <div class="chat-messages" id="chat-messages-readonly">
-                <!-- 채팅 메시지들이 여기에 표시됩니다. -->
+    </div>
+    {% comment %} 채팅창 {% endcomment %}
+    <div class="sections">
+
+        {% comment %} 챗봇 입력/출력 {% endcomment %}
+        <div id="chatbot-section" class="sections" style="display: none;">
+            <div class="section chat-section">
+                <div class="chat-header">
+                    <span>선택된 카테고리: </span><span id="selected-category"></span>
+                </div>
+                <div class="chat-container">
+                    <div id="chat-content" class="chat-box" style="white-space: pre-line;"></div>
+                    <form id="chat-form" action="/education/" method="post" onsubmit="sendMessage(event)">
+                        {% csrf_token %}
+                        <div class="input-container">
+                            <textarea id="question" name="message" placeholder="message..." oninput="autoResize.call(this)"></textarea>
+                            <button id="text-button" type="submit">Send</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% comment %} 읽기 전용 {% endcomment %}
+            <div class="section chat-section-readonly">
+                <div class="chat-header">읽기 전용 채팅창</div>
+                <div class="chat-container">
+                    <div id="readonly-chat-content" class="chat-box" style="white-space: pre-line;"></div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-    function sendMessage(event) {
-        if (event && event.key !== 'Enter') return;
-
-        const input = document.getElementById('chat-input');
-        const message = input.value.trim();
-
-        if (message) {
-            const chatMessages = document.getElementById('chat-messages');
-            const newMessage = document.createElement('div');
-            newMessage.textContent = message;
-            newMessage.className = 'chat-message';
-            chatMessages.appendChild(newMessage);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-            input.value = '';
-
-            // 동일한 메시지를 읽기 전용 채팅창에도 추가
-            const chatMessagesReadonly = document.getElementById('chat-messages-readonly');
-            const newMessageReadonly = newMessage.cloneNode(true);
-            chatMessagesReadonly.appendChild(newMessageReadonly);
-            chatMessagesReadonly.scrollTop = chatMessagesReadonly.scrollHeight;
-        }
-    }
-</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="{% static 'education/js/scripts.js' %}"></script>
 
 {% endblock %}
+

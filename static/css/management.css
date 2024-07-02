@@ -1,7 +1,8 @@
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    padding: 20px; /* 페이지 전체와의 간격 추가 */
+    padding: 20px;
+    /* 페이지 전체와의 간격 추가 */
     background-color: #f4f5f7;
     display: flex;
     flex-direction: column;
@@ -11,7 +12,8 @@ body {
 .container {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* 헤더와 사이드바 사이의 간격 */
+    gap: 20px;
+    /* 헤더와 사이드바 사이의 간격 */
     height: 100%;
 }
 
@@ -19,8 +21,10 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #2c3e50; /* 네이비 색상 */
-    color: white; /* 텍스트 색상 */
+    background-color: #2c3e50;
+    /* 네이비 색상 */
+    color: white;
+    /* 텍스트 색상 */
     padding: 10px 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
@@ -34,7 +38,8 @@ body {
 .header-right {
     display: flex;
     align-items: center;
-    gap: 20px; /* 요소 사이에 간격 추가 */
+    gap: 20px;
+    /* 요소 사이에 간격 추가 */
 }
 
 .header-right .profile-info {
@@ -58,15 +63,17 @@ body {
 .main-content-wrapper {
     display: flex;
     flex: 1;
-    gap: 20px; /* 사이드바와 메인 콘텐츠 사이의 간격 */
+    gap: 20px;
+    /* 사이드바와 메인 콘텐츠 사이의 간격 */
 }
 
 .sidebar {
     width: 250px;
-    background-color: #4d6072; /* 어두운 그레이 색상 */
+    background-color: #4d6072;
+    /* 어두운 그레이 색상 */
     color: white;
     padding: 20px;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     display: flex;
     flex-direction: column;
@@ -112,6 +119,12 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
+
+}
+
+.dashboard>button {
+    width: 90px;
+
 }
 
 .card {
@@ -137,7 +150,8 @@ body {
     border-collapse: collapse;
 }
 
-.card table th, .card table td {
+.card table th,
+.card table td {
     padding: 10px;
     border: 1px solid #ddd;
 }
@@ -149,3 +163,27 @@ body {
 .card table tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
+
+form {
+    height: 100%;
+    cursor: default;
+}
+
+div {
+    padding: 5px;
+}
+
+.nev-form {
+    height: 20px;
+    padding-left: inherit;
+    margin-bottom: -5px;
+}
+
+/* 
+.nav-link.active {
+    font-weight: bold;
+    color: #007bff;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    padding: 8px 12px;
+} */

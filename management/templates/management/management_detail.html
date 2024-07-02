@@ -1,16 +1,57 @@
-{% comment %} {% extends "layout.html" %} {% endcomment %}
-{% block title %}
-Post 상세보기
-{% endblock %}
+{% extends 'base_manager.html' %}
+{% block title %}직원정보 수정 페이지{% endblock %}
+
 {% block content %}
-<form action="" method="POST">
-    <h1>{{user.name}}</h1>
-    제목 : {{user.username}}<br>
-    이메일 : {{user.email}}<br>
-    <br>
-    <div>
-        <a href="{% url 'management:manager_dashboard' %}">사용자 리스트로 돌아가기</a>
-        <a href="{% url 'management:management_edit' user.id %}">수정하기</a>
-    </div>
+
+<h1>직원정보 수정</h1>
+
+<div class="form-floating mb-3">
+    <label for="username">이름</label>
+    <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" disabled>
+</div>
+
+<div class="form-floating mb-3">
+    <label for="email">이메일</label>
+    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+</div>
+
+<div class="form-floating mb-3">
+    <label for="birth">생년월일</label>
+    <input type="date" class="form-control" id="birth" name="birth" value="{{ user.birth }}">
+</div>
+
+<div class="form-floating mb-3">
+    <label for="phone">전화번호</label>
+    <input type="text" class="form-control" id="phone" name="phone" value="{{ user.phone }}">
+</div>
+
+<div class="form-floating mb-3">
+    <label for="address">주소</label>
+    <input type="text" class="form-control" id="address" name="address" value="{{ user.address }}">
+</div>
+
+<div class="form-floating mb-3">
+    <label for="department">소속</label>
+    <input type="text" class="form-control" id="department" name="department" value="{{ user.department }}">
+</div>
+
+<div class="form-floating mb-3">
+    <label for="role">역할</label>
+    <input type="text" class="form-control" id="role" name="role" value="{{ user.role }}">
+</div>
+
+<div class="form-floating mb-3">
+    <label for="status">퇴사/휴직 여부</label>
+    <input type="text" class="form-control" id="status" name="status" value="{{ user.status }}">
+</div>
+
+<div class="mb-3">
+    <button class="w-100 btn btn-lg btn-primary" type="submit">수정</button>
+</div>
+
+<div class="mb-3">
+    <a href="{% url 'management:manager_dashboard' %}" class="w-100 btn btn-lg btn-secondary">사용자 리스트로 돌아가기</a>
+    <a href="{% url 'management:management_edit' user.id %}">수정하기</a>
+</div>
 </form>
 {% endblock %}

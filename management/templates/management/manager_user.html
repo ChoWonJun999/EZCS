@@ -1,7 +1,5 @@
-<!-- main/templates/main/admin_dashboard.html -->
 {% extends 'base_manager.html' %}
-
-{% block title %}직원관리{% endblock %}
+{% block title %}가입승인{% endblock %}
 
 {% block content %}
 <script type="text/javascript">
@@ -97,9 +95,9 @@
                     <th>이름</th>
                     <th>아이디</th>
                     <th>E-mail</th>
-                    <th>소속</th>
                     <th>역할</th>
-                    <th>가입일자</th>
+                    <th>가입 요청 일자</th>
+                    <th>회원 가입 승인</th>
                 </thead>
                 <tbody>
                     {% for item in data %}
@@ -108,9 +106,11 @@
                         <td>{{ item.username }}</td>
                         <td>{{ item.ID }}</td>
                         <td>{{ item.email }}</td>
-                        <td>{{ item.소속 }}</td>
-                        <td>{{ item.역할 }}</td>
-                        <td>{{ item.가입일자 }}</td>
+                        <td>{{ item.역할}}</td>
+                        <td>{{ item.가입요청일자}}</td>
+                        <td><a href="{% url 'management:approve_user' item.id %}" class="approve-btn">승인</a>
+                            {% comment %} <a href="{% url 'management:reject_user' item.id %}" class="reject-btn">거부</a> {% endcomment %}
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

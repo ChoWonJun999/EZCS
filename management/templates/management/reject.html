@@ -47,18 +47,19 @@
                         <th>Username</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>가입승인</th>
+                        <th>활성화</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in data %}
-                    <tr data-url="{% url 'management:allow_detail' item.id %}" style="cursor: pointer;">    
+                    <tr data-url="{% url 'management:reject_detail' item.id %}" style="cursor: pointer;">    
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.username }}</td>
                         <td>{{ item.name }}</td>
                         <td>{{ item.email }}</td>
                         <td>
-                            <a href="{% url 'management:approve_user' item.id %}" class="approve-btn">승인</a>
+                            <a href="{% url 'management:active' item.id %}" class="acive-btn">활성화</a>
+                            <a href="" class="delete-btn">삭제</a>
                             {% comment %} <a href="{% url 'management:reject_user' item.id %}" class="reject-btn">거부</a> {% endcomment %}
                         </td>
                     </tr>

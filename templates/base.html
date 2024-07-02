@@ -14,7 +14,7 @@
 <body>
     <div class="container-fluid">
         <div class="header">
-            <div class="company-name">Company name</div>
+            <div class="company-name">EZCS</div>
             <div class="header-right">
                 {% if user %}
                 <div class="profile-info">안녕하세요, {{ user }}님.</div>
@@ -30,7 +30,6 @@
         </div>
         <div class="main-content-wrapper">
             <div class="sidebar">
-                <div class="logo">CompanyName</div>
                 <ul class="menu">
                     <li class="active">
                         <a href="{% url 'main:user_dashboard' %}"><span class="icon">🏠</span> 대시보드</a>
@@ -41,7 +40,7 @@
                     <li class="dropdown">
                         <a href="javascript:void(0)"><span class="icon">📚</span> 교육</a>
                         <ul class="dropdown-content">
-                            <li><a href="{% url 'education:list' %}">롤플레잉</a></li>
+                            <li><a href="{% url 'education:chat_view' %}">롤플레잉</a></li>
                             <li><a href="{% url 'education:quiz' %}">퀴즈</a></li>
                             <li><a href="{% url 'education:edu_history' %}">교육 이력</a></li>
                             <li><a href="{% url 'education:details' %}">교육 이력 상세 일단보세용</a></li>
