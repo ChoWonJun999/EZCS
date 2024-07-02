@@ -79,6 +79,12 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_comment="The user's email address"
     )
     
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="User Active Flag",
+        db_comment="User Active Flag"
+    )
+    
     ACTIVE_STATUS_CHOICES = [
         (0, 'Inactive'),
         (1, 'Active'),
@@ -111,10 +117,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.name
-    
-    @property
-    def is_active(self):
-        return self.active_status == 1
     
 class UserSession(models.Model):
     """
