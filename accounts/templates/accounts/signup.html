@@ -1,36 +1,67 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'accountsLayout.html' %}
+{% block title %}회원 가입{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="/static/js/bootstrap.bundle.min.js"></script>
-    <title>회원가입</title>
-</head>
+{% block content %}
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<form id="signupForm" data-url="{% url 'accounts:signup' %}" data-csrf="{{ csrf_token }}">
+    <div class="container-sm my_container">
+        <div>
+            <h2>회원가입</h2>
+        </div>
+        <div class="form-floating mb-3 my-form">
+            <input type="text" class="form-control" id="name" name="name">
+            <label for="name">사용자 이름</label>
+        </div>
+        <div>
+            <input type="date" id="birthdate" name="birthdate">
+        </div>
+        <div class="form-floating mb-3 my-form">
+            <input type="password" class="form-control" id="password" name="password">
+            <label for="password">비밀번호</label>
+        </div>
+        <div class="form-floating mb-3 my-form">
+            <input type="password" class="form-control" id="pwChk" name="pwChk">
+            <label for="pwChk">비밀번호 확인</label>
+        </div>
 
-<body>
-    <h2>회원가입</h2>
-    <div>
-        <input type="text" class="email">@
-        <select class="form-select" id="validationTooltip04" required>
-        <option selected disabled value="">Choose...</option>
-        <option>naver.com</option>
-        <option>gmail.com</option>
-        <option>daum.net</option>
-        <option>nate.com</option>
-    </select>
+        <div style="display: flex;">
+            <div class="form-floating mb-3 my-form">
+                <input type="email" class="form-control" id="email" name="email">
+                <label for="email">email</label>
+            </div>
+            <span style="font-size: 40px;">@</span>
+            <div class="form-floating mb-3 my-form" style="display: flex;">
+                <input type="text" class="form-control" id="emailadd" name="emailadd" data-bs-toggle="dropdown" onclick="toggleDropdown()" value="naver.com" readonly="readonly" style="background-color: #000; font-family: white;">
+                <label for="emailadd">emailadd</label>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#" onclick="setEmailDomain('naver.com')">naver.com</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="setEmailDomain('gmail.com')">gmail.com</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="setEmailDomain('daum.net')">daum.net</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="setEmailDomain('nate.com')">nate.com</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="enableDirectInput()">직접입력</a></li>
+                </ul>
+            </div>
+
+        </div>
+        <div>
+            <div class="col-sm-10">
+                <label for="zipp_btn" class="form-label">주소</label><br />
+                <input type="text" class="form-control mb-2" id="zipp_code_id" name="zipp_code" maxlength="10" placeholder="우편번호" style="width: 50%; display: inline;" disabled>
+                <input type="button" id="zipp_btn" class="btn btn-primary" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
+                <input type="text" class="form-control mb-2" name="user_add1" id="UserAdd1" maxlength="40" placeholder="기본 주소를 입력하세요" required disabled>
+                <div class="invalid-feedback">주소를 입력해주시기 바랍니다!</div>
+                <input type="text" class="form-control" name="user_add2" id="UserAdd2" maxlength="40" placeholder="상세 주소를 입력하세요">
+            </div>
+        </div>
+
+        <div>
+            <input type="button" value="회원 요청" class="btn btn-outline-primary" style="width: 5cm;" onclick="signup()">
+        </div>
+        <div>
+            <p>
+                <a href="{% url 'accounts:login' %}"> 로그인으로 돌아가기</a>
+            </p>
+        </div>
     </div>
-    <div>
-        <input type="text" name="username" placeholder="사용자 이름">
-    </div>
-    <div>
-        <input type="password" name="password" placeholder="비밀번호">
-    </div>
-    <div>
-        <input type="submit" value="회원가입" class="btn btn-primary">
-    </div>
-</form>    
-</body>
-</html>
+</form>
+{% endblock %}

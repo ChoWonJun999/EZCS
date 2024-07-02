@@ -24,104 +24,58 @@ function check_login(event) {
     });
 }
 
-$(document).ready(function () {
-    $("#loginForm").on("submit", check_login);
-});
+function execDaumPostcode() {
+    new daum.Postcode({
+        oncomplete: function (data) {
+            // 팝업을 통한 검색 결과 항목 클릭 시 실행
+            var addr = ""; // 주소_결과값이 없을 경우 공백
+            var extraAddr = ""; // 참고항목
 
-function showSignupForm() {
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("signupForm").style.display = "block";
-    document.getElementById("forgotPasswordForm").style.display = "none";
-    document.getElementById("adminLoginForm").style.display = "none";
-    document.getElementById("authTitle").innerText = "회원가입";
+            //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+            if (data.userSelectedType === "R") {
+                // 도로명 주소를 선택
+                addr = data.roadAddress;
+            } else {
+                // 지번 주소를 선택
+                addr = data.jibunAddress;
+            }
+
+            if (data.userSelectedType === "R") {
+                if (data.bname !== "" && /[동|로|가]$/g.test(data.bname)) {
+                    extraAddr += data.bname;
+                }
+                if (data.buildingName !== "" && data.apartment === "Y") {
+                    extraAddr += extraAddr !== "" ? ", " + data.buildingName : data.buildingName;
+                }
+                if (extraAddr !== "") {
+                    extraAddr = " (" + extraAddr + ")";
+                }
+            } else {
+                document.getElementById("UserAdd1").value = "";
+            }
+
+            // 선택된 우편번호와 주소 정보를 input 박스에 넣는다.
+            document.getElementById("zipp_code_id").value = data.zonecode;
+            document.getElementById("UserAdd1").value = addr;
+            document.getElementById("UserAdd1").value += extraAddr;
+            document.getElementById("UserAdd2").focus(); // 우편번호 + 주소 입력이 완료되었음으로 상세주소로 포커스 이동
+        }
+    }).open();
 }
 
-function showForgotPasswordForm() {
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("signupForm").style.display = "none";
-    document.getElementById("forgotPasswordForm").style.display = "block";
-    document.getElementById("adminLoginForm").style.display = "none";
-    document.getElementById("authTitle").innerText = "비밀번호 찾기";
+function toggleDropdown() {
+    var dropdown = document.getElementById("emailDropdown");
+    dropdown.classList.toggle("show");
 }
 
-function showLoginForm() {
-    document.getElementById("loginForm").style.display = "block";
-    document.getElementById("signupForm").style.display = "none";
-    document.getElementById("forgotPasswordForm").style.display = "none";
-    document.getElementById("adminLoginForm").style.display = "none";
-    document.getElementById("authTitle").innerText = "로그인";
+function setEmailDomain(domain) {
+    $("#emailadd").val(domain);
 }
 
-function login() {
-    var username = document.getElementById("loginUsername").value;
-    var password = document.getElementById("loginPassword").value;
-
-    console.log("ID:", username);
-    console.log("PW:", password);
-
-    // 실제 인증 로직을 추가해야 함.
-    // 예: 서버로 사용자명과 암호를 전송하여 인증 처리
-}
-
-function showAdminLoginForm() {
-    document.getElementById("loginForm").style.display = "none";
-    document.getElementById("signupForm").style.display = "none";
-    document.getElementById("forgotPasswordForm").style.display = "none";
-    document.getElementById("adminLoginForm").style.display = "block";
-    document.getElementById("authTitle").innerText = "관리자 로그인";
-}
-
-function adminLogin() {
-    var adminUsername = document.getElementById("adminUsername").value;
-    var adminPassword = document.getElementById("adminPassword").value;
-
-    console.log("관리자 ID:", adminUsername);
-    // console.log('관리자 PW:', adminPassword); // 비밀번호 출력 제거
-
-    // 실제 관리자 인증 로직을 서버 측에서 처리해야 함.
-    // 예: 서버로 관리자 계정으로 인증 요청을 보내고, 결과에 따라 사용자 경험을 관리
-    // 여기서는 클라이언트 측에서는 로그인 폼만 표시하도록 설정
-}
-
-function hideAdminLoginForm() {
-    document.getElementById("adminLoginForm").reset();
-    document.getElementById("loginForm").style.display = "block";
-    document.getElementById("authTitle").innerText = "로그인";
-}
-
-function signup() {
-    var name = document.getElementById("name").value;
-    var address = document.getElementById("address").value;
-    var password = document.getElementById("password").value;
-    var email = document.getElementById("email").value;
-    var birthdate = document.getElementById("birthdate").value;
-    var postcode = document.getElementById("postcode").value;
-
-    console.log("이름:", name);
-    console.log("비밀번호:", password); // 비밀번호 출력 제거
-    console.log("생년월일:", birthdate);
-    console.log("이메일:", email);
-    console.log("주소:", address);
-    console.log("우편번호:", postcode);
-
-    // 실제 회원가입 로직을 추가해야 함.
-    // 예: 서버로 이메일, 이름, 주소, 비밀번호, 생년월일, 우편번호를 전송하여 회원가입 처리
-}
-
-function sendPasswordResetEmail() {
-    var username = document.getElementById("forgotPasswordUsername").value;
-
-    console.log("비밀번호 재설정 요청 이메일:", username);
-
-    // 실제 비밀번호 재설정 이메일 발송 로직을 추가해야 함.
-    // 예: 서버로 사용자 이메일을 전송하여 비밀번호 재설정 이메일을 발송하는 처리
-}
-
-function searchPostcode() {
-    // 우편번호 검색 기능 구현
-    var postcode = document.getElementById("postcode").value;
-
-    console.log("우편번호 검색:", postcode);
-
-    // 여기에 우편번호 서비스 API를 호출?? <자체 데이터베이스에서 검색하여 주소 정보를 가져오는 처리>
+function enableDirectInput() {
+    $("#emailadd").val("");
+    $("#emailadd").attr("readonly", false);
+    $("#emailadd").css("background-color", "#fff");
+    $("#emailadd").css("font-family", "#000");
+    $("#emailadd").focus();
 }
