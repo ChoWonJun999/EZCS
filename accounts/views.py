@@ -1,8 +1,14 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import User
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 import re
 from django.http import HttpResponse
+import logging
+from django.contrib.auth import password_validation
+from django.core.exceptions import ValidationError
+
+logger = logging.getLogger(__name__)
 
 
 def login(request):
@@ -18,7 +24,8 @@ def login(request):
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
         remember_me = request.POST.get('remember_me', None)
-      
+        
+
         if not (username and password):
             result = '아이디와 비밀번호를 입력하세요'
         else:
@@ -45,9 +52,9 @@ def login(request):
                 result = '해당 사용자가 존재하지 않습니다'
     return JsonResponse({'result': result})
 
-
 def logout(request):
-    request.session.pop('user')
+    auth_logout(request)
+    #request.session.pop('user')
     return redirect('/')
 
 
@@ -71,7 +78,12 @@ def signup(request):
 
         if not password:
             errors['password'] = '비밀번호를 입력하세요.'
-
+        else:
+            try:
+                password_validation.validate_password(password, User)
+            except ValidationError as e:
+                errors['password'] = ', '.join(e.messages)
+        
         if not password_confirm:
             errors['password_confirm'] = '비밀번호 확인을 입력하세요.'
         elif password != password_confirm:
@@ -86,7 +98,8 @@ def signup(request):
             errors['email'] = '이미 존재하는 이메일입니다.'
 
         if not errors:
-            user = User.objects.create(
+            user = User.objects.create_user(
+            #user = User.objects.create(
                 username=username,
                 password=password,
                 name=name,
