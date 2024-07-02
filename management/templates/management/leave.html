@@ -47,12 +47,12 @@
                         <th>Username</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>가입승인</th>
+                        <th>비활성화</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in data %}
-                    <tr data-url="{% url 'management:allow_detail' item.id %}" style="cursor: pointer;">    
+                    <tr data-url="{% url 'management:leave_detail' item.id %}" style="cursor: pointer;">    
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.username }}</td>
                         <td>{{ item.name }}</td>

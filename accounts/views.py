@@ -24,7 +24,6 @@ def login(request):
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
         remember_me = request.POST.get('remember_me', None)
-        
 
         if not (username and password):
             result = '아이디와 비밀번호를 입력하세요'

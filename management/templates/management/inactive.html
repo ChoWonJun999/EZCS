@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Allow Users</title>
+    <title>quitter Users</title>
     <style>
         .dashboard {
             width: 80%;
@@ -24,9 +24,22 @@
             background-color: #f9f9f9;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("tr[data-url]").click(function () {
+                var url = $(this).data("url");
+                window.location.href = url;
+            });
+        });
+    </script>
     <form action="" method="GET">
+        <a href="{% url 'management:inactive' %}">전체</a>
+        <a href="{% url 'management:retire'%}">퇴사</a>
+        <a href="{% url 'management:leave'%}">휴직</a>
+        <a href="{% url 'management:reject'%}">거부</a>
         <div class="dashboard">
             <input type="text" placeholder="..." style="width:100%;">
             <button type="submit">검색</button>
@@ -43,15 +56,14 @@
                 </thead>
                 <tbody>
                     {% for item in data %}
-                    <tr>
+                    <tr data-url="{% url 'management:inactive_detail' item.id %}" style="cursor: pointer;">    
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.username }}</td>
                         <td>{{ item.name }}</td>
                         <td>{{ item.email }}</td>
                         <td>
-                            <a href="#" class="quitter">비활성화</a>
+                            <a href="#">비활성화</a>
                             {% comment %} <a href="{% url 'management:reject_user' item.id %}" class="reject-btn">거부</a> {% endcomment %}
-                        </td>
                         </td>
                     </tr>
                     {% endfor %}

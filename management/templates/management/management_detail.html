@@ -1,77 +1,57 @@
 {% extends 'base_manager.html' %}
-{% block title %}직원정보 수정{% endblock %}
-
+{% block title %}직원정보 수정 페이지{% endblock %}
 
 {% block content %}
-<form class="form-signin" th:action="@{/account/signup}" method="post" th:object="${member}">
-    <h1 class="h3 mb-3 fw-normal">직원정보 수정</h1>
-    <hr>
 
-    <input type="hidden" class="form-control" th:field="*{id}" th:readonly="readonly">
-    <input type="hidden" class="form-control" th:field="*{role}" th:readonly="readonly">
+<h1>직원정보 수정</h1>
 
-    <!-- 이메일 입력 -->
-    <div class="mb-3">
-        <label th:for="username">이메일</label>
-        <input type="email" class="form-control" th:field="*{username}" th:readonly="readonly">
-    </div>
+<div class="form-floating mb-3">
+    <label for="username">이름</label>
+    <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" disabled>
+</div>
 
-    <!-- 닉네임 입력 -->
-    <div class="mb-3">
-        <label th:for="nickname">닉네임</label>
-        <input type="text" class="form-control" th:field="*{nickname}" oninput="nicknameModify()">
-        <span class="nickname_ok">사용 가능한 이름입니다.</span>
-        <span class="nickname_already">누군가 이 이름을 사용하고 있어요.</span>
-    </div>
+<div class="form-floating mb-3">
+    <label for="email">이메일</label>
+    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+</div>
 
-    <!-- 생년월일 입력 -->
-    <label class="mb-3 form-label" for="birth">생년월일</label>
-    <div class="mb-3" id="birth" onchange="checkAgeModify()">
-        <!-- 연도 선택 -->
-        <div class="birth dropdown">
-            <select class="form-control" id="year" name="year">
-                <!-- 연도 옵션들 -->
-            </select>
-        </div>
+<div class="form-floating mb-3">
+    <label for="birth">생년월일</label>
+    <input type="date" class="form-control" id="birth" name="birth" value="{{ user.birth }}">
+</div>
 
-        <!-- 월 선택 -->
-        <div class="birth mx-1 dropdown">
-            <select class="form-control" id="month" name="month">
-                <!-- 월 옵션들 -->
-            </select>
-        </div>
+<div class="form-floating mb-3">
+    <label for="phone">전화번호</label>
+    <input type="text" class="form-control" id="phone" name="phone" value="{{ user.phone }}">
+</div>
 
-        <!-- 일 선택 -->
-        <div class="birth dropdown">
-            <select class="form-control" id="day" name="day">
-                <!-- 일 옵션들 -->
-            </select>
-        </div>
-        <span id="birth_check_msg"></span>
-    </div>
+<div class="form-floating mb-3">
+    <label for="address">주소</label>
+    <input type="text" class="form-control" id="address" name="address" value="{{ user.address }}">
+</div>
 
-    <!-- 나이 입력 -->
-    <div class="mb-3">
-        <label for="age">나이</label>
-        <input type="text" class="form-control" id="age" th:readonly="readonly">
-    </div>
+<div class="form-floating mb-3">
+    <label for="department">소속</label>
+    <input type="text" class="form-control" id="department" name="department" value="{{ user.department }}">
+</div>
 
-    <!-- 성별 입력 -->
-    <div class="mb-3">
-        <label th:for="gender">성별</label>
-        <input type="text" class="form-control" id="gender" name="gender" th:value="*{gender.value}" hidden>
-        <input type="text" class="form-control" th:value="*{gender.title}" readonly>
-    </div>
+<div class="form-floating mb-3">
+    <label for="role">역할</label>
+    <input type="text" class="form-control" id="role" name="role" value="{{ user.role }}">
+</div>
 
-    <!-- 수정 버튼 -->
-    <div class="mb-3">
-        <button class="w-100 btn btn-lg btn-primary" type="submit" onclick="return modifyCheckAll()">수정</button>
-    </div>
+<div class="form-floating mb-3">
+    <label for="status">퇴사/휴직 여부</label>
+    <input type="text" class="form-control" id="status" name="status" value="{{ user.status }}">
+</div>
 
-    <!-- 취소 버튼 -->
-    <div class="mb-3">
-        <a type="button" style="color:white" class="w-100 btn btn-lg btn-secondary"
-            onclick="window.history.back();">취소</a>
-    </div>
+<div class="mb-3">
+    <button class="w-100 btn btn-lg btn-primary" type="submit">수정</button>
+</div>
+
+<div class="mb-3">
+    <a href="{% url 'management:manager_dashboard' %}" class="w-100 btn btn-lg btn-secondary">사용자 리스트로 돌아가기</a>
+    <a href="{% url 'management:management_edit' user.id %}">수정하기</a>
+</div>
 </form>
 {% endblock %}
