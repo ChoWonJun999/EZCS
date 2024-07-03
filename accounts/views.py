@@ -64,6 +64,16 @@ def adminLogin(request):
 def searchPW(request):
     return render(request, 'accounts/searchpw.html')
 
+
+def validate_username(username):
+    if re.search(r'[ㄱ-ㅎㅏ-ㅣ가-힣]', username):
+        raise ValidationError('아이디는 한글을 포함할 수 없습니다.')
+
+def validate_name(name):
+    if not re.match(r'^[가-힣]+$', name):
+        raise ValidationError('이름은 한글만 포함해야 합니다.')
+    
+
 def signup(request):
     errors = {}
     if request.method == 'POST':
@@ -77,6 +87,11 @@ def signup(request):
             errors['username'] = '사용자명을 입력하세요.'
         elif User.objects.filter(username=username).exists():
             errors['username'] = '이미 존재하는 사용자명입니다.'
+        else:
+            try:
+                validate_username(username)
+            except ValidationError as e:
+                errors['username'] = str(e)
 
         if not password:
             errors['password'] = '비밀번호를 입력하세요.'
@@ -85,7 +100,7 @@ def signup(request):
                 password_validation.validate_password(password, User)
             except ValidationError as e:
                 errors['password'] = ', '.join(e.messages)
-        
+
         if not password_confirm:
             errors['password_confirm'] = '비밀번호 확인을 입력하세요.'
         elif password != password_confirm:
@@ -93,6 +108,11 @@ def signup(request):
 
         if not name:
             errors['name'] = '이름을 입력하세요.'
+        else:
+            try:
+                validate_name(name)
+            except ValidationError as e:
+                errors['name'] = str(e)
 
         if not email:
             errors['email'] = '이메일을 입력하세요.'
@@ -101,7 +121,6 @@ def signup(request):
 
         if not errors:
             user = User.objects.create_user(
-            #user = User.objects.create(
                 username=username,
                 password=password,
                 name=name,
