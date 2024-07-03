@@ -1,7 +1,8 @@
 function check_login(obj) {
     username = $("#loginUsername");
     password = $("#loginPassword");
-    rememberMeVal = $("#rememberMe").is(":checked") ? "on" : "off";
+    rememberMe = $("#rememberMe").is(":checked") ? "on" : "off";
+
     if (username.val() == "") {
         alert("아이디 입력");
         username.focus();
@@ -16,7 +17,7 @@ function check_login(obj) {
     let param = {
         username: username.val(),
         password: password.val(),
-        remember_me: rememberMeVal
+        remember_me: rememberMe
     };
 
     var from = $("#loginForm");

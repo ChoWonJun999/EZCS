@@ -32,8 +32,8 @@ def login(request):
         logger.log(1, user)
 
         if user is not None:
-            if not user.is_active:
-                result = '관리자의 승인이 필요합니다.'
+            if user.active_status != 1:
+                result = '로그인 권한이 없습니다.'
             else:
                 auth_login(request, user)
                 request.session['user'] = username
@@ -67,74 +67,38 @@ def searchPW(request):
     return render(request, 'accounts/searchpw.html')
 
 
-def validate_username(username):
-    if re.search(r'[ㄱ-ㅎㅏ-ㅣ가-힣]', username):
-        raise ValidationError('아이디는 한글을 포함할 수 없습니다.')
-
-
-def validate_name(name):
-    if not re.match(r'^[가-힣]+$', name):
-        raise ValidationError('이름은 한글만 포함해야 합니다.')
-    
 
 def signup(request):
-    errors = {}
-    if request.method == 'POST':
+    print('haha')
+    if request.method == 'GET':
+        return render(request, 'accounts/signup.html')
+    elif request.method == 'POST':
+        result = True
         username = request.POST.get('username')
         password = request.POST.get('password')
-        password_confirm = request.POST.get('password_confirm')
         name = request.POST.get('name')
         email = request.POST.get('email')
+        birth_date = request.POST.get('birthdate')
+        address_code = request.POST.get('addressCode')
+        address = request.POST.get('address')
+        address_detail = request.POST.get('addressDetail')
 
-        if not username:
-            errors['username'] = '사용자명을 입력하세요.'
-        elif User.objects.filter(username=username).exists():
-            errors['username'] = '이미 존재하는 사용자명입니다.'
-        else:
-            try:
-                validate_username(username)
-            except ValidationError as e:
-                errors['username'] = str(e)
+        User.objects.create_user(
+            username = username,
+            password = password,
+            name = name,
+            email = email,
+            birth_date = birth_date,
+            address_code = address_code,
+            address = address,
+            address_detail = address_detail
+        )
+        msg = "회원가입 요청이 완료되었습니다."
+    else:
+        result = False
+        msg = '잘못된 접근입니다.'
 
-        if not password:
-            errors['password'] = '비밀번호를 입력하세요.'
-        else:
-            try:
-                password_validation.validate_password(password, User)
-            except ValidationError as e:
-                errors['password'] = ', '.join(e.messages)
-
-        if not password_confirm:
-            errors['password_confirm'] = '비밀번호 확인을 입력하세요.'
-        elif password != password_confirm:
-            errors['password_confirm'] = '입력된 비밀번호가 다릅니다.'
-
-        if not name:
-            errors['name'] = '이름을 입력하세요.'
-        else:
-            try:
-                validate_name(name)
-            except ValidationError as e:
-                errors['name'] = str(e)
-
-        if not email:
-            errors['email'] = '이메일을 입력하세요.'
-        elif User.objects.filter(email=email).exists():
-            errors['email'] = '이미 존재하는 이메일입니다.'
-
-        if not errors:
-            user = User.objects.create_user(
-                username=username,
-                password=password,
-                name=name,
-                email=email,
-                #is_active=0
-            )
-            return JsonResponse({'success': True})
-
-        return JsonResponse({'success': False, 'errors': errors})
-
-    return render(request, 'accounts/signup.html')
+    return JsonResponse({'result': result, 'msg': msg})
 
 
 def check_username(request):

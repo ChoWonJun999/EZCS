@@ -4,7 +4,7 @@
 {% block content %}
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'education/css/styles.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'education/css/styles.css' %}"> {% endcomment %}
 
 <div class="dashboard">
     {% comment %} 카테고리 선택 페이지 {% endcomment %}
@@ -20,7 +20,8 @@
     <div class="sections">
 
         {% comment %} 챗봇 입력/출력 {% endcomment %}
-        <div id="chatbot-section" class="sections" style="display: none;">
+        {% comment %} <div id="chatbot-section" class="sections" style="display: none;"> {% endcomment %}
+        <div id="chatbot-section" class="sections">
             <div class="section chat-section">
                 <div class="chat-header">
                     <span>선택된 카테고리: </span><span id="selected-category"></span>
@@ -36,7 +37,6 @@
                     </form>
                 </div>
             </div>
-
             {% comment %} 읽기 전용 {% endcomment %}
             <div class="section chat-section-readonly">
                 <div class="chat-header">읽기 전용 채팅창</div>

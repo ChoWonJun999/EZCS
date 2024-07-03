@@ -79,7 +79,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
 
     address_code = models.IntegerField(
-        max_length=10,
         verbose_name="User's Address",
         db_comment="User's Address"
     )

@@ -1,20 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Dashboard{% endblock %}</title>
+    <title>{% block title %}Investor Dashboard{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet" />
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 </head>
-
 <body>
-    <div class="container-fluid">
+    <div class="sidebar" id="sidebar">
+        <div>
+            <h1>EZCS</h1>
+            <p class="menu-title">MAIN MENU</p>
+            <ul class="menu">
+                <li><a href="{% url 'main:user_dashboard' %}"><span class="icon">🏠</span> 대시보드</a></li>
+                <li><a href="{% url 'counseling:list' %}"><span class="icon">💱</span> 상담</a></li>
+                <li class="has-submenu">
+                    <a href="#"><span class="icon">📊</span> 교육</a>
+                    <ul class="submenu">
+                        <li><a href="{% url 'education:chat_view' %}" class="active">롤플레잉</a></li>
+                        <li><a href="{% url 'education:quiz' %}">퀴즈</a></li>
+                        <li><a href="{% url 'education:edu_history' %}">교육 이력</a></li>
+                        <li><a href="{% url 'education:details' %}">교육 이력 상세(개발용)</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <ul class="menu">
+                <li><a href="#">Community</a></li>
+                <li><a href="#">Help & Support</a></li>
+                <li><a href="#">Settings</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content">
         <div class="header">
-            <div class="company-name">EZCS</div>
+            <button class="sidebar-toggle" id="sidebarToggle">☰</button>
             <div class="header-right">
                 {% if user %}
                 <div class="profile-info">안녕하세요, {{ user }}님.</div>
@@ -28,44 +50,21 @@
                 {% endif %}
             </div>
         </div>
-        <div class="main-content-wrapper">
-            <div class="sidebar">
-                <ul class="menu">
-                    <li class="active">
-                        <a href="{% url 'main:user_dashboard' %}"><span class="icon">🏠</span> 대시보드</a>
-                    </li>
-                    <li>
-                        <a href="{% url 'counseling:list' %}"><span class="icon">💼</span> 상담</a>
-                    </li>
-                    <li class="dropdown">
-                        <a href="javascript:void(0)"><span class="icon">📚</span> 교육</a>
-                        <ul class="dropdown-content">
-                            <li><a href="{% url 'education:chat_view' %}">롤플레잉</a></li>
-                            <li><a href="{% url 'education:quiz' %}">퀴즈</a></li>
-                            <li><a href="{% url 'education:edu_history' %}">교육 이력</a></li>
-                            <li><a href="{% url 'education:details' %}">교육 이력 상세 일단보세용</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <ul class="settings">
-                    <li>
-                        <a href="#"><span class="icon">⚙️</span> 환경설정</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="main-content">
-                {% block content %}
-                <!-- 대시보드 내용 -->
-                {% endblock %}
-            </div>
+        <div class="main-content">
+            {% block content %}
+            대시보드 페이지
+            {% endblock %}
         </div>
+        <footer class="footer">
+            <p>&copy; 2024 EZCS. All rights reserved.</p>
+        </footer>
     </div>
-    <footer class="footer">
-        <div class="footer-content">
-            풋터 내용
-        </div>
-    </footer>
     <script src="{% static 'js/menu.js' %}"></script>
+    <script>
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            var sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+        });
+    </script>
 </body>
-
 </html>
