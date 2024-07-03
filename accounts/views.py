@@ -62,6 +62,11 @@ def logout(request):
     auth_logout(request)
     return redirect('/')
 
+
+def adminLogin(request):
+    return render(request, 'accounts/adminlogin.html')
+
+
 def searchPW(request):
     return render(request, 'accounts/searchpw.html')
 
@@ -81,7 +86,7 @@ def signup(request):
         address_code = request.POST.get('addressCode')
         address = request.POST.get('address')
         address_detail = request.POST.get('addressDetail')
-        
+
         User.objects.create_user(
             username = username,
             password = password,
