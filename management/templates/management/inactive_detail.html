@@ -1,0 +1,17 @@
+{% block title %}
+(전체)비활성시킬 애들
+{% endblock %}
+{% block content %}
+<form action="" method="POST">
+    <h1>{{data.name}}</h1>
+    제목 : {{data.username}}<br>
+    이메일 : {{data.email}}<br>
+    활동상태 : {{data.active_status}}<br>
+    <br>
+    <div>
+        {% comment %} <a href="{% url 'management:allow' %}">사용자 리스트로 돌아가기</a>
+        <a href="{% url 'management:approve_user' user.id %}">승인</a> {% endcomment %}
+    </div>
+</form>
+{% endblock %}
+<title>(전체)비활성시킬 애들</title>

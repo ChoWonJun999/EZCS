@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Allow Users</title>
+    <title>휴직자</title>
     <style>
         .dashboard {
             width: 80%;
@@ -24,8 +24,17 @@
             background-color: #f9f9f9;
         }
     </style>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("tr[data-url]").click(function () {
+                var url = $(this).data("url");
+                window.location.href = url;
+            });
+        });
+    </script>
     <form action="" method="GET">
         <div class="dashboard">
             <input type="text" placeholder="..." style="width:100%;">
@@ -43,15 +52,14 @@
                 </thead>
                 <tbody>
                     {% for item in data %}
-                    <tr>
+                    <tr data-url="{% url 'management:leave_detail' item.id %}" style="cursor: pointer;">    
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.username }}</td>
                         <td>{{ item.name }}</td>
                         <td>{{ item.email }}</td>
                         <td>
-                            <a href="#" class="quitter">비활성화</a>
+                            <a href="{% url 'management:approve_user' item.id %}" class="approve-btn">승인</a>
                             {% comment %} <a href="{% url 'management:reject_user' item.id %}" class="reject-btn">거부</a> {% endcomment %}
-                        </td>
                         </td>
                     </tr>
                     {% endfor %}

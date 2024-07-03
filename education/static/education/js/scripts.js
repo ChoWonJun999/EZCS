@@ -1,9 +1,19 @@
 // static/education/js/scripts.js
 
+document.addEventListener('DOMContentLoaded', function () {
+    const categoryButtons = document.querySelectorAll('.category-button');
+    categoryButtons.forEach(button => {
+        button.addEventListener('click', function () {
+            const selectedCategory = this.textContent;
+            selectCategory(selectedCategory);
+        });
+    });
+});
+
 let selectedCategory = null;
 
-function selectCategory() {
-    selectedCategory = document.getElementById('category').value;
+function selectCategory(category) {
+    selectedCategory = category;
     console.log('Selected category:', selectedCategory);
 
     const formData = new FormData();
@@ -14,7 +24,12 @@ function selectCategory() {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
         console.log('Chatbot initialized:', data);
         document.getElementById('selected-category').innerText = selectedCategory;
@@ -38,7 +53,7 @@ function sendMessage(event) {
     formData.append('message', userInput);
     formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
 
-    fetch('/education/chat/', {
+    fetch('/education/', {
         method: 'POST',
         body: formData,
         headers: {
