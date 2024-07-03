@@ -1,14 +1,59 @@
 function signup() {
+    let username = $("#loginUsername").val();
+    let name = $("#name").val();
+
+    if (containsKorean(username)) {
+        $("#usernameError").text("아이디는 한글을 포함할 수 없습니다.");
+        $("#usernameError").show();
+        return false;
+    } else {
+        $("#usernameError").hide();
+    }
+
+    if (!isKorean(name)) {
+        $("#nameError").text("이름은 한글만 포함해야 합니다.");
+        $("#nameError").show();
+        return false;
+    } else {
+        $("#nameError").hide();
+    }
+
+    
+    let password = $("#password").val();
+    let password_confirm = $("#pwChk").val();
+
+    if (password != password_confirm) {
+        alert("비번 다름");
+        return false;
+    }
+    
+    if (!validatePassword(password)) {
+        $("#passwordError").text("비밀번호는 최소 8자 이상이어야 하며, 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.");
+        $("#passwordError").show();
+        return false;
+    } else {
+        $("#passwordError").hide();
+    }
+
+    if (password !== password_confirm) {
+        $("#passwordConfirmError").text("비밀번호가 일치하지 않습니다.");
+        $("#passwordConfirmError").show();
+        return false;
+    } else {
+        $("#passwordConfirmError").hide();
+    }
+    // email: $("#email").val() + "@" + $("#emailadd").val(),
+    $("#addressCode").removeAttr("disabled");
     let param = {
-        username: $("#loginUsername").val(),
-        password: $("#password").val(),
-        password_confirm: $("#pwChk").val(),
-        name: $("#name").val(),
-        email: $("#email").val() + "@" + $("#emailadd").val(),
+        username: username,
+        password: password,
+        name: name,
+
+        email: "temp@temp.com",
         birthdate: $("#birthdate").val(),
-        zipp_code: $("#zipp_code_id").val(),
-        user_add1: $("#UserAdd1").val(),
-        user_add2: $("#UserAdd2").val(),
+        addressCode: $("#addressCode").val(),
+        address: $("#UserAdd1").val(),
+        addressDetail: $("#UserAdd2").val()
     };
 
     var from = $("#signupForm");
@@ -24,21 +69,31 @@ function signup() {
             "X-CSRFToken": csrf
         },
         success: function (data) {
-            if (data.success) {
-                alert("회원가입 요청이 완료되었습니다.");
+            $("#addressCode").attr("disabled");
+            if (data.result) {
+                alert(data.msg);
                 location.href = "/accounts";
             } else {
-                // errors 키를 통해 각 필드별 오류 메시지를 출력
-                //for (let key in data.errors) {
-                //    alert(data.errors[key]);
-                // 추가 displayErrors
-                    displayErrors(data.errors);
+                alert(data.msg);
             }
         }
-                
     });
 }
 
+function isKorean(text) {
+    var koreanRegex = /^[가-힣]+$/;
+    return koreanRegex.test(text);
+}
+
+function containsKorean(text) {
+    var koreanRegex = /[ㄱ-ㅎㅏ-ㅣ가-힣]/;
+    return koreanRegex.test(text);
+}
+
+function validatePassword(password) {
+    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+}
 function displayErrors(errors) {
     for (let key in errors) {
         let errorDiv = $("#" + key + "Error");
@@ -46,7 +101,6 @@ function displayErrors(errors) {
         errorDiv.show();
     }
 }
-
 
 function toggleDropdown() {
     var dropdown = document.getElementById("emailDropdown");
@@ -89,7 +143,7 @@ function execDaumPostcode() {
                 }
             }
 
-            document.getElementById("zipp_code_id").value = data.zonecode;
+            document.getElementById("addressCode").value = data.zonecode;
             document.getElementById("UserAdd1").value = addr;
             document.getElementById("UserAdd1").value += extraAddr;
             document.getElementById("UserAdd2").focus();

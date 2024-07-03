@@ -64,6 +64,16 @@ class CustomerInfo(models.Model):
     birth_date = models.DateField(
         verbose_name="Customer's Birth Date", db_comment="Customer's Birth Date"
     )
+    
+    joined_date = models.DateField(
+        verbose_name="Customer's Birth Date", db_comment="Customer's Birth Date"
+    )
+    
+    address = models.CharField(
+        max_length=255,
+        verbose_name="User's Address",
+        db_comment="User's Address"
+    )
 
     class Meta:
         db_table = "customer_info"

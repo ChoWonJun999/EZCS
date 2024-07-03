@@ -4,6 +4,7 @@ from . import views
 app_name = 'management'
 
 urlpatterns = [
+
     path('', views.manager_dashboard, name='dashboard'), #대쉬보드 화면
     path('management_detail/<int:id>/', views.manager_detail, name='management_detail'), # 직원상세정보화면
     path('detail/<int:id>/', views.detail, name='detail'), # 직원상세정보화면
@@ -26,4 +27,3 @@ urlpatterns = [
     # path('search/', views.search, name='search'), #검색 로직
     # # path('all/', views.all, name='all'), #all 전체선택 로직
 ]
-

@@ -15,9 +15,9 @@
             <div id="usernameError" class="error-message"></div>
         </div>
         <div class="form-floating mb-3 my-form">
-            <input type="text" class="form-control" id="name" name="name"  maxlength="10">
+            <input type="text" class="form-control" id="name" name="name" maxlength="10">
             <label for="name">사용자 이름</label>
-
+            <div id="nameError" class="error-message"></div>
         </div>
         <div>
             <label for="birthdate">생년월일</label>
@@ -26,11 +26,11 @@
             <input type="date" id="birthdate" name="birthdate">
         </div>
         <div class="form-floating mb-3 my-form">
-            <input type="password" class="form-control" id="password" name="password"  maxlength="64">
+            <input type="password" class="form-control" id="password" name="password" maxlength="64">
             <label for="password">비밀번호</label>
         </div>
         <div class="form-floating mb-3 my-form">
-            <input type="password" class="form-control" id="pwChk" name="pwChk"  maxlength="64">
+            <input type="password" class="form-control" id="pwChk" name="pwChk" maxlength="64">
             <label for="pwChk">비밀번호 확인</label>
             <!--추가-->
             <div id="passwordError" class="error-message"></div>
@@ -38,7 +38,7 @@
 
         <div style="display: flex;">
             <div class="form-floating mb-3 my-form">
-                <input type="email" class="form-control" id="email" name="email"  maxlength="41">
+                <input type="email" class="form-control" id="email" name="email" maxlength="41">
                 <label for="email">email</label>
             </div>
             <span style="font-size: 40px;">@</span>
@@ -58,7 +58,7 @@
         <div>
             <div class="col-sm-10">
                 <label for="zipp_btn" class="form-label">주소</label><br />
-                <input type="text" class="form-control mb-2" id="zipp_code_id" name="zipp_code" maxlength="10" placeholder="우편번호" style="width: 50%; display: inline;" disabled>
+                <input type="text" class="form-control mb-2" id="addressCode" name="addressCode" maxlength="10" placeholder="우편번호" style="width: 50%; display: inline;" disabled>
                 <input type="button" id="zipp_btn" class="btn btn-primary" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
                 <input type="text" class="form-control mb-2" name="user_add1" id="UserAdd1" maxlength="40" placeholder="기본 주소를 입력하세요" required disabled>
                 <div class="invalid-feedback">주소를 입력해주시기 바랍니다!</div>
