@@ -10,8 +10,8 @@ class Chatbot:
     def __init__(self,
                 api_key,
                 db_path,
-                behavior_policy="너는 친절하고 상냥하고 유능한 상담원이야. 사용자가 요청하는 주제로 답변을 해줘. 그런데 참고자료가 반드시 질문과 연관된 정보를 제공하지는 않아. 사용자가 질문한 내용을 잘 이해하고 답변해줘야 해.",
                 category=None,
+                model_id='gpt-3.5-turbo',
                 THRESHOLD=0.4
                 ):
         """
@@ -20,11 +20,12 @@ class Chatbot:
                     ChatMessageHistory를 사용하여 사용자의 질문과 답변을 기록합니다.
  
         Args:
+            model_id (str): model id
             api_key (_type_): openai api key
             db_path (str, optional): chroma db path
         """
        
-        self.chat_model = ChatOpenAI(model="gpt-3.5-turbo", api_key=api_key)
+        self.chat_model = ChatOpenAI(model=model_id, api_key=api_key)
         self.embeddings = OpenAIEmbeddings(model="text-embedding-ada-002", api_key=api_key)
         self.database = Chroma(persist_directory=db_path, embedding_function=self.embeddings)
  
@@ -32,11 +33,6 @@ class Chatbot:
         self.THRESHOLD = THRESHOLD
        
         self.memory = ChatMessageHistory()
-       
-        self.behavior_policy = behavior_policy
-        self.messages = [
-            SystemMessage(self.behavior_policy)
-        ]
        
        
     def chat(self, query):
@@ -55,10 +51,6 @@ class Chatbot:
     def search(self, query, k=3):
         sim_docs = self.database.similarity_search_with_score(query, k=k, filter={"category":self.category}) if self.category else self.database.similarity_search_with_score(query, k=k)
        
-        for doc, score in sim_docs:
-            print(f"score: {score}, page_content: {doc.page_content}")
-            print()
-       
         return sim_docs
    
     def prompting(self, query, similarity_docs):
@@ -71,7 +63,6 @@ class Chatbot:
                 prompt += f"\n\n 참고자료 {num}: " + doc.page_content
                 num += 1
            
-        prompt = self.messages + [HumanMessage(content=prompt, history=self.memory.messages)]
+        prompt = [HumanMessage(content=prompt, history=self.memory.messages)]
        
         return prompt
- 

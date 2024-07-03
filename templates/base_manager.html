@@ -19,14 +19,14 @@
             <div class="company-name">관리자 페이지</div>
             <div class="header-right">
                 <div class="profile-info">안녕하세요, 관리자님.</div>
-                <div class="logout">로그아웃</div>
+                <div><a class="logout" href="{% url 'accounts:logout' %}">로그아웃</a></div>
             </div>
         </div>
         <div>
             <nav class="nev-form">
                 <a class="btn btn-outline-primary" type="button" href="{% url 'management:manager_dashboard' %}">직원 관리</a>
                 <a class="btn btn-outline-primary" type="button" href="{% url 'management:allow' %}">가입 승인</a>
-                <a class="btn btn-outline-primary" type="button" href="{% url 'management:quitter' %}">퇴사 및 휴직 관리</a>
+                <a class="btn btn-outline-primary" type="button" href="{% url 'management:inactive' %}">퇴사 및 휴직 관리</a>
             </nav>
         </div>
         <div class="main-content-wrapper">
