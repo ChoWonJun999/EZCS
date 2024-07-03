@@ -19,6 +19,7 @@ urlpatterns = [
     # path('user_inactive/<int:id>/', views.user_inactive, name='user_inactive'),
     # path('user_inactive/<int:id>/', views.user_inactive, name='user_inactive'),
     # path('reject/<int:id>/', views.reject_user, name='reject_user'),
+
     path('inactive/', views.inactive, name='inactive'),
     path('inactive/inactive_detail/<int:id>/', views.inactive_detail, name='inactive_detail'),
     path('retire/', views.retire, name='retire'),
