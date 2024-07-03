@@ -49,8 +49,7 @@ def chat_view(request):
             db_path = '../db'
 
             # Chatbot 객체 초기화
-            behavior_policy = "너는 고객이고, 나는 상담사야. 너는 나에게 고객상담을 위한 질문을 해야해. 그에 대한 답변은 내가 할거야. 너는 나에게 '상담사님'이라고 해야해. 내가 답변할 수 있는 내용은 참고자료의 내용으로 답변할 수 있어."
-            chatbot = Chatbot(api_key=api_key, db_path=db_path, behavior_policy=behavior_policy, category=category, THRESHOLD=2)
+            chatbot = Chatbot(api_key=api_key, db_path=db_path, category=category, THRESHOLD=2)
 
             # 첫 질문 생성
             initial_question = chatbot.chat("나에게 아무런 고객상담을 위한 질문을 해줄래?")
