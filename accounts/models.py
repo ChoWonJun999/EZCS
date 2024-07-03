@@ -34,10 +34,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     """
     유저 정보(사용자/관리자)
     """
-    id = models.AutoField(
+    id = models.CharField(
         primary_key=True,
-        verbose_name="Auto created ID",
-        db_comment="Auto created ID"
+        max_length=16,
+        unique=True,
+        verbose_name="ID to use when login",
+        db_comment="ID to use when login for the user"
     )
     
     password = models.CharField(
@@ -57,13 +59,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=False,
         verbose_name="Administrator status(0:General User, 1:Administrator User)",
         db_comment="Administrator status(0:General User, 1:Administrator User)"
-    )
-    
-    username = models.CharField(
-        max_length=16,
-        unique=True,
-        verbose_name="ID to use when login",
-        db_comment="ID to use when login for the user"
     )
     
     name = models.CharField(
