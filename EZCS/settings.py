@@ -28,6 +28,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# CSRF_TRUSTED_ORIGINS = ['url']
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -56,6 +58,8 @@ MIDDLEWARE = [
     "accounts.middleware.BlockedMiddleware",
     "accounts.middleware.LoginSessionMiddleware",
 ]
+
+LOGIN_URL = '/accounts'
 
 ROOT_URLCONF = "EZCS.urls"
 
@@ -163,3 +167,4 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_AGE = 60 * 60 * 3
 
 SESSION_SAVE_EVERY_REQUEST = True
+
