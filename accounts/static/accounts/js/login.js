@@ -1,9 +1,24 @@
 function check_login(obj) {
+    username = $("#loginUsername");
+    password = $("#loginPassword");
+    rememberMeVal = $("#rememberMe").is(":checked") ? "on" : "off";
+    if (username.val() == "") {
+        alert("아이디 입력");
+        username.focus();
+        return;
+    }
+    if (password.val() == "") {
+        alert("password 입력");
+        password.focus();
+        return;
+    }
+
     let param = {
-        username: $("#loginUsername").val(),
-        password: $("#loginPassword").val(),
-        remember_me: $("#rememberMe").is(":checked") ? "on" : "off"
+        username: username.val(),
+        password: password.val(),
+        remember_me: rememberMeVal
     };
+
     var from = $("#loginForm");
     var url = from.data("url");
     var csrf = from.data("csrf");
@@ -22,8 +37,7 @@ function check_login(obj) {
             } else {
                 if ((obj == 0 && data.result == "user") || (obj == 0 && data.result == "manager")) {
                     location.href = "/";
-                }
-                else if (obj == 1 && data.result == "manager") {
+                } else if (obj == 1 && data.result == "manager") {
                     location.href = "/management";
                 } else {
                     alert("관리자 권한이 없습니다.");
@@ -33,10 +47,11 @@ function check_login(obj) {
     });
 }
 
-$(document).ready(function() {
-    $('#loginUsername').focus();
-    $('#loginPassword').keypress(function(event) {
-        if (event.which == 13) { 
+
+$(document).ready(function () {
+    $("#loginUsername").focus();
+    $("#loginPassword").keypress(function (event) {
+        if (event.which == 13) {
             check_login(0);
         }
     });
