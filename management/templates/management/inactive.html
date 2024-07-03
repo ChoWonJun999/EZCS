@@ -1,75 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>quitter Users</title>
-    <style>
-        .dashboard {
-            width: 80%;
-            margin: 0 auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("tr[data-url]").click(function () {
-                var url = $(this).data("url");
-                window.location.href = url;
-            });
+{% extends 'base_manager.html' %}
+{% block title %}퇴사 및 휴직 관리{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("tr[data-url]").click(function () {
+            var url = $(this).data("url");
+            window.location.href = url;
         });
-    </script>
-    <form action="" method="GET">
-        <a href="{% url 'management:inactive' %}">전체</a>
-        <a href="{% url 'management:retire'%}">퇴사</a>
-        <a href="{% url 'management:leave'%}">휴직</a>
-        <a href="{% url 'management:reject'%}">거부</a>
-        <div class="dashboard">
-            <input type="text" placeholder="..." style="width:100%;">
-            <button type="submit">검색</button>
-            <br><br>
-            <table>
+    });
+</script>
+
+<form action="" method="POST">
+    <div>
+        <h2>퇴사 및 휴직 관리</h2>
+    </div>
+    <div class="dashboard">
+        <div>
+            <ul>
+                <li>
+                    <input type="text" class="form-control" id="seachText" name="seachText" placeholder="검색창">
+                </li>
+                <li>
+                    <input type="submit" class="btn btn-primary" value="검색">
+                </li>
+            </ul>
+        </div>
+        <div>
+            <td colspan="7">총 {{ data|length }}건</td>
+        </div>
+        <div>
+            <table class="styled-table">
                 <thead>
                     <tr>
-                        <th>Index</th>
-                        <th>Username</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>비활성화</th>
+                        <th>회원번호</th>
+                        <th>이름</th>
+                        <th>아이디</th>
+                        <th>E-mail</th>
+                        <th>소속</th>
+                        <th>역할</th>
+                        <th>가입 요청 일자</th>
+                        <th>처리</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in data %}
-                    <tr data-url="{% url 'management:inactive_detail' item.id %}" style="cursor: pointer;">    
+                    <tr data-url="{% url 'management:allow_detail' item.id %}" class="active-row">
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.username }}</td>
-                        <td>{{ item.name }}</td>
+                        <td>{{ item.ID }}</td>
                         <td>{{ item.email }}</td>
+                        <td>{{ item.소속 }}</td>
+                        <td>{{ item.역할 }}</td>
+                        <td>{{ item.date_joined }}</td>
                         <td>
-                            <a href="#">비활성화</a>
-                            {% comment %} <a href="{% url 'management:reject_user' item.id %}" class="reject-btn">거부</a> {% endcomment %}
+                            <!-- Example single danger button -->
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    Action
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Action</a></li>
+                                    <li><a class="dropdown-item" href="#">Another action</a></li>
+                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
+                                    <li><a class="dropdown-item" href="#">Separated link</a></li>
+                                </ul>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-    </form>
-</body>
-</html>
+    </div>
+</form>
+{% endblock %}

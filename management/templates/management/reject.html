@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Allow Users</title>
+    <title>보류</title>
     <style>
         .dashboard {
             width: 80%;
@@ -58,7 +58,7 @@
                         <td>{{ item.name }}</td>
                         <td>{{ item.email }}</td>
                         <td>
-                            <a href="{% url 'management:active' item.id %}" class="acive-btn">활성화</a>
+                            <a href="{% url 'management:reject_active' item.id %}" class="acive-btn">활성화</a>
                             <a href="" class="delete-btn">삭제</a>
                             {% comment %} <a href="{% url 'management:reject_user' item.id %}" class="reject-btn">거부</a> {% endcomment %}
                         </td>

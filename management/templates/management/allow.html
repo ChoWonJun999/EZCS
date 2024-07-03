@@ -1,64 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Allow Users</title>
-    <style>
-        .dashboard {
-            width: 80%;
-            margin: 0 auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-    </style>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
-<body>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("tr[data-url]").click(function () {
-                var url = $(this).data("url");
-                window.location.href = url;
-            });
+{% extends 'base_manager.html' %}
+{% block title %}가입승인{% endblock %}
+
+{% block content %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("tr[data-url]").click(function () {
+            var url = $(this).data("url");
+            window.location.href = url;
         });
-    </script>
-    <form action="" method="GET">
-        <div class="dashboard">
-            <input type="text" placeholder="..." style="width:100%;">
-            <button type="submit">검색</button>
-            <br><br>
-            <table>
+    });
+</script>
+<form action="" method="GET">
+    <div>
+        <h2>가입 승인 페이지</h2>
+    </div>
+    <div class="dashboard">
+        <div>
+            <ul>
+                <li>
+                    <input type="text" class="form-control" id="seachText" name="seachText" placeholder="검색창">
+                </li>
+                <li>
+                    <button>검색</button>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <td colspan="7">총 {{ data|length }}건</td>
+        </div>
+        <div>
+            <table class="styled-table">
                 <thead>
-                    <tr>
-                        <th>Index</th>
-                        <th>Username</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>가입승인</th>
-                    </tr>
+                    <th>회원번호</th>
+                    <th>이름</th>
+                    <th>아이디</th>
+                    <th>E-mail</th>
+                    <th>소속</th>
+                    <th>역할</th>
+                    <th>가입 요청 일자</th>
+                    <th>회원 가입 승인</th>
                 </thead>
                 <tbody>
                     {% for item in data %}
-                    <tr data-url="{% url 'management:allow_detail' item.id %}" style="cursor: pointer;">    
+                    <tr data-url="{% url 'management:allow_detail' item.id %}" class="active-row">
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.username }}</td>
-                        <td>{{ item.name }}</td>
+                        <td>{{ item.ID }}</td>
                         <td>{{ item.email }}</td>
-                        <td>
-                            <a href="{% url 'management:approve_user' item.id %}" class="approve-btn">승인</a>
+                        <td>{{ item.소속}}</td>
+                        <td>{{ item.역할}}</td>
+                        <td>{{ item.date_joined}}</td>
+                        <td><a href="{% url 'management:approve_user' item.id %}" class="approve-btn">승인</a>
                             {% comment %} <a href="{% url 'management:reject_user' item.id %}" class="reject-btn">거부</a> {% endcomment %}
                         </td>
                     </tr>
@@ -66,6 +58,6 @@
                 </tbody>
             </table>
         </div>
-    </form>
-</body>
-</html>
+    </div>
+</form>
+{% endblock %}

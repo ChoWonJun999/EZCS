@@ -9,15 +9,15 @@
             <h2>회원가입</h2>
         </div>
         <div class="form-floating mb-3 my-form">
-            <input type="text" class="form-control" id="loginUsername" name="loginUsername">
+            <input type="text" class="form-control" id="loginUsername" name="loginUsername" maxlength="41">
             <label for="loginUsername">ID</label>
             <!--추가-->
             <div id="usernameError" class="error-message"></div>
         </div>
         <div class="form-floating mb-3 my-form">
-            <input type="text" class="form-control" id="name" name="name">
+            <input type="text" class="form-control" id="name" name="name"  maxlength="10">
             <label for="name">사용자 이름</label>
-
+            <div id="nameError" class="error-message"></div>
         </div>
         <div>
             <label for="birthdate">생년월일</label>
@@ -26,11 +26,11 @@
             <input type="date" id="birthdate" name="birthdate">
         </div>
         <div class="form-floating mb-3 my-form">
-            <input type="password" class="form-control" id="password" name="password">
+            <input type="password" class="form-control" id="password" name="password"  maxlength="64">
             <label for="password">비밀번호</label>
         </div>
         <div class="form-floating mb-3 my-form">
-            <input type="password" class="form-control" id="pwChk" name="pwChk">
+            <input type="password" class="form-control" id="pwChk" name="pwChk"  maxlength="64">
             <label for="pwChk">비밀번호 확인</label>
             <!--추가-->
             <div id="passwordError" class="error-message"></div>
@@ -38,7 +38,7 @@
 
         <div style="display: flex;">
             <div class="form-floating mb-3 my-form">
-                <input type="email" class="form-control" id="email" name="email">
+                <input type="email" class="form-control" id="email" name="email"  maxlength="41">
                 <label for="email">email</label>
             </div>
             <span style="font-size: 40px;">@</span>

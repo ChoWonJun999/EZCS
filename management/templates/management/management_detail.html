@@ -3,55 +3,62 @@
 
 {% block content %}
 
-<h1>직원정보 수정</h1>
+<h1>직원 상세정보</h1>
 
 <div class="form-floating mb-3">
-    <label for="username">이름</label>
-    <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" disabled>
-</div>
-
-<div class="form-floating mb-3">
-    <label for="email">이메일</label>
-    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+    <label for="name">이름</label>
+    <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}" disabled>
 </div>
 
 <div class="form-floating mb-3">
     <label for="birth">생년월일</label>
-    <input type="date" class="form-control" id="birth" name="birth" value="{{ user.birth }}">
+    <input type="date" class="form-control" id="birth" name="birth" value="{{ user.birth }}" disabled>
 </div>
 
 <div class="form-floating mb-3">
     <label for="phone">전화번호</label>
-    <input type="text" class="form-control" id="phone" name="phone" value="{{ user.phone }}">
+    <input type="text" class="form-control" id="phone" name="phone" value="{{ user.phone }}" disabled>
+</div>
+
+<div class="form-floating mb-3">
+    <label for="username">ID</label>
+    <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" disabled>
+</div>
+
+<div class="form-floating mb-3">
+    <label for="username">PW</label>
+    <input type="text" class="form-control" id="password" name="password" value="{{ user.password }}" disabled>
+</div>
+
+<div class="form-floating mb-3">
+    <label for="email">이메일:</label>
+    <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" disabled>
 </div>
 
 <div class="form-floating mb-3">
     <label for="address">주소</label>
-    <input type="text" class="form-control" id="address" name="address" value="{{ user.address }}">
+    <input type="text" class="form-control" id="address" name="address" value="{{ user.address }}" disabled>
 </div>
 
 <div class="form-floating mb-3">
     <label for="department">소속</label>
-    <input type="text" class="form-control" id="department" name="department" value="{{ user.department }}">
+    <input type="text" class="form-control" id="department" name="department" value="{{ user.department }}" disabled>
 </div>
 
 <div class="form-floating mb-3">
     <label for="role">역할</label>
-    <input type="text" class="form-control" id="role" name="role" value="{{ user.role }}">
+    <input type="text" class="form-control" id="role" name="role" value="{{ user.role }}" disabled>
 </div>
 
 <div class="form-floating mb-3">
     <label for="status">퇴사/휴직 여부</label>
-    <input type="text" class="form-control" id="status" name="status" value="{{ user.status }}">
-</div>
-
-<div class="mb-3">
-    <button class="w-100 btn btn-lg btn-primary" type="submit">수정</button>
+    <input type="text" class="form-control" id="status" name="status" value="{{ user.status }}" disabled>
 </div>
 
 <div class="mb-3">
     <a href="{% url 'management:manager_dashboard' %}" class="w-100 btn btn-lg btn-secondary">사용자 리스트로 돌아가기</a>
     <a href="{% url 'management:management_edit' user.id %}">수정하기</a>
+    
 </div>
 </form>
 {% endblock %}

@@ -7,6 +7,9 @@ from django.db.models import Q
 #관리자 메인페이지 DB에서 정보 받아오는 부분
 def manager_dashboard(request):
     data = User.objects.all()
+    print('='*20)
+    print(data)
+    print('='*20)
     return render(request, 'management/manager_dashboard.html',{'data':data})
 
 #상세페이지
@@ -32,23 +35,12 @@ def manager_edit(request, id):
         user.save()
         return redirect("management:management_detail", id)
 
+
 # 가입승인페이지
 def allow(request):
     data = User.objects.filter(active_status = 0)
-    print('='*20)
-    print(data)
-    print('='*20)
     return render(request, 'management/allow.html',{'data':data})
 
-
-# 가입승인페이지
-def manager_user(request):
-    data = User.objects.filter(active_status = 0)
-    return render(request, 'management/manager_user.html',{'data':data})
-
-# def allow_detail(request, id):
-#     user = User.objects.get(id=id)
-#     return render(request, 'management/management_detail.html', {'user':user})   
 
 def allow_detail(request, id):
     user = get_object_or_404(User, id=id)
@@ -64,7 +56,31 @@ def approve_user(request, id):
     user.save()
     return redirect('management:allow')
 
-def active(request, id):
+#비활성화 페이지 다시 활성화 시킬때 
+def inactive_active(request, id):
+    user = get_object_or_404(User, id=id)
+    print(user.active_status)
+    user.active_status = 1
+    user.save()    
+    return redirect('management:inactive')
+
+#퇴사 페이지 다시 활성화 시킬때
+def retire_active(request, id):
+    user = get_object_or_404(User, id=id)
+    print(user.active_status)
+    user.active_status = 1
+    user.save()
+    return redirect('management:retire')
+
+#휴직 페이지 다시 활성화 시킬때
+def leave_active(request, id):
+    user = get_object_or_404(User, id=id)
+    print(user.active_status)
+    user.active_status = 1
+    user.save()
+    return redirect('management:leave')
+
+def reject_active(request, id):
     user = get_object_or_404(User, id=id)
     print(user.active_status)
     user.active_status = 1
@@ -121,12 +137,20 @@ def leave_detail(request, id):
     print(data.active_status)
     return render(request, 'management/retire_detail.html', {'data':data})
 
-#휴직자 페이지
+#보류 페이지
 def reject(request):
     data = User.objects.filter(Q(active_status = 4)) #여기서 사용하는 Q는 장고에서 쓰는 or
     return render(request, 'management/reject.html', {'data':data})
 
+#보류 당한 유저 상세페이지
 def reject_detail(request, id):
     data = get_object_or_404(User, id=id)
     print(data.active_status)
-    return render(request, 'management/reject_detail.html', {'data':data})            
+    return render(request, 'management/reject_detail.html', {'data':data})
+
+def running(request, id):
+    data = get_object_or_404(User, id=id)
+    print(data.active_status)
+    data.active_status = request.GET.get('active_staus')
+    data.save()
+    return render(request, )           

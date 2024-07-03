@@ -1,4 +1,22 @@
 function signup() {
+    let username = $("#loginUsername").val();
+    let name = $("#name").val();
+
+    if (containsKorean(username)) {
+        $("#usernameError").text("아이디는 한글을 포함할 수 없습니다.");
+        $("#usernameError").show();
+        return false;
+    } else {
+        $("#usernameError").hide();
+    }
+
+    if (!isKorean(name)) {
+        $("#nameError").text("이름은 한글만 포함해야 합니다.");
+        $("#nameError").show();
+        return false;
+    } else {
+        $("#nameError").hide();
+    }
     let param = {
         username: $("#loginUsername").val(),
         password: $("#password").val(),
@@ -37,6 +55,16 @@ function signup() {
         }
                 
     });
+}
+
+function isKorean(text) {
+    var koreanRegex = /^[가-힣]+$/;
+    return koreanRegex.test(text);
+}
+
+function containsKorean(text) {
+    var koreanRegex = /[ㄱ-ㅎㅏ-ㅣ가-힣]/;
+    return koreanRegex.test(text);
 }
 
 function displayErrors(errors) {
