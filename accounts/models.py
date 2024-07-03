@@ -40,6 +40,13 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_comment="Auto created ID"
     )
     
+    username = models.CharField(
+        max_length=16,
+        unique=True,
+        verbose_name="ID to use when login",
+        db_comment="ID to use when login for the user"
+    )
+    
     password = models.CharField(
         max_length=128,
         verbose_name="Password",
@@ -59,11 +66,24 @@ class User(AbstractBaseUser, PermissionsMixin):
         db_comment="Administrator status(0:General User, 1:Administrator User)"
     )
     
-    username = models.CharField(
-        max_length=16,
-        unique=True,
-        verbose_name="ID to use when login",
-        db_comment="ID to use when login for the user"
+    birth_date = models.DateField(
+        verbose_name="User's Birth Date",
+        db_comment="User's Birth Date"
+    )
+    
+    phone_number = models.CharField(
+        verbose_name="User's Phone Number",
+        db_comment="User's Phone Number"
+    )
+    
+    address = models.CharField(
+        verbose_name="User's Address",
+        db_comment="User's Address"
+    )
+    
+    department = models.CharField(
+        verbose_name="User's Department",
+        db_comment="User's Department"
     )
     
     name = models.CharField(
