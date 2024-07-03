@@ -72,16 +72,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     
     phone_number = models.CharField(
+        max_length=11,
         verbose_name="User's Phone Number",
         db_comment="User's Phone Number"
     )
     
     address = models.CharField(
+        max_length=128,
         verbose_name="User's Address",
         db_comment="User's Address"
     )
     
     department = models.CharField(
+        max_length=32,
         verbose_name="User's Department",
         db_comment="User's Department"
     )
