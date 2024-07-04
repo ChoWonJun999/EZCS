@@ -12,7 +12,7 @@
             <input type="text" class="form-control" id="loginUsername" name="loginUsername" maxlength="41">
             <label for="loginUsername">ID</label>
             <!--추가-->
-            <div id="usernameError" class="error-message"></div>
+            <div id="usernameError" class="invalid-feedback"></div>        
         </div>
         <div class="form-floating mb-3 my-form">
             <input type="text" class="form-control" id="name" name="name" maxlength="10">
@@ -40,12 +40,13 @@
             <div class="form-floating mb-3 my-form">
                 <input type="email" class="form-control" id="email" name="email" maxlength="41">
                 <label for="email">email</label>
+                <div id="emailError" class="invalid-feedback"></div>
             </div>
             <span style="font-size: 40px;">@</span>
             <div class="form-floating mb-3 my-form" style="display: flex;">
-                <input type="text" class="form-control" id="emailadd" name="emailadd" data-bs-toggle="dropdown" onclick="toggleDropdown()" value="naver.com" readonly="readonly" style="background-color: #000; font-family: white;">
+                <input type="text" class="form-control" id="emailadd" name="emailadd" data-bs-toggle="dropdown" onclick="toggleDropdown()" value="naver.com"  style="background-color: #fff; color: #000; font-family: Arial, sans-serif;">
                 <label for="emailadd">emailadd</label>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" id="emailDropdown">
                     <li><a class="dropdown-item" href="#" onclick="setEmailDomain('naver.com')">naver.com</a></li>
                     <li><a class="dropdown-item" href="#" onclick="setEmailDomain('gmail.com')">gmail.com</a></li>
                     <li><a class="dropdown-item" href="#" onclick="setEmailDomain('daum.net')">daum.net</a></li>
@@ -63,6 +64,7 @@
                 <input type="text" class="form-control mb-2" name="user_add1" id="UserAdd1" maxlength="40" placeholder="기본 주소를 입력하세요" required disabled>
                 <div class="invalid-feedback">주소를 입력해주시기 바랍니다!</div>
                 <input type="text" class="form-control" name="user_add2" id="UserAdd2" maxlength="40" placeholder="상세 주소를 입력하세요">
+                <div id="userAdd2Error" class="error-message"></div>
             </div>
         </div>
 

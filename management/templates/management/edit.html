@@ -28,7 +28,7 @@
         </div>
 
         <div>
-            <label for="username">PW</label>
+            <label for="password">PW</label>
             <input type="text" id="password" name="password" value="{{ user.password }}">
         </div>
 
@@ -47,18 +47,31 @@
         </div>
         
         <div>
-            <label for="role">역할</label>
-            <input type="text" id="role" name="role" value="{{ user.role }}">
+            <label for="is_superuser">역할</label>
+            <input type="text" id="is_superuser" name="is_superuser" value="{{ user.is_superuser }}">
         </div>
         
-        <div>
-            <label for="status">퇴사/휴직 여부</label>
-            <input type="text" id="status" name="status" value="{{ user.status }}" disabled>
+        {% comment %} <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                퇴사/휴직 여부 선택
+            </button>
+            <ul class="dropdown-menu" >
+                <li><a class="dropdown-item" href="#">휴직</a></li>
+                <li><a class="dropdown-item" href="#">퇴사</a></li>
+                <li><a class="dropdown-item" href="#">보류</a></li>
+                <li><a class="dropdown-item" href="#">거부</a></li>
+            </ul>
+        </div> {% endcomment %}
+
+
+        <div class="form-group mt-2">
+            <label for="status">활동상태</label>
+            <input type="text" id="status" name="status" class="form-control" value="{{ user.active_status }}">
         </div>
+        
 
         <div>
-            <button type="submit">저장하기</button>
-            <input class="w-100 btn btn-lg btn-primary" type="submit" value="수정">
+            <input class="w-100 btn btn-lg btn-primary" type="submit" value="수정정보 저장하기">
         </div>
 
         <div>

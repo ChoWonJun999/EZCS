@@ -4,223 +4,86 @@
 {% block content %}
 
 <!-- 직원용 대시보드 내용 -->
-{% comment %} <link rel="stylesheet" href="{% static 'education/css/styles.css' %}"> {% endcomment %}
 <div class="dashboard">
     <div class="consultation-container">
         <div class="customer-info">
             <h2>고객 정보</h2>
-            <ul>
-                <li>고객명</li>
-                <li>생년월일</li>
-                <li>전화번호</li>
-                <li>주소</li>
-                <li>가입일</li>
-            </ul>
-            <div class="buttons">
-                <button class="save-button">저장</button>
-                <button class="save-button">초기화</button>
-                <button class="cancel-button">취소</button>
-            </div>
-        </div>
+            <form id="customer-form">
+                <ul>
+                    <li>
+                        <label for="customer-name">고객명</label>
+                        <input type="text" id="customer-name" name="customer-name" disabled>
+                    </li>
+                    <li>
+                        <label for="birthdate">생년월일</label>
+                        <input type="date" id="birthdate" name="birthdate" disabled>
+                    </li>
+                    <li>
+                        <label for="phone">전화번호</label>
+                        <input type="tel" id="phone" name="phone" disabled>
+                    </li>
+                    <li>
+                        <label for="address">주소</label>
+                        <input type="text" id="address" name="address" disabled>
+                    </li>
+                    <li>
+                        <label for="join-date">가입일</label>
+                        <input type="date" id="join-date" name="join-date" disabled>
+                    </li>
+                </ul>
+                <div class="buttons">
+                    <input type="button" class="edit-button" value="수정" onclick="editCustomerInfo()">
+                    <input type="button" class="save-button" value="저장" onclick="saveCustomerInfo()" style="display: none;">
+                    <input type="reset" class="save-button" value="초기화" style="display: none;">
+                    <input type="button" class="cancel-button" value="취소" onclick="cancelEdit()" style="display: none;">
+                </div>
+            </form>
+        </div>        
         <div class="stt-content">
             <h2>상담내용 변환 창</h2>
             <div class="stt">
-                <button id="start-button">마이크 연결</button>
-                <button id="stop-button" disabled>마이크 연결 끊기</button>
+                <input type="button" id="start-button" value="마이크 연결">
+                <input type="button" id="stop-button" value="마이크 연결 끊기" disabled>
                 <div id="transcription">여기에 음성 입력 내용이 표시됩니다...</div>
             </div>
             <div class="recommended-answer">추천 응대 멘트</div>
         </div>
         <div class="memo-section">
             <h2>메모창</h2>
-            <div class="memo-content">
-                <p>메모장</p>
-            </div>
+            <form id="memo-form">
+                <textarea id="memo-text" name="memo-text" rows="10" cols="50" disabled></textarea>
+                <div class="buttons">
+                    <input type="button" class="edit-button" value="수정" onclick="editMemo()">
+                    <input type="button" class="save-button" value="저장" onclick="saveMemo()" style="display: none;">
+                    <input type="button" class="cancel-button" value="취소" onclick="cancelMemoEdit()" style="display: none;">
+                </div>
+            </form>
         </div>
         <div class="consultation-content">
             <h2>문의/조치 내용</h2>
-            <div class="memo-content">
-                <div class="memo-block">문의 내용</div>
-                <div class="memo-block">조치 내용</div>
-            </div>
+            <form id="consultation-form">
+                <div class="memo-content">
+                    <div class="memo-block">
+                        <label for="inquiry-text">문의 내용</label>
+                        <textarea id="inquiry-text" name="inquiry-text" rows="5" cols="50" disabled></textarea>
+                    </div>
+                    <div class="memo-block">
+                        <label for="action-text">조치 내용</label>
+                        <textarea id="action-text" name="action-text" rows="5" cols="50" disabled></textarea>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <input type="button" class="edit-button" value="수정" onclick="editConsultation()">
+                    <input type="button" class="save-button" value="저장" onclick="saveConsultation()" style="display: none;">
+                    <input type="reset" class="save-button" value="초기화" style="display: none;">
+                    <input type="button" class="cancel-button" value="취소" onclick="cancelConsultationEdit()" style="display: none;">
+                </div>
+            </form>
         </div>
+    </div>
 </div>
 
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const startButton = document.getElementById('start-button');
-        const stopButton = document.getElementById('stop-button');
-        const transcription = document.getElementById('transcription');
-    
-        let mediaRecorder;
-        let fullAudioChunks = [];
-        let audioStream;
-        let interval;
-    
-        startButton.addEventListener('click', () => {
-            navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(stream => {
-                    audioStream = stream;
-                    mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-                    mediaRecorder.start();
-    
-                    interval = setInterval(() => {
-                        if (mediaRecorder.state === 'recording') {
-                            mediaRecorder.requestData();
-                        }
-                    }, 5000);  // 5초마다 데이터 요청
-    
-                    mediaRecorder.ondataavailable = event => {
-                        if (event.data.size > 0) {
-                            // fullAudioChunks에 현재 청크를 추가
-                            fullAudioChunks.push(event.data);
-    
-                            // 청크 데이터의 길이 로그 출력
-                            console.log('Audio chunk size:', event.data.size);
-    
-                            // 청크 데이터를 비동기적으로 전송
-                            sendAudioChunk(event.data);
-                        }
-                    };
-    
-                    startButton.disabled = true;
-                    stopButton.disabled = false;
-                })
-                .catch(error => {
-                    console.error('Error accessing media devices.', error);
-                });
-        });
-    
-        stopButton.addEventListener('click', () => {
-            if (mediaRecorder) {
-                mediaRecorder.stop();
-            }
-    
-            if (audioStream) {
-                audioStream.getTracks().forEach(track => track.stop());
-            }
-    
-            clearInterval(interval);
-    
-            const fullAudioBlob = new Blob(fullAudioChunks, { type: 'audio/webm' });
-            fullAudioChunks = [];
-    
-            const formData = new FormData();
-            formData.append('audio', fullAudioBlob);
-    
-            fetch('/counseling/stt_chat/', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                if (data.output) {
-                    transcription.innerHTML += '<br>Final Output: ' + data.output;
-                } else if (data.error) {
-                    transcription.innerHTML += 'Error: ' + data.error + '<br>';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                transcription.innerHTML += 'Error: ' + error.message + '<br>';
-            });
-    
-            startButton.disabled = false;
-            stopButton.disabled = true;
-        });
-    
-        function sendAudioChunk(chunk) {
-            const formData = new FormData();
-            formData.append('audio', chunk);
-    
-            fetch('/counseling/stt/', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRFToken': getCookie('csrftoken')
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log(data);
-                if (data.text) {
-                    transcription.innerHTML += data.text + '<br>';
-                } else if (data.error) {
-                    transcription.innerHTML += 'Error: ' + data.error + '<br>';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                transcription.innerHTML += 'Error: ' + error.message + '<br>';
-            });
-        }
-    
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-    });
-</script>
-
-<style>
-    .consultation-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: 1fr 1fr;
-        gap: 20px;
-    }
-
-    .customer-info, .stt-content, .memo-section, .consultation-content {
-        border: 1px solid #ccc;
-        padding: 20px;
-        box-shadow: 2px 2px 12px #aaa;
-        border-radius: 8px;
-    }
-
-    .customer-info {
-        grid-column: 1 / 2;
-        grid-row: 1 / 2;
-    }
-
-    .stt-content {
-        grid-column: 2 / 3;
-        grid-row: 1 / 2;
-    }
-
-    .memo-section {
-        grid-column: 1 / 2;
-        grid-row: 2 / 3;
-    }
-
-    .consultation-content {
-        grid-column: 2 / 3;
-        grid-row: 2 / 3;
-    }
-</style>
+<script src="{% static 'counseling/js/scripts.js' %}"></script>
+<link rel="stylesheet" href="{% static 'counseling/css/styles.css' %}">
 
 {% endblock %}

@@ -23,7 +23,7 @@ function check_login(obj) {
     var from = $("#loginForm");
     var url = from.data("url");
     var csrf = from.data("csrf");
-
+    
     $.ajax({
         url: url,
         type: "post",
@@ -47,6 +47,7 @@ function check_login(obj) {
         }
     });
 }
+
 
 $(document).ready(function () {
     $("#loginUsername").focus();

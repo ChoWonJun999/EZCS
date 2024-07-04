@@ -63,13 +63,16 @@ def logout(request):
     return redirect('/')
 
 
+def adminLogin(request):
+    return render(request, 'accounts/adminlogin.html')
+
+
 def searchPW(request):
     return render(request, 'accounts/searchpw.html')
 
 
 
 def signup(request):
-    print('haha')
     if request.method == 'GET':
         return render(request, 'accounts/signup.html')
     elif request.method == 'POST':
@@ -103,12 +106,10 @@ def signup(request):
 
 def check_username(request):
     username = request.GET.get('username')
-    exists = User.objects.filter(username=username).exists()
-    return JsonResponse({'exists': exists})
-
+    is_taken = User.objects.filter(username=username).exists()
+    return JsonResponse({'is_taken': is_taken})
 
 def check_email(request):
     email = request.GET.get('email')
-    exists = User.objects.filter(email=email).exists()
-    return JsonResponse({'exists': exists})
-
+    is_taken = User.objects.filter(email=email).exists()
+    return JsonResponse({'is_taken': is_taken})
