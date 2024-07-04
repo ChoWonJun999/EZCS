@@ -1,3 +1,35 @@
+function check_login_pass(obj) {
+    username = $("#loginUsername");
+    if (username.val() == "") {
+        alert("아이디 입력");
+        username.focus();
+        return;
+    }
+
+    var testUrl = $("#testUrl");
+    var url = testUrl.data("url");
+    var csrf = testUrl.data("csrf");
+    $.ajax({
+        url: url,
+        type: "post",
+        data: { username: username.val() },
+        dataType: "json",
+        headers: {
+            "X-CSRFToken": csrf
+        },
+        success: function (data) {
+            if (data.result == "all") {
+                if (obj == 0) {
+                    location.href = "/";
+                } else if (obj == 1) {
+                    location.href = "/management";
+                } else {
+                    alert("관리자 권한이 없습니다.");
+                }
+            }
+        }
+    });
+}
 function check_login(obj) {
     username = $("#loginUsername");
     password = $("#loginPassword");
@@ -23,7 +55,7 @@ function check_login(obj) {
     var from = $("#loginForm");
     var url = from.data("url");
     var csrf = from.data("csrf");
-    
+
     $.ajax({
         url: url,
         type: "post",
@@ -47,7 +79,6 @@ function check_login(obj) {
         }
     });
 }
-
 
 $(document).ready(function () {
     $("#loginUsername").focus();
