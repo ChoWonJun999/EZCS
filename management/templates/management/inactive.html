@@ -45,7 +45,7 @@
                 </thead>
                 <tbody>
                     {% for item in data %}
-                    <tr data-url="{% url 'management:detail' item.id %}" class="active-row">
+                    <tr data-url="{% url 'management:management_detail' item.id %}" class="active-row">
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.name }}</td>
                         <td>{{ item.username }}</td>

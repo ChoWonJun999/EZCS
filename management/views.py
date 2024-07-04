@@ -7,7 +7,7 @@ from django.db.models import Q
 #관리자 메인페이지 DB에서 정보 받아오는 부분
 def manager_dashboard(request):
     data = User.objects.all()
-    return render(request, 'management/dashboard.html',{'data':data})
+    return render(request, 'management/manager_dashboard.html',{'data':data})
 
 #상세페이지
 def manager_detail(request, id):
@@ -43,7 +43,6 @@ def allow(request):
     data = User.objects.filter(active_status = 0)
     return render(request, 'management/allow.html',{'data':data})
 
-
 #승인
 def approve_user(request, id):
     user = User.objects.get(id=id)
@@ -51,6 +50,7 @@ def approve_user(request, id):
     user.active_status = 1  
     user.save()  # 변경 사항 저장
     return render(request, 'management/allow.html',{'data':data}) 
+
 
 
 #활동중인 인원 구분 및 보류 위한 페이지
@@ -105,11 +105,12 @@ def reject_active(request, id):
     user.save()
     return render(request, 'management/detail.html', {'data':data})
 
+#테스트페이지
 def test(request):
     data = User.objects.all()
     return render(request, 'management/test.html',{'data':data})
 
-
+#검색로직
 def search(request):
     query = request.POST.get('seachText', '')
     if query:
@@ -117,5 +118,3 @@ def search(request):
     else:
         results = User.objects.all()
     return render(request, 'management/test.html', {'data': results, 'query': query})
-
-         

@@ -2,66 +2,77 @@
 {% block title %}직원정보 수정 페이지{% endblock %}
 
 {% block content %}
-
 <h1>직원 상세정보</h1>
 <form action="" method="POST">
+    {% csrf_token %}
     <div class="form-floating mb-3">
         <label for="name">이름</label>
-        <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}" disabled>
+        <input type="text" class="form-control" id="name" name="name" value="{{ data.name }}" disabled>
+
     </div>
 
     <div class="form-floating mb-3">
-        <label for="birth">생년월일</label>
-        <input type="date" class="form-control" id="birth" name="birth" value="{{ user.birth }}" disabled>
+        <label for="birth_date">생년월일</label>
+        <input type="date" class="form-control" id="birth_date" name="birth_date" value="{{ data.birth_date|date:'Y-m-d' }}" disabled>
     </div>
 
     <div class="form-floating mb-3">
         <label for="phone">전화번호</label>
-        <input type="text" class="form-control" id="phone" name="phone" value="{{ user.phone }}" disabled>
+        <input type="text" class="form-control" id="phone" name="phone" value="{{ data.phone }}" disabled>
     </div>
 
     <div class="form-floating mb-3">
         <label for="username">ID</label>
-        <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" disabled>
+        <input type="text" class="form-control" id="username" name="username" value="{{ data.username }}" disabled>
     </div>
 
     <div class="form-floating mb-3">
         <label for="username">PW</label>
-        <input type="text" class="form-control" id="password" name="password" value="{{ user.password }}" disabled>
+        <input type="text" class="form-control" id="password" name="password" value="{{ data.password }}" disabled>
     </div>
 
     <div class="form-floating mb-3">
         <label for="email">이메일:</label>
-        <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" disabled>
+        <input type="email" class="form-control" id="email" name="email" value="{{ data.email }}" disabled>
     </div>
 
     <div class="form-floating mb-3">
         <label for="address">주소</label>
-        <input type="text" class="form-control" id="address" name="address" value="{{ user.address }}" disabled>
+        <input type="text" class="form-control" id="address" name="address" value="{{ data.address }}" disabled>
     </div>
 
     <div class="form-floating mb-3">
         <label for="department">소속</label>
-        <input type="text" class="form-control" id="department" name="department" value="{{ user.department }}"
+        <input type="text" class="form-control" id="department" name="department" value="{{ data.department }}"
             disabled>
     </div>
 
     <div class="form-floating mb-3">
         <label for="is_superuser">역할</label>
-        <input type="text" class="form-control" id="is_superuser " name="is_superuser " value="{{ user.is_superuser}}"
+        <input type="text" class="form-control" id="is_superuser " name="is_superuser " value="{{ data.is_superuser}}"
             disabled>
     </div>
 
     <div class="form-floating mb-3">
         <label for="active_status">활동상태</label>
-        <input type="text" class="form-control" id="active_status" name="active_status" value="{{ user.active_status }}"
+        <input type="text" class="form-control" id="active_status" name="active_status" value="{{ data.active_status }}"
             disabled>
+        <form>
+            <select name="subject" disabled>
+                <option value="C">C언어</option>
+                <option value="JAVA">JAVA</option>
+                <option value="HTML" selected>HTML</option>
+                <option value="CSS">CSS</option>
+            </select>
+        </form>
     </div>
 
     <div class="mb-3">
         <a href="{% url 'management:dashboard' %}" class="w-100 btn btn-lg btn-secondary">사용자 리스트로 돌아가기</a>
-        <a href="{% url 'management:edit' user.id %}">수정하기</a>
-
+        <a href="{% url 'management:edit' data.id %}">수정하기</a>
+    </div>
+    <div>
+        <a href="{% url 'management:inactive' %}">뒤로 돌아가기</a>
     </div>
 </form>
 {% endblock %}
