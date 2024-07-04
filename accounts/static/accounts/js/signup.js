@@ -34,7 +34,15 @@ function signup() {
         $("#passwordError").hide();
     }
 
-    // email: $("#email").val() + "@" + $("#emailadd").val(),
+
+    if (password !== password_confirm) {
+        $("#passwordConfirmError").text("비밀번호가 일치하지 않습니다.");
+        $("#passwordConfirmError").show();
+        return false;
+    } else {
+        $("#passwordConfirmError").hide();
+    }
+
     $("#addressCode").removeAttr("disabled");
 
 
