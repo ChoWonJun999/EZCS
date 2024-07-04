@@ -2,15 +2,9 @@
 {% block title %}가입승인{% endblock %}
 
 {% block content %}
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("tr[data-url]").click(function () {
-            var url = $(this).data("url");
-            window.location.href = url;
-        });
-    });
+
 </script>
-<form action="" method="GET">
+<form action="" method="POST">
     <div>
         <h2>가입 승인 페이지</h2>
     </div>
@@ -42,13 +36,13 @@
                 </thead>
                 <tbody>
                     {% for item in data %}
-                    <tr data-url="{% url 'management:allow_detail' item.id %}" class="active-row">
+                    <tr class="active-allow">
                         <td>{{ forloop.counter }}</td>
+                        <td>{{ item.name }}</td>
                         <td>{{ item.username }}</td>
-                        <td>{{ item.ID }}</td>
                         <td>{{ item.email }}</td>
                         <td>{{ item.소속}}</td>
-                        <td>{{ item.역할}}</td>
+                        <td>{{ item.is_superuser}}</td>
                         <td>{{ item.date_joined}}</td>
                         <td><a href="{% url 'management:approve_user' item.id %}" class="approve-btn">승인</a>
                             {% comment %} <a href="{% url 'management:reject_user' item.id %}" class="reject-btn">거부</a> {% endcomment %}

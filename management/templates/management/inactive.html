@@ -40,34 +40,20 @@
                         <th>소속</th>
                         <th>역할</th>
                         <th>가입 요청 일자</th>
-                        <th>처리</th>
+                        <th>활동상태</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for item in data %}
-                    <tr data-url="{% url 'management:allow_detail' item.id %}" class="active-row">
+                    <tr data-url="{% url 'management:detail' item.id %}" class="active-row">
                         <td>{{ forloop.counter }}</td>
+                        <td>{{ item.name }}</td>
                         <td>{{ item.username }}</td>
-                        <td>{{ item.ID }}</td>
                         <td>{{ item.email }}</td>
-                        <td>{{ item.소속 }}</td>
-                        <td>{{ item.역할 }}</td>
+                        <td>{{ item.department }}</td>
+                        <td>{{ item.is_superuser }}</td>
                         <td>{{ item.date_joined }}</td>
-                        <td>
-                            <!-- Example single danger button -->
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    Action
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Action</a></li>
-                                    <li><a class="dropdown-item" href="#">Another action</a></li>
-                                    <li><a class="dropdown-item" href="#">Something else here</a></li>
-                                    <li><a class="dropdown-item" href="#">Separated link</a></li>
-                                </ul>
-                            </div>
-                        </td>
+                        <td>{{ item.active_status }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

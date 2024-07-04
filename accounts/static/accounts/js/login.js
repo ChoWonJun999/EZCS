@@ -48,6 +48,7 @@ function check_login(obj) {
     });
 }
 
+
 $(document).ready(function () {
     $("#loginUsername").focus();
     $("#loginPassword").keypress(function (event) {
