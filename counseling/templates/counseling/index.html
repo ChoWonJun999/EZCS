@@ -42,8 +42,8 @@
         <div class="stt-content">
             <h2>상담내용 변환 창</h2>
             <div class="stt">
-                <input type="button" id="start-button" value="마이크 연결">
-                <input type="button" id="stop-button" value="마이크 연결 끊기" disabled>
+                <input type="button" id="start-button" value="마이크 연결" onclick="startCounseling()">
+                <input type="button" id="stop-button" value="마이크 연결 끊기" onclick="stopCounseling()" disabled>
                 <div id="transcription">여기에 음성 입력 내용이 표시됩니다...</div>
             </div>
             <div class="recommended-answer">추천 응대 멘트</div>
