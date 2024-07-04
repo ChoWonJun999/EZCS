@@ -42,6 +42,7 @@ function signup() {
     } else {
         $("#passwordConfirmError").hide();
     }
+
     $("#addressCode").removeAttr("disabled");
 
 

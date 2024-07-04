@@ -12,6 +12,7 @@ class Chatbot:
                 db_path,
                 category=None,
                 model_id='gpt-3.5-turbo',
+                behavior_policy=None,
                 THRESHOLD=0.4
                 ):
         """
@@ -23,6 +24,7 @@ class Chatbot:
             model_id (str): model id
             api_key (_type_): openai api key
             db_path (str, optional): chroma db path
+            behavior_policy (str): systemMessage
         """
        
         self.chat_model = ChatOpenAI(model=model_id, api_key=api_key)
@@ -33,6 +35,12 @@ class Chatbot:
         self.THRESHOLD = THRESHOLD
        
         self.memory = ChatMessageHistory()
+        self.behavior_policy = behavior_policy
+
+        if self.behavior_policy != None:
+            self.messages = [
+                SystemMessage(self.behavior_policy) 
+            ]
        
        
     def chat(self, query):
@@ -62,7 +70,11 @@ class Chatbot:
                     continue
                 prompt += f"\n\n 참고자료 {num}: " + doc.page_content
                 num += 1
-           
-        prompt = [HumanMessage(content=prompt, history=self.memory.messages)]
+        
+        if self.behavior_policy != None:
+            prompt = self.messages + [HumanMessage(content=prompt, history=self.memory.messages)]
+            
+        else:
+            prompt = [HumanMessage(content=prompt, history=self.memory.messages)]
        
         return prompt

@@ -1,4 +1,4 @@
-/* education/static/education/css/styles.css */
+/* education/static/education/css/chat.css */
 
 body {
     font-family: Arial, sans-serif;
@@ -6,52 +6,36 @@ body {
     padding: 20px;
     background-color: #f4f5f7;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     height: 100vh;
 }
 
 .dashboard {
-    flex: 1; /* 풋터를 제외한 전체 공간 채우기 */
     display: flex;
     flex-direction: column;
-    gap: 20px;
-}
-
-.top-section {
-    display: flex;
-    gap: 20px;
+    width: 100%;
+    max-width: 1200px;
+    height: 100%;
+    align-items: center;
 }
 
 .sections {
     display: flex;
+    justify-content: space-between;
     gap: 20px;
+    width: 100%;
     flex-grow: 1;
 }
 
 .section {
     flex: 1;
-    padding: 20px;
-    background-color: yellow;
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-}
-
-.top-block {
-    padding: 10px;
-    background-color: #d0e1f9;
-    border-radius: 5px;
-    height: 50px;
-    flex: 1;
-}
-
-.chat-section,
-.chat-section-readonly {
-    background-color: #fff;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
+    padding: 20px;
 }
 
 .chat-header {
@@ -60,101 +44,32 @@ body {
     color: white;
     text-align: center;
     font-weight: bold;
-}
-
-.chat-messages {
-    flex: 1;
-    padding: 10px;
-    overflow-y: auto;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-}
-
-.chat-input {
-    display: flex;
-    border-top: 1px solid #ddd;
-}
-
-.chat-input input {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-top: 1px solid #ddd;
-}
-
-.chat-input button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.chat-input button:hover {
-    background-color: #0056b3;
-}
-
-.chat-section-readonly .chat-input {
-    display: none;
-}
-
-.chat-message {
-    padding: 5px;
-    margin-bottom: 5px;
-    background-color: #f1f1f1;
-    border-radius: 4px;
+    border-radius: 5px 5px 0 0;
 }
 
 .chat-container {
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     background-color: #f9f9f9;
-}
-.chat-box {
-    width: 100%;
-    height: 400px;
-    overflow-y: scroll;
     border: 1px solid #ccc;
+    border-radius: 0 0 5px 5px;
+    overflow: hidden;
+}
+
+.chat-box {
+    flex: 1;
     padding: 10px;
-    border-radius: 10px;
+    overflow-y: scroll;
     background-color: #fff;
 }
-.message {
-    display: flex;
-    margin: 10px 0;
-    padding: 10px;
-    border-radius: 10px;
-    max-width: 80%;
-    word-wrap: break-word;
-    align-self: flex-start;
-}
 
-.message.user {
-    background-color: #dcf8c6;
-    text-align: right;
-    margin-left: auto;
-    align-self: flex-end; /* 사용자 메시지는 오른쪽에 정렬 */
-}
-
-.message.bot {
-    background-color: #ececec;
-    text-align: left;
-    margin-right: auto;
-    align-self: flex-start; /* 봇 메시지는 왼쪽에 정렬 */
-}
-
-.chat-box {
-    display: flex;
-    flex-direction: column; /* 세로 방향으로 메시지 정렬 */
-}
 .input-container {
     display: flex;
-    margin-top: 20px;
+    padding: 10px;
+    border-top: 1px solid #ccc;
 }
+
 .input-container textarea {
     flex: 1;
     padding: 10px;
@@ -162,6 +77,7 @@ body {
     border-radius: 5px;
     resize: none;
 }
+
 .input-container button {
     padding: 10px 20px;
     border: none;
@@ -170,22 +86,32 @@ body {
     border-radius: 5px;
     cursor: pointer;
     margin-left: 10px;
+    transition: background-color 0.3s;
 }
-.category-select {
-    margin-bottom: 20px;
+
+.input-container button:hover {
+    background-color: #0056b3;
+}
+
+.message {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.category-select select {
-    flex: 1;
-    margin-right: 10px;
-}
-.category-select button {
-    padding: 10px 20px;
-    border: none;
-    background-color: #28a745;
-    color: #fff;
+    margin: 10px 0;
+    padding: 10px;
     border-radius: 5px;
-    cursor: pointer;
+    max-width: 80%;
+    word-wrap: break-word;
+    align-self: flex-start;
+}
+
+.message.user {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+}
+
+.message.bot {
+    background-color: #ececec;
+}
+
+.chat-section-readonly .input-container {
+    display: none;
 }

@@ -1,0 +1,66 @@
+{% extends 'base_manager.html' %}
+{% block title %}직원정보 상세보기 디테일 모두{% endblock %}
+<script>
+    function updateStatus(newStatus) {
+    }
+    </script>
+    
+{% block content %}
+<form action="" method="POST">
+    {% csrf_token %}
+    <div>
+        <h1>{{ data.name }}</h1>
+    </div>
+    <div>
+        생년월일: {{ data.birth }}<br>
+    </div>
+    <div>
+        전화번호: {{ data.phone }}<br>
+    </div>
+    <div>
+        ID: {{ data.username }}<br>
+    </div>
+    <div>
+        PW: {{ data.password }}<br>
+    </div>
+    <div>
+        이메일: {{ data.email }}<br>
+    </div>
+    <div>
+        주소: {{ data.address }}<br>
+    </div>
+    <div>
+        소속: {{ data.department }}<br>
+    </div>
+    <div>
+        역할: {{ data.is_superuser }}<br>
+    </div>
+    <div>
+        활동상태: {{ data.active_status }}<br>
+    </div>
+
+    <div id="buttonContainer">
+        {% if data.active_status == 1 %}
+        <input type="button" class="btn btn-primary" value="휴직" onclick="updateStatus(2)" data.active-status="2">
+        <input type="button" class="btn btn-primary" value="퇴사" onclick="updateStatus(3)" data.active-status="3">
+        <!-- <input type="button" class="btn btn-primary" value="보류" onclick="updateStatus(4)" data.active-status="4"> -->
+        {% elif data.active_status == 2 %}
+        <input type="button" class="btn btn-primary" value="복직" onclick="updateStatus(1)">
+        <input type="button" class="btn btn-primary" value="퇴사" onclick="updateStatus(3)">
+        <!-- <input type="button" class="btn btn-primary" value="보류" onclick="updateStatus(4)"> -->
+        {% elif data.active_status == 3 %}
+        <input type="button" class="btn btn-primary" value="복직" onclick="updateStatus(1)">
+        <input type="button" class="btn btn-primary" value="휴직자" onclick="updateStatus(2)">
+        <!-- <input type="button" class="btn btn-primary" value="보류" onclick="updateStatus(4)"> -->
+        {% elif data.active_status == 4 %}
+        <input type="button" class="btn btn-primary" value="승인O" onclick="updateStatus(1)">
+        <input type="button" class="btn btn-primary" value="휴직자" onclick="updateStatus(2)">
+        <input type="button" class="btn btn-primary" value="퇴사자" onclick="updateStatus(3)">
+        {% endif %}
+    </div>
+
+    <div>
+        <a href="{% url 'management:inactive' %}">뒤로 돌아가기</a>
+    </div>
+</form>
+{% endblock %}
