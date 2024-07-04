@@ -23,7 +23,7 @@ function signup() {
     let password_confirm = $("#pwChk").val();
 
     if (password != password_confirm) {
-        alert("비번 다름");
+        alert("비밀번호가 일치하지 않습니다.");
         return false;
     }
     
@@ -42,18 +42,37 @@ function signup() {
     } else {
         $("#passwordConfirmError").hide();
     }
-    // email: $("#email").val() + "@" + $("#emailadd").val(),
     $("#addressCode").removeAttr("disabled");
+
+
+    let email = $("#email").val();
+    let emailDomain = $("#emailadd").val();
+    if (!email || !emailDomain) {
+        $("#emailError").text("이메일을 입력해 주세요.");
+        $("#emailError").show();
+        return false;
+    } else {
+        $("#emailError").hide();
+    }
+
+    let fullEmail = email + "@" + emailDomain;
+    let addressDetail = $("#UserAdd2").val();
+    if (!addressDetail) {
+        $("#userAdd2Error").text("상세 주소를 입력해 주세요.");
+        $("#userAdd2Error").show();
+        return false;
+    } else {
+        $("#userAdd2Error").hide();
+    }
     let param = {
         username: username,
         password: password,
         name: name,
-
-        email: "temp@temp.com",
+        email: fullEmail,
         birthdate: $("#birthdate").val(),
         addressCode: $("#addressCode").val(),
         address: $("#UserAdd1").val(),
-        addressDetail: $("#UserAdd2").val()
+        addressDetail: addressDetail
     };
 
     var from = $("#signupForm");
@@ -69,7 +88,7 @@ function signup() {
             "X-CSRFToken": csrf
         },
         success: function (data) {
-            $("#addressCode").attr("disabled");
+            $("#addressCode").attr("disabled", true);
             if (data.result) {
                 alert(data.msg);
                 location.href = "/accounts";
@@ -79,6 +98,65 @@ function signup() {
         }
     });
 }
+
+$(document).ready(function () {
+    $("#loginUsername").on("input", function () {
+        let username = $(this).val();
+        let csrf = $("#signupForm").data("csrf");
+
+        $.ajax({
+            url: "/accounts/check-username/",
+            type: "get",
+            data: { username: username },
+            dataType: "json",
+            headers: {
+                "X-CSRFToken": csrf
+            },
+            success: function (data) {
+                if (data.is_taken) {
+                    $("#usernameError").text("이미 가입된 아이디입니다.");
+                    $("#usernameError").show();
+                    $("#loginUsername").addClass("is-invalid");
+                } else {
+                    $("#usernameError").hide();
+                    $("#loginUsername").removeClass("is-invalid");
+                }
+            }
+        });
+    });
+
+    $("#email").on("input", function () {
+        let email = $(this).val();
+        let csrf = $("#signupForm").data("csrf");
+
+        $.ajax({
+            url: "/accounts/check-email/",
+            type: "get",
+            data: { email: email + "@" + $("#emailadd").val() },
+            dataType: "json",
+            headers: {
+                "X-CSRFToken": csrf
+            },
+            success: function (data) {
+                if (data.is_taken) {
+                    $("#emailError").text("이미 가입된 이메일입니다.");
+                    $("#emailError").show();
+                    $("#email").addClass("is-invalid");
+                } else {
+                    $("#emailError").hide();
+                    $("#email").removeClass("is-invalid");
+                }
+            }
+        });
+    });
+    $("#UserAdd2").on("input", function () {
+        let addressDetail = $(this).val();
+        if (addressDetail) {
+            $("#userAdd2Error").hide();
+        }
+    });
+});
+
 
 function isKorean(text) {
     var koreanRegex = /^[가-힣]+$/;
@@ -104,19 +182,22 @@ function displayErrors(errors) {
 
 function toggleDropdown() {
     var dropdown = document.getElementById("emailDropdown");
-    dropdown.classList.toggle("show");
+    dropdown.toggleClass("show");
 }
 
 function setEmailDomain(domain) {
     $("#emailadd").val(domain);
+    toggleDropdown();
 }
 
 function enableDirectInput() {
     $("#emailadd").val("");
-    $("#emailadd").attr("readonly", false);
+    $("#emailadd").attr("readonly");
     $("#emailadd").css("background-color", "#fff");
-    $("#emailadd").css("font-family", "#000");
+    $("#emailadd").css("color", "#000");
     $("#emailadd").focus();
+    toggleDropdown();
+
 }
 
 function execDaumPostcode() {
