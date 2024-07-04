@@ -86,6 +86,7 @@ def signup(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         name = request.POST.get('name')
+        phone_number = request.POST.get('phone_number')
         email = request.POST.get('email')
         birth_date = request.POST.get('birthdate')
         address_code = request.POST.get('addressCode')
@@ -98,6 +99,7 @@ def signup(request):
             name = name,
             email = email,
             birth_date = birth_date,
+            phone_number = phone_number,
             address_code = address_code,
             address = address,
             address_detail = address_detail
@@ -119,3 +121,4 @@ def check_email(request):
     email = request.GET.get('email')
     is_taken = User.objects.filter(email=email).exists()
     return JsonResponse({'is_taken': is_taken})
+
