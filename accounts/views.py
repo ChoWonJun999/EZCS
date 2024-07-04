@@ -9,6 +9,12 @@ from django.core.exceptions import ValidationError
 
 logger = logging.getLogger(__name__)
 
+def login_pass(request):
+    print("haha")
+    username = request.POST.get('username', None)
+    if username == "test":
+        request.session['user'] = username
+        return JsonResponse({'result' : 'all'})
 
 def login(request):
     """

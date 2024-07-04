@@ -1,5 +1,3 @@
-// static/education/js/scripts.js
- 
 document.addEventListener('DOMContentLoaded', function () {
     const categoryButtons = document.querySelectorAll('.category-button');
     categoryButtons.forEach(button => {
@@ -7,6 +5,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const selectedCategory = this.textContent;
             selectCategory(selectedCategory);
         });
+    });
+
+    document.getElementById("question").addEventListener("keydown", function(event) {
+        if (event.keyCode === 13 && !event.shiftKey) {
+            event.preventDefault();
+            document.getElementById("text-button").click();
+        }
     });
 });
  
@@ -33,8 +38,6 @@ function selectCategory(category) {
     .then(data => {
         console.log('Chatbot initialized:', data);
         document.getElementById('selected-category').innerText = selectedCategory;
-        document.getElementById('category-selection').style.display = 'none';
-        document.getElementById('chatbot-section').style.display = 'block';
         appendMessage('bot', data.initial_question); // 첫 질문 출력
     })
     .catch(error => console.error('Error:', error));
@@ -91,7 +94,7 @@ function getCookie(name) {
     }
     return cookieValue;
 }
- 
+
 function cancelSelection() {
     document.getElementById('room-code').value = '';
     selectedCategory = null;
@@ -103,3 +106,4 @@ document.getElementById("question").addEventListener("keydown", function(event) 
         document.getElementById("text-button").click();
     }
 });
+

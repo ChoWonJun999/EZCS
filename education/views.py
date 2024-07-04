@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from django.http import JsonResponse
 from chat import Chatbot
+from accounts.models import User
 import os
 import json
 from django.views.decorators.csrf import csrf_exempt
@@ -10,6 +11,9 @@ from .models import EducationChatbotLog
 
 def list(request):
     return render(request, 'education/index.html')
+
+def details(request):
+    return render(request, 'education/details.html')
 
 # 퀴즈페이지
 def quiz(request):
@@ -22,8 +26,9 @@ def edu_history(request):
     return render(request, 'education/edu_history.html', {'logs': logs})
 
 # 교육이력 상세페이지
-def details(request):
-    return render(request, 'education/details.html')
+def edu_detail(request):
+    user = User.objects.get(id=id)
+    return render(request, 'education/details.html', {'user':user})
 
 
 # 웹에서 동작하는 Chatbot(미완성)
