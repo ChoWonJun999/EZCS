@@ -1,89 +1,80 @@
-/* education/static/education/css/quiz.css */
-
-body {
-              font-family: Arial, sans-serif;
-          }
-          
-          .dashboard {
-              padding: 20px;
-          }
-          
-          .quiz-container {
-              background-color: #f9f9f9;
-              padding: 20px;
-              border-radius: 8px;
-              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-              margin-top: 20px;
-              position: relative; /* 추가 */
-          }
-          
-          .question {
-              margin-bottom: 20px;
-          }
-          
-          .question p {
-              font-size: 18px;
-              font-weight: bold;
-          }
-          
-          .question img {
-              max-width: 100%;
-              height: auto;
-              margin-bottom: 10px;
-          }
-          
-          .answer-input {
-              width: 100%;
-              padding: 10px;
-              font-size: 16px;
-              margin-top: 10px;
-              margin-bottom: 10px;
-              border: 1px solid #ccc;
-              border-radius: 4px;
-          }
-          
-          .feedback {
-              margin-bottom: 20px;
-          }
-          
-          .feedback-correct {
-              color: green;
-              font-size: 18px;
-              font-weight: bold;
-          }
-          
-          .explanation {
-              background-color: #fff;
-              padding: 20px;
-              border: 1px solid #e0e0e0;
-              border-radius: 8px;
-          }
-          
-          .explanation-title {
-              font-size: 18px;
-              font-weight: bold;
-              margin-bottom: 10px;
-          }
-          
-          .explanation-content {
-              font-size: 16px;
-              line-height: 1.5;
-          }
-          
-          .submit-button {
-              position: absolute; /* 추가 */
-              bottom: 20px; /* 추가 */
-              right: 20px; /* 추가 */
-              padding: 10px 20px;
-              font-size: 16px;
-              background-color: #007bff;
-              color: white;
-              border: none;
-              border-radius: 4px;
-              cursor: pointer;
-          }
-          
-          .submit-button:hover {
-              background-color: #0056b3;
-          }
-          
+/* education/static/education/css/quiz.css */          
+ .quiz-container {
+     background-color: #f9f9f9;
+     padding: 20px;
+     border-radius: 8px;
+     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+     margin-top: 20px;
+     position: relative; /* 추가 */
+ }
+ 
+ .question {
+     margin-bottom: 20px;
+ }
+ 
+ .question p {
+     font-size: 18px;
+     font-weight: bold;
+ }
+ 
+ .question img {
+     max-width: 100%;
+     height: auto;
+     margin-bottom: 10px;
+ }
+ 
+ .answer-input {
+     width: 100%;
+     padding: 10px;
+     font-size: 16px;
+     margin-top: 10px;
+     margin-bottom: 10px;
+     border: 1px solid #ccc;
+     border-radius: 4px;
+ }
+ 
+ .feedback {
+     margin-bottom: 20px;
+ }
+ 
+ .feedback-correct {
+     color: green;
+     font-size: 18px;
+     font-weight: bold;
+ }
+ 
+ .explanation {
+     background-color: #fff;
+     padding: 20px;
+     border: 1px solid #e0e0e0;
+     border-radius: 8px;
+ }
+ 
+ .explanation-title {
+     font-size: 18px;
+     font-weight: bold;
+     margin-bottom: 10px;
+ }
+ 
+ .explanation-content {
+     font-size: 16px;
+     line-height: 1.5;
+ }
+ 
+ .submit-button {
+     position: absolute; /* 추가 */
+     bottom: 20px; /* 추가 */
+     right: 20px; /* 추가 */
+     padding: 10px 20px;
+     font-size: 16px;
+     background-color: #007bff;
+     color: white;
+     border: none;
+     border-radius: 4px;
+     cursor: pointer;
+ }
+ 
+ .submit-button:hover {
+     background-color: #0056b3;
+ }
+ 

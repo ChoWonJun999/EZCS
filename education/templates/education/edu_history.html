@@ -1,67 +1,63 @@
-<!-- education/templates/education/history.html -->
+<!-- main/templates/main/admin_dashboard.html -->
 {% extends 'base.html' %}
 
-{% block title %}Education History{% endblock %}
+{% block title %}Dashboard{% endblock %}
+
 {% block content %}
-{% load static %}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("tr[data-url]").click(function () {
+            var url = $(this).data("url");
+            window.location.href = url;
+        });
+    });
+</script>
 
-<link rel="stylesheet" href="{% static 'education/css/history.css' %}">
-
-<div class="dashboard">
-    <h1>교육 이력</h1>
-    <div class="tabs">
-        <button class="tab-button active">교육 이력</button>
-        <button class="tab-button">퀴즈 이력</button>
+<form action="" method="GET">
+    <div class="dashboard">
+        <div>
+            <ul>
+                <li>
+                    <input type="text" class="form-control" id="seachText" name="seachText" placeholder="검색창">
+                </li>
+                <li>
+                    <button>검색</button>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <td colspan="7">총 {{ data|length }}건</td>
+        </div>
+        <div>
+            <table class="styled-table">
+                <thead>
+                    <th>회원번호</th>
+                    <th>이름</th>
+                    <th>아이디</th>
+                    <th>E-mail</th>
+                    <th>소속</th>
+                    <th>역할</th>
+                    <th>가입일자</th>
+                </thead>
+                <tbody>
+                    {% for item in data %}
+                    <tr data-url="{% url 'education:edu_detail' item.id %}" class="active-row">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.name }}</td>
+                        <td>{{ item.username }}</td>
+                        <td>{{ item.email }}</td>
+                        <td>{{ item.소속 }}</td>
+                        <td>{{ item.역할 }}</td>
+                        <td>{{ item.date_joined }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="filters">
-        <select class="filter-dropdown">
-            <option value="전체">전체</option>
-            <option value="검색">검색</option>
-        </select>
-        <input type="text" class="filter-search" placeholder="검색">
-        <button class="filter-button">검색</button>
-    </div>
-    <table class="history-table">
-        <thead>
-            <tr>
-                <th>번호</th>
-                <th>카테고리</th>
-                <th>주제</th>
-                <th>평가 지표</th>
-                <th>수강 일자</th>
-                <th>확인</th>
-            </tr>
-        </thead>
-        {% comment %}
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>---</td>
-                <td>강의 내용1</td>
-                <td>평가 지표1</td>
-                <td>2024.02.02 09:00:00</td>
-                <td><a href="edu_history_detail.html" class="confirm-button">확인</a></td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>---</td>
-                <td>강의 내용2</td>
-                <td>평가 지표2</td>
-                <td>2024.02.02 12:24:45</td>
-                <td><a href="#" class="confirm-button">확인</a></td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>---</td>
-                <td>강의 내용3</td>
-                <td>평가 지표3</td>
-                <td>2024.02.03 09:15:13</td>
-                <td><a href="#" class="confirm-button">확인</a></td>
-            </tr>
-        </tbody>
-        {% endcomment %}
-        {% comment %} education_chatbot_log Table에서 데이터를 조회(body(json) 처리 부분 미완성) {% endcomment %}
-        <tbody>
+</form>
+{% endblock %}
+        {% comment %} <tbody>
             {% for log in logs %}
                 <tr>
                     <td>{{ log.id }}</td>
@@ -72,5 +68,4 @@
             {% endfor %}
         </tbody>
     </table>
-</div>
-{% endblock %}
+</div> {% endcomment %}
