@@ -50,11 +50,12 @@
         </div>
         <div class="memo-section">
             <h2>메모창</h2>
-            <form id="memo-form">
+            <form id="memo-form" onsubmit="saveMemo(); return false;">
                 <textarea id="memo-text" name="memo-text" rows="10" cols="50" disabled></textarea>
                 <div class="buttons">
                     <input type="button" class="edit-button" value="수정" onclick="editMemo()">
                     <input type="button" class="save-button" value="저장" onclick="saveMemo()" style="display: none;">
+                    <input type="reset" class="save-button" value="초기화" style="display: none;">
                     <input type="button" class="cancel-button" value="취소" onclick="cancelMemoEdit()" style="display: none;">
                 </div>
             </form>
