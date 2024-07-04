@@ -13,15 +13,16 @@
     });
 </script>
 
-<form action="" method="POST">
+<form action="{% url 'management:search' %}" method="POST">
+    {% csrf_token %}
     <div class="dashboard">
         <div>
             <ul>
                 <li>
-                    <input type="text" class="form-control" id="searchText" name="searchText" placeholder="검색창">
+                    <input type="text" class="form-control" id="seachText" name="seachText" placeholder="검색창" value="{{ query }}">
                 </li>
                 <li>
-                    <button>검색</button>
+                    <button type="submit">검색</button>
                 </li>
             </ul>
         </div>

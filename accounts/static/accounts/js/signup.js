@@ -26,7 +26,6 @@ function signup() {
         alert("비밀번호가 일치하지 않습니다.");
         return false;
     }
-    
     if (!validatePassword(password)) {
         $("#passwordError").text("비밀번호는 최소 8자 이상이어야 하며, 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.");
         $("#passwordError").show();
@@ -34,6 +33,7 @@ function signup() {
     } else {
         $("#passwordError").hide();
     }
+
 
     if (password !== password_confirm) {
         $("#passwordConfirmError").text("비밀번호가 일치하지 않습니다.");
@@ -101,55 +101,57 @@ function signup() {
 }
 
 $(document).ready(function () {
-    $("#loginUsername").on("input", function () {
-        let username = $(this).val();
-        let csrf = $("#signupForm").data("csrf");
+    if (window.location.pathname === '/accounts/signup/'){
+        $("#loginUsername").on("input", function () {
+            let username = $(this).val();
+            let csrf = $("#signupForm").data("csrf");
 
-        $.ajax({
-            url: "/accounts/check-username/",
-            type: "get",
-            data: { username: username },
-            dataType: "json",
-            headers: {
-                "X-CSRFToken": csrf
-            },
-            success: function (data) {
-                if (data.is_taken) {
-                    $("#usernameError").text("이미 가입된 아이디입니다.");
-                    $("#usernameError").show();
-                    $("#loginUsername").addClass("is-invalid");
-                } else {
-                    $("#usernameError").hide();
-                    $("#loginUsername").removeClass("is-invalid");
+            $.ajax({
+                url: "/accounts/check-username/",
+                type: "get",
+                data: { username: username },
+                dataType: "json",
+                headers: {
+                    "X-CSRFToken": csrf
+                },
+                success: function (data) {
+                    if (data.is_taken) {
+                        $("#usernameError").text("이미 가입된 아이디입니다.");
+                        $("#usernameError").show();
+                        $("#loginUsername").addClass("is-invalid");
+                    } else {
+                        $("#usernameError").hide();
+                        $("#loginUsername").removeClass("is-invalid");
+                    }
                 }
-            }
+            });
         });
-    });
 
-    $("#email").on("input", function () {
-        let email = $(this).val();
-        let csrf = $("#signupForm").data("csrf");
+        $("#email").on("input", function () {
+            let email = $(this).val();
+            let csrf = $("#signupForm").data("csrf");
 
-        $.ajax({
-            url: "/accounts/check-email/",
-            type: "get",
-            data: { email: email + "@" + $("#emailadd").val() },
-            dataType: "json",
-            headers: {
-                "X-CSRFToken": csrf
-            },
-            success: function (data) {
-                if (data.is_taken) {
-                    $("#emailError").text("이미 가입된 이메일입니다.");
-                    $("#emailError").show();
-                    $("#email").addClass("is-invalid");
-                } else {
-                    $("#emailError").hide();
-                    $("#email").removeClass("is-invalid");
+            $.ajax({
+                url: "/accounts/check-email/",
+                type: "get",
+                data: { email: email + "@" + $("#emailadd").val() },
+                dataType: "json",
+                headers: {
+                    "X-CSRFToken": csrf
+                },
+                success: function (data) {
+                    if (data.is_taken) {
+                        $("#emailError").text("이미 가입된 이메일입니다.");
+                        $("#emailError").show();
+                        $("#email").addClass("is-invalid");
+                    } else {
+                        $("#emailError").hide();
+                        $("#email").removeClass("is-invalid");
+                    }
                 }
-            }
+            });
         });
-    });
+    }
     $("#UserAdd2").on("input", function () {
         let addressDetail = $(this).val();
         if (addressDetail) {
