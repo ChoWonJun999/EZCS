@@ -13,7 +13,7 @@
     });
 </script>
 
-<form action="" method="GET">
+<form action="" method="POST">
     <div class="dashboard">
         <div>
             <ul>
@@ -47,7 +47,7 @@
                         <td>{{ item.username }}</td>
                         <td>{{ item.email }}</td>
                         <td>{{ item.소속 }}</td>
-                        <td>{{ item.역할 }}</td>
+                        <td>{{ item.is_superuser }}</td>
                         <td>{{ item.date_joined }}</td>
                     </tr>
                     {% endfor %}

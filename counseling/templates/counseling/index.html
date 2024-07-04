@@ -1,58 +1,89 @@
-<!-- main/templates/main/admin_dashboard.html -->
 {% extends 'base.html' %}
 {% load static %}
 {% block title %}Admin Dashboard{% endblock %}
 {% block content %}
-<div class="dashboard">
-    <!-- 직원용 대시보드 내용 -->
-    <h1>상담페이지</h1>
-    <link rel="stylesheet" href="{% static 'education/css/styles.css' %}">
 
-    <div class="dashboard">
-        <h1>상담 페이지</h1>
-        <div class="consultation-container">
-            <div class="customer-info">
-                <h2>고객 정보</h2>
+<!-- 직원용 대시보드 내용 -->
+<div class="dashboard">
+    <div class="consultation-container">
+        <div class="customer-info">
+            <h2>고객 정보</h2>
+            <form id="customer-form">
                 <ul>
-                    <li>고객명</li>
-                    <li>핸드폰</li>
-                    <li>이메일</li>
-                    <li>기타</li>
-                    <li>고객 메모</li>
-                    <li>등록일</li>
-                    <li>추천인</li>
+                    <li>
+                        <label for="customer-name">고객명</label>
+                        <input type="text" id="customer-name" name="customer-name" disabled>
+                    </li>
+                    <li>
+                        <label for="birthdate">생년월일</label>
+                        <input type="date" id="birthdate" name="birthdate" disabled>
+                    </li>
+                    <li>
+                        <label for="phone">전화번호</label>
+                        <input type="tel" id="phone" name="phone" disabled>
+                    </li>
+                    <li>
+                        <label for="address">주소</label>
+                        <input type="text" id="address" name="address" disabled>
+                    </li>
+                    <li>
+                        <label for="join-date">가입일</label>
+                        <input type="date" id="join-date" name="join-date" disabled>
+                    </li>
                 </ul>
                 <div class="buttons">
-                    <button class="save-button">저장</button>
-                    <button class="cancel-button">취소</button>
+                    <input type="button" class="edit-button" value="수정" onclick="editCustomerInfo()">
+                    <input type="button" class="save-button" value="저장" onclick="saveCustomerInfo()" style="display: none;">
+                    <input type="reset" class="save-button" value="초기화" style="display: none;">
+                    <input type="button" class="cancel-button" value="취소" onclick="cancelEdit()" style="display: none;">
                 </div>
+            </form>
+        </div>        
+        <div class="stt-content">
+            <h2>상담내용 변환 창</h2>
+            <div class="stt">
+                <input type="button" id="start-button" value="마이크 연결">
+                <input type="button" id="stop-button" value="마이크 연결 끊기" disabled>
+                <div id="transcription">여기에 음성 입력 내용이 표시됩니다...</div>
             </div>
-            <div class="consultation-content">
-                <h2>상담내용 변환 창</h2>
-                <div class="sst">SST</div>
-                <div class="recommended-answer">추천 응대 멘트</div>
-            </div>
-            <div class="memo-section">
-                <h2>메모창</h2>
+            <div class="recommended-answer">추천 응대 멘트</div>
+        </div>
+        <div class="memo-section">
+            <h2>메모창</h2>
+            <form id="memo-form">
+                <textarea id="memo-text" name="memo-text" rows="10" cols="50" disabled></textarea>
+                <div class="buttons">
+                    <input type="button" class="edit-button" value="수정" onclick="editMemo()">
+                    <input type="button" class="save-button" value="저장" onclick="saveMemo()" style="display: none;">
+                    <input type="button" class="cancel-button" value="취소" onclick="cancelMemoEdit()" style="display: none;">
+                </div>
+            </form>
+        </div>
+        <div class="consultation-content">
+            <h2>문의/조치 내용</h2>
+            <form id="consultation-form">
                 <div class="memo-content">
-                    <div class="memo-block">문의 내용</div>
-                    <div class="memo-block">조치 내용</div>
+                    <div class="memo-block">
+                        <label for="inquiry-text">문의 내용</label>
+                        <textarea id="inquiry-text" name="inquiry-text" rows="5" cols="50" disabled></textarea>
+                    </div>
+                    <div class="memo-block">
+                        <label for="action-text">조치 내용</label>
+                        <textarea id="action-text" name="action-text" rows="5" cols="50" disabled></textarea>
+                    </div>
                 </div>
-            </div>
-            <div class="task-status">
-                <h2>업무 상태 선택 창</h2>
-                <div class="task-menu">
-                    <div class="task-item">메뉴 항목</div>
-                    <div class="task-item">...</div>
-                    <div class="task-item">...</div>
+                <div class="buttons">
+                    <input type="button" class="edit-button" value="수정" onclick="editConsultation()">
+                    <input type="button" class="save-button" value="저장" onclick="saveConsultation()" style="display: none;">
+                    <input type="reset" class="save-button" value="초기화" style="display: none;">
+                    <input type="button" class="cancel-button" value="취소" onclick="cancelConsultationEdit()" style="display: none;">
                 </div>
-                <button class="save-button">저장</button>
-            </div>
+            </form>
         </div>
     </div>
 </div>
-<<<<<<< HEAD
+
+<script src="{% static 'counseling/js/scripts.js' %}"></script>
+<link rel="stylesheet" href="{% static 'counseling/css/styles.css' %}">
+
 {% endblock %}
-=======
-{% endblock %}
->>>>>>> 4932debc6af146815f64f908b4fd7ed960345a88
