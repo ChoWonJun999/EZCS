@@ -64,19 +64,6 @@ def detail(request, id):
     print(data.active_status)
     return render(request, 'management/detail.html', {'data':data}) 
 
-#검색 로직
-def search(request):
-    query = request.GET.get('query')
-    if query:
-        results = User.objects.filter(name__icontains=query)
-    else:
-        results = []
-    
-    print('='*30)
-    print(query)
-    print('='*30)
-    return render(request, 'management/manager_dashboard.html', {'results': results, 'query': query})
-
 #비활성화 기능
 def disable(request, id):
     user = get_object_or_404(User, id=id)
