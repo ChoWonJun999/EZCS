@@ -38,11 +38,31 @@ function editCustomerInfo() {
 function saveCustomerInfo() {
     const form = document.getElementById('customer-form');
     const inputs = form.querySelectorAll('input:not([type="button"])');
-    inputs.forEach(input => input.disabled = true);
 
     // 고객 정보를 저장하는 로직 추가, 예: 서버로 데이터 전송
-    // alert('고객 정보가 저장되었습니다.');
+    const formData = new FormData(form);
 
+    fetch('/counseling/save_customer_info/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('고객 정보가 저장되었습니다.');
+            } else {
+                alert('고객 정보 저장에 실패했습니다.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('고객 정보 저장 중 오류가 발생했습니다.');
+        });
+
+    inputs.forEach(input => input.disabled = true);
     form.querySelector('.edit-button').style.display = 'inline-block';
     form.querySelectorAll('.save-button, .cancel-button').forEach(button => {
         button.style.display = 'none';
@@ -276,7 +296,7 @@ function sendTextToChatbot(text) {
     formData.append('text', text);
     // DB 저장을 위한 데이터(미완성)
     formData.append('username', '홍길동')
-    formData.append('phone_number', '01000000001')
+    formData.append('phone_number', '01000000000')
 
     fetch('/counseling/stt_chat/', {
         method: 'POST',
