@@ -75,7 +75,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone_number = models.CharField(
         max_length=20,
         verbose_name="User's Phone Number",
-        db_comment="User's Phone Number"
+        db_comment="User's Phone Number",
+        null=True
+
     )
 
     address_code = models.IntegerField(
