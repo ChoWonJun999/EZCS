@@ -7,7 +7,6 @@ from django.contrib.auth import logout as auth_logout
 
 
 class BlockedMiddleware(MiddlewareMixin):
-
     def process_request(self, request):
         blocked = request.session.pop('blocked', None)
         if blocked:
@@ -16,18 +15,15 @@ class BlockedMiddleware(MiddlewareMixin):
             return redirect(settings.LOGIN_URL)
 
 
-
 class LoginSessionMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request):
-        print(f"request.path : {request.path}")
         if request.path == '/favicon.ico' or 'logout' in request.path:
             return self.get_response(request)
 
         user = request.session.get('user', None)
-        print(f"user : {user}")
 
         if 'accounts' in request.path:
             if user:

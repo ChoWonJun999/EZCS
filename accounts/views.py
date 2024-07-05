@@ -41,7 +41,7 @@ def login(request):
                 result = '로그인 권한이 없습니다.'
             else:
                 auth_login(request, user)
-                request.session['user'] = username
+                request.session['user'] = user.name
                 if user.is_superuser == True:
                     result = 'manager'
                 else:
@@ -54,7 +54,7 @@ def login(request):
                     response.delete_cookie('remember_me')
                 return response
         else:
-            result = '해당 사용자가 존재하지 않습니다'
+            result = 'ID 혹은 PW를 확인해 주세요.'
     else:
         result = '잘못된 접근입니다.'
     return JsonResponse({'result': result})
@@ -125,3 +125,4 @@ def check_phone(request):
     phone_number = request.GET.get('phone_number')
     is_taken = User.objects.filter(phone_number=phone_number).exists()
     return JsonResponse({'is_taken': is_taken})
+
