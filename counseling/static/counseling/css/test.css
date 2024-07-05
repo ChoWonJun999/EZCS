@@ -1,10 +1,3 @@
-@font-face {
-    font-family: 'Chosunilbo_myungjo';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
 body {
     width: 100%;
     height: 100%;
@@ -20,40 +13,41 @@ body {
 .dashboard {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1.5fr 3fr; /* 각 행의 높이를 동일하게 설정 */
+    grid-template-rows: 1fr 1fr; /* 각 행의 높이를 동일하게 설정 */
     gap: 20px;
     height: calc(100vh - 40px); /* 전체 높이에서 패딩을 뺀 값으로 설정 */
     box-sizing: border-box;
     padding: 20px;
 }
 
+.section {
+    display: flex;
+    flex-direction: column;
+}
+
+.section h2 {
+    margin: 0 0 10px 0; /* 박스와 제목 사이의 간격을 줌 */
+}
+
 .customer-info, .memo-section, .stt-content, .chat-section-readonly {
     border: 1px solid #ccc;
     padding: 20px;
     box-sizing: border-box;
+    overflow: auto; /* 내용이 박스를 벗어나지 않도록 설정 */
     background-color: #fff; /* 백그라운드 색상 추가 */
     border-radius: 8px; /* 모서리 둥글게 */
     display: flex;
     flex-direction: column;
-    overflow: scroll; /* 상담내용 변환 창에서 스크롤을 없애기 위해 추가 */
 }
 
-.stt-content .stt, .translation {
+.stt-content .stt {
     display: flex;
     flex-direction: column;
     flex-grow: 1; /* 상위 요소가 늘어날 때 이 요소도 같이 늘어나도록 설정 */
 }
 
-.button-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
-.mic-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.stt-content .stt input[type="button"] {
+    margin-bottom: 10px;
     padding: 10px;
     border: none;
     border-radius: 5px;
@@ -61,55 +55,13 @@ body {
     background-color: #007bff;
     color: #fff;
     transition: background-color 0.3s;
-    flex: 1; /* 버튼이 동일한 크기를 갖도록 설정 */
-    margin: 0 5px; /* 버튼 사이 간격 추가 */
 }
 
-.mic-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-.mic-button i {
-    margin-right: 5px;
-}
-
-.mic-button:hover:not(:disabled) {
+.stt-content .stt input[type="button"]:hover {
     background-color: #0056b3;
 }
 
-#transcription, #translation-content {
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    flex-grow: 1;
-    overflow-y: scroll; /* 스크롤을 transcription과 translation-content 안에서만 되도록 설정 */
-    font-family: 'Chosunilbo_myungjo', serif; /* 폰트 변경 */
-    font-size: 14px;
-    line-height: 1.5;
-    height: 100%; /* 높이를 부모 요소에 맞춤 */
-    max-height: calc(100% - 50px); /* 최대 높이 설정으로 버튼 높이를 제외한 나머지 높이 설정 */
-}
-
-.recommended-answer {
-    padding: 10px;
-    background-color: #e9ecef;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    margin-top: 10px;
-    font-family: 'Chosunilbo_myungjo', serif; /* 폰트 변경 */
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.chat-section .chat-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.chat-section .chat-box {
+#transcription {
     padding: 10px;
     background-color: #f8f9fa;
     border-radius: 5px;
@@ -118,20 +70,34 @@ body {
     overflow-y: auto;
 }
 
-.chat-section .chat-box .message {
+.chat-section-readonly .chat-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-section-readonly .chat-box {
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.chat-section-readonly .chat-box .message {
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 5px;
     background-color: #e9ecef;
-    font-family: 'Chosunilbo_myungjo', serif; /* 폰트 변경 */
 }
 
-.chat-section .chat-box .message.user {
+.chat-section-readonly .chat-box .message.user {
     background-color: #d1ecf1;
     align-self: flex-end;
 }
 
-.chat-section .chat-box .message.bot {
+.chat-section-readonly .chat-box .message.bot {
     background-color: #f8d7da;
     align-self: flex-start;
 }

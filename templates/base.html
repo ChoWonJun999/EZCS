@@ -15,15 +15,15 @@
             <h1>EZCS</h1>
             <p class="menu-title">MAIN MENU</p>
             <ul class="menu">
-                <li><a href="{% url 'main:user_dashboard' %}"><span class="icon">🏠</span> 대시보드</a></li>
-                <li><a href="{% url 'counseling:list' %}"><span class="icon">💱</span> 상담</a></li>
-                <li class="has-submenu">
-                    <a href="#"><span class="icon">📊</span> 교육</a>
+                <li><a href="{% url 'main:user_dashboard' %}">대시보드</a></li>
+                <li><a href="{% url 'counseling:list' %}">상담</a></li>
+                <li class="has-submenu {% if request.path == '/education/' %}active{% endif %}">
+                    <a href="{% url 'education:chat_view' %}">교육</a>
                     <ul class="submenu">
-                        <li><a href="{% url 'education:chat_view' %}" class="active">롤플레잉</a></li>
-                        <li><a href="{% url 'education:quiz' %}">퀴즈</a></li>
-                        <li><a href="{% url 'education:edu_history' %}">교육 이력</a></li>
-                        <li><a href="{% url 'education:details' %}">교육 이력 상세(개발용)</a></li>
+                        <li><a href="{% url 'education:chat_view' %}" class="{% if request.path == '/education/' %}active{% endif %}">롤플레잉</a></li>
+                        <li><a href="{% url 'education:quiz' %}" class="{% if request.path == '/education/quiz/' %}active{% endif %}">퀴즈</a></li>
+                        <li><a href="{% url 'education:edu_history' %}" class="{% if request.path == '/education/edu_history/' %}active{% endif %}">교육 이력</a></li>
+                        <li><a href="{% url 'education:details' %}" class="{% if request.path == '/education/details/' %}active{% endif %}">교육 이력 상세(개발용)</a></li>
                     </ul>
                 </li>
             </ul>
@@ -40,8 +40,8 @@
         <div class="header">
             <button class="sidebar-toggle" id="sidebarToggle">☰</button>
             <div class="header-right">
-                {% if request.session.user %}
-                <div class="profile-info">안녕하세요, {{ request.session.user }}님.</div>
+                {% if user %}
+                <div class="profile-info">{{ user }}님, 오늘 하루도 화이팅 하세요.</div>
                 <div class="logout">
                     <a href="{% url 'accounts:logout' %}">로그아웃</a>
                 </div>
@@ -58,16 +58,14 @@
             {% endblock %}
         </div>
         <footer class="footer">
-            <p>&copy; 2024 EZCS. All rights reserved.</p>
+            <div class="footer-content">
+                <p><a href="#">개인정보 처리방침</a> | <a href="#">이용약관</a></p>
+                <p>㈜KT 에이블스쿨팀 충남/충북권역 대표자: team21 </p>
+                <p>&copy; 2024 aivleschool team21. All rights reserved.</p>
+            </div>
         </footer>
     </div>
     <script src="{% static 'js/menu.js' %}"></script>
-    <script>
-        document.getElementById('sidebarToggle').addEventListener('click', function () {
-            var sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('active');
-        });
-    </script>
 </body>
 
 </html>

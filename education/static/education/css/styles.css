@@ -1,24 +1,47 @@
-.dashboard {
-    display: flex;
-    padding: 20px; /* 공백 최소화 */
-    box-sizing: border-box;
-    gap: 20px; /* Flexbox 아이템 사이의 공백 */
-    height: 100%; /* 부모 컨테이너의 전체 높이를 사용 */
+@font-face {
+    font-family: 'Chosunilbo_myungjo';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
 
-.top-section {
-    width: 250px; /* 카테고리 섹션의 고정 너비 설정 */
+body {
+    width: 100%;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f7fb;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.dashboard {
+    display: flex;
+    height: 100vh;
+    padding: 20px;
+    gap: 20px;
+    box-sizing: border-box;
+}
+
+.section {
+    flex: 2;
     background-color: #ffffff;
-    border-radius: 0; /* 경계선 반경 제거 */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding: 20px;
     box-sizing: border-box;
-    margin: 0; /* 마진 제거 */
-    flex-shrink: 0; /* 너비 고정 */
     display: flex;
     flex-direction: column;
-    gap: 10px; /* 버튼들 사이의 공백 */
-    height: 100%; /* 부모 컨테이너의 전체 높이에 맞춤 */
+    overflow: hidden;
+}
+
+.category-section {
+    flex: 1; /* 다른 섹션의 절반 크기로 설정 */
+    display: flex;
+    flex-direction: column;
 }
 
 .menu-header {
@@ -42,34 +65,12 @@
     color: white;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
+    font-family: 'Chosunilbo_myungjo', serif;
 }
 
 .category-button:hover {
     background-color: #0056b3;
     transform: translateY(-2px);
-}
-
-.sections {
-    display: flex;
-    flex-grow: 1; /* 부모 컨테이너의 남은 공간을 채움 */
-    gap: 20px; /* 섹션들 사이의 간격 설정 */
-    padding: 0 10px; /* 좌우 공백을 줄임 */
-    height: 100%; /* 부모 컨테이너의 전체 높이에 맞춤 */
-}
-
-.section {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1; /* 부모 컨테이너의 남은 공간을 채움 */
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    box-sizing: border-box;
-    overflow: hidden; /* 섹션 내의 요소들이 넘치지 않도록 설정 */
-    height: 100%; /* 부모 컨테이너의 전체 높이에 맞춤 */
-    width: 100%;
 }
 
 .chat-header {
@@ -84,33 +85,33 @@
 .chat-container {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* 부모 컨테이너의 남은 공간을 채움 */
-    overflow: hidden; /* 내용이 넘치지 않도록 설정 */
+    flex-grow: 1;
+    overflow: hidden;
 }
 
 .chat-box {
-    flex-grow: 1; /* 부모 컨테이너의 남은 공간을 채움 */
+    flex-grow: 1;
     padding: 10px;
     background-color: #f9f9f9;
     border: 1px solid #e0e0e0;
     border-radius: 5px;
     overflow-y: auto;
     white-space: pre-line;
-    word-wrap: break-word; /* 긴 단어나 URL이 줄바꿈 되도록 설정 */
-    max-width: 100%; /* 가로 사이즈를 고정 */
-    display: flex; /* 추가: 메시지 요소들을 Flexbox 컨테이너로 설정 */
-    flex-direction: column; /* 추가: 메시지 요소들을 세로로 정렬 */
+    word-wrap: break-word;
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .input-container {
     display: flex;
     gap: 10px;
-    padding-top: 10px; /* 입력창과 채팅창 사이의 간격을 추가 */
-    flex-shrink: 0; /* 입력창이 줄어들지 않도록 설정 */
+    padding-top: 10px;
+    flex-shrink: 0;
 }
 
 textarea {
-    flex-grow: 1; /* 부모 컨테이너의 남은 공간을 채움 */
+    flex-grow: 1;
     padding: 10px;
     border-radius: 5px;
     border: 1px solid #e0e0e0;
@@ -134,22 +135,63 @@ textarea {
     transform: translateY(-2px);
 }
 
+.mic-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-top: 10px;
+}
+
+.mic-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.button-container {
+    display: flex;
+    gap: 10px;
+    padding-top: 10px;
+}
+
+.button-container .mic-button {
+    flex-grow: 1;
+}
+
 /* 추가된 스타일 */
 .message {
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 5px;
-    max-width: 80%; /* 최대 너비 설정 */
+    max-width: 80%;
     word-wrap: break-word;
 }
 
 .message.bot {
     background-color: #e0e0e0;
-    align-self: flex-start; /* 봇 메시지는 왼쪽 정렬 */
+    align-self: flex-start;
 }
 
 .message.user {
     background-color: #007bff;
     color: white;
-    align-self: flex-end; /* 사용자 메시지는 오른쪽 정렬 */
+    align-self: flex-end;
+}
+
+/* 반응형 디자인을 위한 미디어 쿼리 */
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+    }
+
+    .input-container {
+        flex-direction: column;
+    }
+
+    button#text-button {
+        width: 100%;
+    }
 }

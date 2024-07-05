@@ -41,7 +41,7 @@ function saveCustomerInfo() {
     inputs.forEach(input => input.disabled = true);
 
     // 고객 정보를 저장하는 로직 추가, 예: 서버로 데이터 전송
-    alert('고객 정보가 저장되었습니다.');
+    // alert('고객 정보가 저장되었습니다.');
 
     form.querySelector('.edit-button').style.display = 'inline-block';
     form.querySelectorAll('.save-button, .cancel-button').forEach(button => {
@@ -55,7 +55,7 @@ function cancelEdit() {
     inputs.forEach(input => input.disabled = true);
 
     // 수정 취소를 처리하는 로직 추가, 예: 변경 사항 되돌리기
-    alert('수정이 취소되었습니다.');
+    // alert('수정이 취소되었습니다.');
 
     form.querySelector('.edit-button').style.display = 'inline-block';
     form.querySelectorAll('.save-button, .cancel-button').forEach(button => {
@@ -78,7 +78,7 @@ function saveMemo() {
     textarea.disabled = true;
 
     // 메모 내용을 저장하는 로직 추가, 예: 서버로 데이터 전송
-    alert('메모가 저장되었습니다.');
+    // alert('메모가 저장되었습니다.');
 
     document.querySelector('#memo-form .edit-button').style.display = 'inline-block';
     document.querySelectorAll('#memo-form .save-button, #memo-form .cancel-button').forEach(button => {
@@ -91,7 +91,7 @@ function cancelMemoEdit() {
     textarea.disabled = true;
 
     // 메모 수정 취소를 처리하는 로직 추가, 예: 변경 사항 되돌리기
-    alert('메모 수정이 취소되었습니다.');
+    // alert('메모 수정이 취소되었습니다.');
 
     document.querySelector('#memo-form .edit-button').style.display = 'inline-block';
     document.querySelectorAll('#memo-form .save-button, #memo-form .cancel-button').forEach(button => {
@@ -116,7 +116,7 @@ function saveConsultation() {
     textareas.forEach(textarea => textarea.disabled = true);
 
     // 문의/조치 내용을 저장하는 로직 추가, 예: 서버로 데이터 전송
-    alert('문의/조치 내용이 저장되었습니다.');
+    // alert('문의/조치 내용이 저장되었습니다.');
 
     document.querySelector('#consultation-form .edit-button').style.display = 'inline-block';
     document.querySelectorAll('#consultation-form .save-button, #consultation-form .cancel-button').forEach(button => {
@@ -130,7 +130,7 @@ function cancelConsultationEdit() {
     textareas.forEach(textarea => textarea.disabled = true);
 
     // 문의/조치 내용 수정 취소를 처리하는 로직 추가, 예: 변경 사항 되돌리기
-    alert('문의/조치 내용 수정이 취소되었습니다.');
+    // alert('문의/조치 내용 수정이 취소되었습니다.');
 
     document.querySelector('#consultation-form .edit-button').style.display = 'inline-block';
     document.querySelectorAll('#consultation-form .save-button, #consultation-form .cancel-button').forEach(button => {

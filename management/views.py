@@ -9,10 +9,11 @@ def dashboard(request):
     data = User.objects.all()
     return render(request, 'management/dashboard.html',{'data':data})
 
-#상세페이지
-def manager_detail(request, id):
-    user = get_object_or_404(User, id=id)
-    return render(request, 'management/detail.html', {'user':user})
+#유저상세페이지
+def detail(request, id):
+    data = get_object_or_404(User, id=id)
+    return render(request, 'management/detail.html', {'data':data}) 
+
 
 #개인정보 수정
 def manager_edit(request, id):
@@ -35,13 +36,15 @@ def manager_edit(request, id):
         # user.role = request.POST.get('role') #역할
         # user.active_status = request.POST.get('active_status') #활동상태
         user.save()
-        return redirect("management:detail", id)
+        return redirect("management:management_detail", id)
+
 
 
 # 가입승인페이지
 def allow(request):
     data = User.objects.filter(active_status = 0)
     return render(request, 'management/allow.html',{'data':data})
+
 
 #승인
 def approve_user(request, id):
@@ -58,11 +61,6 @@ def inactive(request):
     data = User.objects.filter(~Q(active_status = 0)) #여기서 사용하는 Q는 장고에서 쓰는 or
     return render(request, 'management/inactive.html', {'data':data})
 
-#유저상세페이지
-def detail(request, id):
-    data = get_object_or_404(User, id=id)
-    print(data.active_status)
-    return render(request, 'management/detail.html', {'data':data}) 
 
 #비활성화 기능
 def disable(request, id):
@@ -116,5 +114,6 @@ def search(request):
     if query:
         results = User.objects.filter(name__icontains=query)
     else:
-        results = User.objects.all()
-    return render(request, 'management/test.html', {'data': results, 'query': query})
+        results = []
+    return render(request, 'management/manager_dashboard.html', {'results': results, 'query': query})
+         

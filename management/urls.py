@@ -17,8 +17,5 @@ urlpatterns = [
     path('retire_active/<int:id>/', views.retire_active, name='retire_active'), #퇴직자로 변경
     path('reject_active/<int:id>/', views.reject_active, name='reject_active'), #보류자로 변경
     path('test/', views.test, name='test'), #테스트
-    path('search/', views.search, name='search'), #테스트
-    
-    # path('search/', views.search, name='search'), #검색 로직
+    path('search/', views.search, name='search'), #검색기능
 ]
-

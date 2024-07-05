@@ -10,21 +10,21 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("question").addEventListener("keydown", function(event) {
         if (event.keyCode === 13 && !event.shiftKey) {
             event.preventDefault();
-            document.getElementById("text-button").click();
+            sendMessage(event);
         }
     });
 });
- 
+
 let selectedCategory = null;
- 
+
 function selectCategory(category) {
     selectedCategory = category;
     console.log('Selected category:', selectedCategory);
- 
+
     const formData = new FormData();
     formData.append('category', selectedCategory);
     formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
- 
+
     fetch('/education/', {
         method: 'POST',
         body: formData
@@ -38,24 +38,25 @@ function selectCategory(category) {
     .then(data => {
         console.log('Chatbot initialized:', data);
         document.getElementById('selected-category').innerText = selectedCategory;
+        document.getElementById('chat-content').innerHTML = ''; // Clear chat content
         appendMessage('bot', data.initial_question); // 첫 질문 출력
     })
     .catch(error => console.error('Error:', error));
 }
- 
+
 function sendMessage(event) {
     event.preventDefault();
     const userInput = document.getElementById('question').value;
     if (!userInput.trim()) return;
- 
+
     // Append user message to chat box
     appendMessage('user', userInput);
- 
+
     // Send user message to server
     const formData = new FormData();
     formData.append('message', userInput);
     formData.append('csrfmiddlewaretoken', getCookie('csrftoken'));
- 
+
     fetch('/education/', {
         method: 'POST',
         body: formData,
@@ -70,7 +71,7 @@ function sendMessage(event) {
     })
     .catch(error => console.error('Error:', error));
 }
- 
+
 function appendMessage(sender, message) {
     const messageElement = document.createElement('div');
     messageElement.className = 'message ' + sender;
@@ -79,7 +80,7 @@ function appendMessage(sender, message) {
     document.getElementById('question').value = '';
     document.getElementById('chat-content').scrollTop = document.getElementById('chat-content').scrollHeight;
 }
- 
+
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -94,16 +95,3 @@ function getCookie(name) {
     }
     return cookieValue;
 }
-
-function cancelSelection() {
-    document.getElementById('room-code').value = '';
-    selectedCategory = null;
-}
- 
-document.getElementById("question").addEventListener("keydown", function(event) {
-    if (event.keyCode === 13 && !event.shiftKey) {
-        event.preventDefault();
-        document.getElementById("text-button").click();
-    }
-});
-

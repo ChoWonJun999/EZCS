@@ -156,3 +156,4 @@ def reset_password(request):
         except User.DoesNotExist:
             return JsonResponse({'result': 'error', 'msg': '사용자를 찾을 수 없습니다.'})
     return render(request, 'accounts/reset_password.html')
+
