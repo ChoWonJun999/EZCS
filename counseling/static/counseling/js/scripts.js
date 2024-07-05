@@ -141,7 +141,7 @@ function cancelConsultationEdit() {
 const transcription = document.getElementById('transcription');
 const startButton = document.getElementById('start-button');
 const stopButton = document.getElementById('stop-button');
-const recommendedAnswer = document.querySelector('.recommended-answer');
+const recommendedAnswer = document.getElementById('translation-content');
 let mediaRecorder;
 let audioChunks = [];
 
@@ -249,7 +249,7 @@ function stopCounseling() {
         mediaRecorder.onstop = () => {
             // const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            sendAudioToServer(audioBlob);
+            // sendAudioToServer(audioBlob);
         };
     }
 }
@@ -274,6 +274,9 @@ function createFinalDiv(text) {
 function sendTextToChatbot(text) {
     const formData = new FormData();
     formData.append('text', text);
+    // DB 저장을 위한 데이터(미완성)
+    formData.append('username', '홍길동')
+    formData.append('phone_number', '01000000001')
 
     fetch('/counseling/stt_chat/', {
         method: 'POST',
