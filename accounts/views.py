@@ -7,7 +7,6 @@ import logging
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
 import requests
-
 logger = logging.getLogger(__name__)
 
 def login_pass(request):
@@ -156,4 +155,3 @@ def reset_password(request):
         except User.DoesNotExist:
             return JsonResponse({'result': 'error', 'msg': '사용자를 찾을 수 없습니다.'})
     return render(request, 'accounts/reset_password.html')
-
