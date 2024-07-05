@@ -4,24 +4,20 @@
 {% block title %}직원관리{% endblock %}
 
 {% block content %}
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("tr[data-url]").click(function () {
-            var url = $(this).data("url");
-            window.location.href = url;
-        });
-    });
-</script>
+
 
 <form action="" method="POST">
     <div class="dashboard">
         <div>
+            <h2>직원 관리</h2>
+        </div>
+        <div>
             <ul>
                 <li>
-                    <input type="text" class="form-control" id="seachText" name="seachText" placeholder="검색창">
+                    <input type="text" class="form-control" id="searchText" name="searchText" placeholder="검색창">
                 </li>
                 <li>
-                    <button>검색</button>
+                    <input type="submit" class="btn btn-primary" value="검색">
                 </li>
             </ul>
         </div>
@@ -41,7 +37,7 @@
                 </thead>
                 <tbody>
                     {% for item in data %}
-                    <tr data-url="{% url 'management:management_detail' item.id %}" class="active-row">
+                    <tr data-url="{% url 'management:detail' item.id %}" class="active-row">
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.name }}</td>
                         <td>{{ item.username }}</td>

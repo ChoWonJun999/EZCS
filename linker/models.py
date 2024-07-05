@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class UserCounselLog(models.Model):
     """
     user 테이블과 counsel_log 테이블의 조인테이블
@@ -30,6 +31,7 @@ class UserCounselLog(models.Model):
         db_table = 'user_counsel_log'
         verbose_name = 'User Counsel Log'
         verbose_name_plural = 'Users Counsel Log'
+    
     
 class UserCounselChatbotLog(models.Model):
     """
@@ -112,7 +114,7 @@ class UserEducationQuiz(models.Model):
     )
     
     education_quiz_id = models.ForeignKey(
-        "education.EducationQuiz",
+        "education.Quiz",
         on_delete=models.CASCADE,
         verbose_name="User's Education Quiz ID",
         db_comment="User's Education Quiz ID",

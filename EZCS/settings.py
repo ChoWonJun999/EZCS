@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "accounts",
     "management",
     "education",
+    'education.templatetags',
     "counseling",
     "linker",
 ]

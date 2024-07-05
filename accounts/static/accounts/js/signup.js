@@ -178,6 +178,7 @@ $(document).ready(function () {
                 }
             });
         });
+
     }
     $("#UserAdd2").on("input", function () {
         let addressDetail = $(this).val();
