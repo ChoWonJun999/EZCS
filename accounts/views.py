@@ -6,6 +6,7 @@ import re
 import logging
 from django.contrib.auth import password_validation
 from django.core.exceptions import ValidationError
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -125,3 +126,33 @@ def check_phone(request):
     phone_number = request.GET.get('phone_number')
     is_taken = User.objects.filter(phone_number=phone_number).exists()
     return JsonResponse({'is_taken': is_taken})
+
+def searchPW(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        birthdate = request.POST.get('birthdate')
+        phone_number = request.POST.get('phone_number')
+
+        try:
+            user = User.objects.get(username=username, birth_date=birthdate, phone_number=phone_number)
+            # 인증 정보가 맞다면 비밀번호 재설정 페이지로 이동
+            request.session['reset_user_id'] = user.id
+            return JsonResponse({'result': 'success', 'msg': '인증 성공. 비밀번호 재설정 페이지로 이동합니다.'})
+        except User.DoesNotExist:
+            return JsonResponse({'result': 'error', 'msg': '해당 정보의 사용자를 찾을 수 없습니다.'})
+    return render(request, 'accounts/searchpw.html')
+
+def reset_password(request):
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password')
+        user_id = request.session.get('reset_user_id')
+
+        try:
+            user = User.objects.get(id=user_id)
+            user.set_password(new_password)
+            user.save()
+            del request.session['reset_user_id']
+            return JsonResponse({'result': 'success', 'msg': '비밀번호가 성공적으로 변경되었습니다.'})
+        except User.DoesNotExist:
+            return JsonResponse({'result': 'error', 'msg': '사용자를 찾을 수 없습니다.'})
+    return render(request, 'accounts/reset_password.html')
