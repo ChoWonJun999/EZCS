@@ -19,7 +19,7 @@
                 </li>
                 <li>
                     <label for="phone">전화번호</label>
-                    <input type="tel" id="phone" name="phone" disabled>
+                    <input type="tel" id="phone" name="phone" maxlength="11" pattern="\d{3}\d{4}\d{4}" disabled>
                 </li>
                 <li>
                     <label for="address">주소</label>
@@ -36,7 +36,7 @@
                 <input type="reset" class="save-button" value="초기화" style="display: none;">
                 <input type="button" class="cancel-button" value="취소" onclick="cancelEdit()" style="display: none;">
             </div>
-        </form>
+        </form>        
     </div>
     <div class="memo-section">
         <h2>문의/조치 내용</h2>
@@ -60,7 +60,7 @@
         </form>
     </div>
     <div class="stt-content">
-        <h2>상담내용 변환 창</h2>
+        <h2>고객-상담원</h2>
         <div class="stt">
             <div id="transcription">여기에 음성 입력 내용이 표시됩니다...</div>
             <div class="button-container">
@@ -74,10 +74,13 @@
         </div>
     </div>
     <div class="stt-content">
-        <h2>번역 창</h2>
+        <h2>고객음성번역-챗봇추천응대멘트</h2>
         <div class="translation">
             <div id="translation-content">여기에 번역된 내용이 표시됩니다...</div>
         </div>
+    </div>
+    <div class="submit-container">
+        <button type="submit" class="submit-button">저장</button>
     </div>
 </div>
 

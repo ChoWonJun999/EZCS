@@ -40,7 +40,12 @@ function saveCustomerInfo() {
     const inputs = form.querySelectorAll('input:not([type="button"])');
 
     // 고객 정보를 저장하는 로직 추가, 예: 서버로 데이터 전송
-    const formData = new FormData(form);
+    const phoneInput = document.getElementById('phone');
+    if (phoneInput.value.length !== 11 || !/^\d{11}$/.test(phoneInput.value)) {
+        alert('전화번호는 11자리 숫자여야 합니다.');
+        phoneInput.disabled = false; // 입력 필드 다시 활성화
+        return;
+    }
 
     fetch('/counseling/save_customer_info/', {
         method: 'POST',
@@ -161,7 +166,7 @@ function cancelConsultationEdit() {
 const transcription = document.getElementById('transcription');
 const startButton = document.getElementById('start-button');
 const stopButton = document.getElementById('stop-button');
-const recommendedAnswer = document.getElementById('translation-content');
+const translationContent = document.getElementById('translation-content');
 let mediaRecorder;
 let audioChunks = [];
 
@@ -233,6 +238,12 @@ function startCounseling() {
                     const finalDiv = createFinalDiv(finalTranscript);
                     transcription.appendChild(finalDiv);
                     sendTextToChatbot(finalTranscript);  // 텍스트 데이터를 챗봇에 전송
+
+                    // 최종 텍스트를 번역된 내용으로 변경하여 translation-content에 추가
+                    const translationDiv = document.createElement('div');
+                    translationDiv.className = 'output-msg';
+                    translationDiv.innerText = finalTranscript; // 여기서 최종 텍스트를 번역된 내용으로 바꿔야 합니다.
+                    translationContent.appendChild(translationDiv);
                 }
 
                 interimDiv.remove();
@@ -252,6 +263,9 @@ function startCounseling() {
 
 // 상담 종료 함수
 function stopCounseling() {
+    // 팝업 창을 띄워서 파일을 저장할지 물어보기
+    const userConfirmed = confirm("파일을 저장하시겠습니까?");
+
     if (window.recognition) {
         window.recognition.stop();
     }
@@ -267,9 +281,11 @@ function stopCounseling() {
     if (mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
         mediaRecorder.onstop = () => {
-            // const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            // sendAudioToServer(audioBlob);
+            if (userConfirmed) {
+                // 사용자가 "네"를 선택한 경우 파일 저장 프로세스 진행
+                sendAudioToServer(audioBlob);
+            }
         };
     }
 }
@@ -316,7 +332,7 @@ function sendTextToChatbot(text) {
                 const childDiv = document.createElement('div');
                 childDiv.className = 'chatbot-response';
                 childDiv.innerText = data.output;
-                recommendedAnswer.appendChild(childDiv);  // 챗봇 응답을 recommended-answer div에 추가
+                translationContent.appendChild(childDiv);  // 챗봇 응답을 translation-content div에 추가
             } else if (data.error) {
                 console.error('Error from server:', data.error);
             }
@@ -328,28 +344,6 @@ function sendTextToChatbot(text) {
 
 // 오디오 데이터를 서버로 전송하는 함수(임시로 로컬로 저장하게 구현)
 function sendAudioToServer(audioBlob) {
-    // const formData = new FormData();
-    // formData.append('audio', audioBlob);
-
-    // fetch('/counseling/stt_audio/', {
-    //     method: 'POST',
-    //     body: formData,
-    //     headers: {
-    //         'X-CSRFToken': getCookie('csrftoken')
-    //     }
-    // })
-    // .then(response => {
-    //     if (!response.ok) {
-    //         throw new Error('Network response was not ok');
-    //     }
-    //     return response.json();
-    // })
-    // .then(data => {
-    //     console.log('Audio data sent to server:', data);
-    // })
-    // .catch(error => {
-    //     console.error('Error:', error);
-    // });
     const url = URL.createObjectURL(audioBlob);
     const a = document.createElement('a');
     a.style.display = 'none';

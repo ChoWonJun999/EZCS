@@ -29,14 +29,14 @@ def manager_edit(request, id):
         # user.birthday = request.POST.get('birthday') #생년월일
         # user.phone_number = request.POST.get('phone_number') #전화번호
         user.username = request.POST.get('username') #id
-        user.password = request.POST.get('password') #pw
+        # user.password = request.POST.get('password') #pw
         user.email = request.POST.get('email') #이메일
         # user.address = request.POST.get('address') #주소
         # user.belong = request.POST.get('belong') # 소속
         # user.role = request.POST.get('role') #역할
         # user.active_status = request.POST.get('active_status') #활동상태
         user.save()
-        return redirect("management:management_detail", id)
+        return redirect("management:detail", id)
 
 
 
@@ -111,9 +111,28 @@ def test(request):
 #검색로직
 def search(request):
     query = request.POST.get('seachText', '')
+   
     if query:
         results = User.objects.filter(name__icontains=query)
     else:
         results = []
-    return render(request, 'management/manager_dashboard.html', {'results': results, 'query': query})
+    return render(request, 'management/dashboard.html', {'data': results, 'query': query})
+         
+def allow_search(request):
+    query = request.POST.get('seachText', '')
+   
+    if query:
+        results = User.objects.filter(name__icontains=query)
+    else:
+        results = []
+    return render(request, 'management/allow.html', {'data': results, 'query': query})
+       
+def inactive_search(request):
+    query = request.POST.get('seachText', '')
+   
+    if query:
+        results = User.objects.filter(name__icontains=query)
+    else:
+        results = []
+    return render(request, 'management/inactive.html', {'data': results, 'query': query})
          

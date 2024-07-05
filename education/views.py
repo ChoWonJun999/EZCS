@@ -66,10 +66,11 @@ def edu_history(request):
 
     return render(request, 'education/edu_history.html', {'logs': logs})
 
-# 교육이력 상세페이지
-def edu_detail(request):
-    user = User.objects.get(id=id)
-    return render(request, 'education/details.html', {'user':user})
+# 교육이력페이지
+def edu_history(request):
+    logs = EducationChatbotLog.objects.filter(user_id=request.session['_auth_user_id'])
+
+    return render(request, 'education/edu_history.html', {'logs': logs})
 
 
 # 웹에서 동작하는 Chatbot(미완성)

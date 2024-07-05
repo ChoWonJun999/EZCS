@@ -6,7 +6,8 @@
 {% block content %}
 
 
-<form action="" method="POST">
+<form action="{% url 'management:search' %}" method="POST">
+    {% csrf_token %}
     <div class="dashboard">
         <div>
             <h2>직원 관리</h2>
