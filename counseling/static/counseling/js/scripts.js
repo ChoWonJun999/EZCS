@@ -141,7 +141,7 @@ function cancelConsultationEdit() {
 const transcription = document.getElementById('transcription');
 const startButton = document.getElementById('start-button');
 const stopButton = document.getElementById('stop-button');
-const recommendedAnswer = document.querySelector('.recommended-answer');
+const recommendedAnswer = document.getElementById('translation-content');
 let mediaRecorder;
 let audioChunks = [];
 
@@ -249,7 +249,7 @@ function stopCounseling() {
         mediaRecorder.onstop = () => {
             // const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-            sendAudioToServer(audioBlob);
+            // sendAudioToServer(audioBlob);
         };
     }
 }
