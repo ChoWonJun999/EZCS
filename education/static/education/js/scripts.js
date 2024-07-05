@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById("question").addEventListener("keydown", function(event) {
         if (event.keyCode === 13 && !event.shiftKey) {
             event.preventDefault();
-            document.getElementById("text-button").click();
+            sendMessage(event);
         }
     });
 });
@@ -38,6 +38,7 @@ function selectCategory(category) {
     .then(data => {
         console.log('Chatbot initialized:', data);
         document.getElementById('selected-category').innerText = selectedCategory;
+        document.getElementById('chat-content').innerHTML = ''; // Clear chat content
         appendMessage('bot', data.initial_question); // 첫 질문 출력
     })
     .catch(error => console.error('Error:', error));

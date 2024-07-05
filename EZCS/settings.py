@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "accounts",
     "management",
     "education",
+    'education.templatetags',
     "counseling",
     "linker",
 ]
@@ -167,4 +168,3 @@ CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_AGE = 60 * 60 * 3
 
 SESSION_SAVE_EVERY_REQUEST = True
-

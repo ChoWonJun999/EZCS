@@ -12,4 +12,5 @@ urlpatterns = [
     path('searchPW/', views.searchPW, name='searchPW'),
     path('check-username/', views.check_username, name='check_username'),
     path('check-email/', views.check_email, name='check_email'),
+    path('check-phone/', views.check_phone, name='check_phone'), 
 ]

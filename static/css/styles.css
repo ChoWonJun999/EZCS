@@ -8,12 +8,10 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    position: fixed;
-    overflow: hidden;
 }
 
 .sidebar {
-    width: 250px;
+    width: 180px;
     background-color: #ffffff;
     padding: 20px;
     border-right: 1px solid #e0e0e0;
@@ -26,6 +24,10 @@ body {
     overflow-y: auto;
     transition: transform 0.3s ease;
     z-index: 1000;
+}
+
+.sidebar.hidden {
+    transform: translateX(-100%);
 }
 
 .sidebar h1 {
@@ -69,9 +71,9 @@ body {
 
 .sidebar .menu .submenu {
     list-style: none;
-    padding: 0;
+    padding: 0 0 0 20px;
     margin: 0;
-    display: none;
+    display: block;
 }
 
 .sidebar .menu .submenu li {
@@ -79,7 +81,7 @@ body {
 }
 
 .sidebar .menu .submenu a {
-    padding: 5px 20px;
+    padding: 5px 15px;
 }
 
 .sidebar .menu .submenu a.active {
@@ -87,20 +89,12 @@ body {
 }
 
 .has-submenu > a::after {
-    content: '▼';
-    font-size: 12px;
-    margin-left: auto;
-    transition: transform 0.3s;
-}
-
-.has-submenu.open > a::after {
-    transform: rotate(180deg);
+    content: none;
 }
 
 .content {
     flex-grow: 1;
-    padding: 20px;
-    margin-left: 270px; /* 사이드바와 겹치지 않게 하기 위해 추가 */
+    margin-left: 200px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
@@ -115,17 +109,19 @@ body {
     padding: 20px;
     background-color: #ffffff;
     border-bottom: 1px solid #e0e0e0;
-    margin-left: 20px;
 }
 
 .header-right {
     display: flex;
     align-items: center;
-    gap: 20px;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .profile-info {
     font-size: 16px;
+    margin-right: auto;
+    padding: 0px 0px 0px 30px;
 }
 
 .logout {
@@ -147,7 +143,6 @@ body {
     background-color: #E71D36;
 }
 
-
 .main-content {
     flex-grow: 1;
     background-color: #ffffff;
@@ -157,8 +152,8 @@ body {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-left: 20px;
-    overflow: hidden; /* Prevent overflow */
+    margin-left: 40px;
+    overflow: hidden;
 }
 
 .footer {
@@ -174,18 +169,39 @@ body {
     flex-shrink: 0;
 }
 
-.sidebar-toggle {
-    display: none;
-    background-color: #2EC4B6;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    z-index: 1001;
+.footer-content {
+    text-align: center;
+    font-size: 12px;
+    color: #999;
 }
 
-.sidebar.active {
-    transform: translateX(-100%);
+.footer-content a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.footer-content a:hover {
+    text-decoration: underline;
+}
+
+.footer-content p {
+    margin: 5px 0;
+}
+
+.sidebar-toggle {
+    display: none;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+.sidebar-toggle:hover {
+    background-color: #0056b3;
 }
 
 @media (max-width: 768px) {
@@ -193,27 +209,39 @@ body {
         transform: translateX(-100%);
     }
 
-    .sidebar.active {
-        transform: translateX(0);
-    }
-
     .sidebar-toggle {
         display: block;
-        background-color: #2EC4B6;
-        color: white;
-        border: none;
-        padding: 10px;
-        cursor: pointer;
-        z-index: 1001;
-        margin-right: auto; /* 왼쪽 정렬을 위한 속성 추가 */
     }
 
     .content {
         margin-left: 0;
     }
 
+    .main-content {
+        margin-left: 0;
+    }
+
     .footer {
         width: 100%;
-        left: 0;
+        margin-left: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-info {
+        padding-left: 0;
+    }
+
+    .logout {
+        padding: 5px 10px;
+    }
+
+    .main-content {
+        padding: 10px;
     }
 }

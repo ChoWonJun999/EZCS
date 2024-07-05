@@ -41,7 +41,7 @@ function saveCustomerInfo() {
     inputs.forEach(input => input.disabled = true);
 
     // 고객 정보를 저장하는 로직 추가, 예: 서버로 데이터 전송
-    alert('고객 정보가 저장되었습니다.');
+    // alert('고객 정보가 저장되었습니다.');
 
     form.querySelector('.edit-button').style.display = 'inline-block';
     form.querySelectorAll('.save-button, .cancel-button').forEach(button => {
@@ -55,7 +55,7 @@ function cancelEdit() {
     inputs.forEach(input => input.disabled = true);
 
     // 수정 취소를 처리하는 로직 추가, 예: 변경 사항 되돌리기
-    alert('수정이 취소되었습니다.');
+    // alert('수정이 취소되었습니다.');
 
     form.querySelector('.edit-button').style.display = 'inline-block';
     form.querySelectorAll('.save-button, .cancel-button').forEach(button => {
@@ -78,7 +78,7 @@ function saveMemo() {
     textarea.disabled = true;
 
     // 메모 내용을 저장하는 로직 추가, 예: 서버로 데이터 전송
-    alert('메모가 저장되었습니다.');
+    // alert('메모가 저장되었습니다.');
 
     document.querySelector('#memo-form .edit-button').style.display = 'inline-block';
     document.querySelectorAll('#memo-form .save-button, #memo-form .cancel-button').forEach(button => {
@@ -91,7 +91,7 @@ function cancelMemoEdit() {
     textarea.disabled = true;
 
     // 메모 수정 취소를 처리하는 로직 추가, 예: 변경 사항 되돌리기
-    alert('메모 수정이 취소되었습니다.');
+    // alert('메모 수정이 취소되었습니다.');
 
     document.querySelector('#memo-form .edit-button').style.display = 'inline-block';
     document.querySelectorAll('#memo-form .save-button, #memo-form .cancel-button').forEach(button => {
@@ -116,7 +116,7 @@ function saveConsultation() {
     textareas.forEach(textarea => textarea.disabled = true);
 
     // 문의/조치 내용을 저장하는 로직 추가, 예: 서버로 데이터 전송
-    alert('문의/조치 내용이 저장되었습니다.');
+    // alert('문의/조치 내용이 저장되었습니다.');
 
     document.querySelector('#consultation-form .edit-button').style.display = 'inline-block';
     document.querySelectorAll('#consultation-form .save-button, #consultation-form .cancel-button').forEach(button => {
@@ -130,7 +130,7 @@ function cancelConsultationEdit() {
     textareas.forEach(textarea => textarea.disabled = true);
 
     // 문의/조치 내용 수정 취소를 처리하는 로직 추가, 예: 변경 사항 되돌리기
-    alert('문의/조치 내용 수정이 취소되었습니다.');
+    // alert('문의/조치 내용 수정이 취소되었습니다.');
 
     document.querySelector('#consultation-form .edit-button').style.display = 'inline-block';
     document.querySelectorAll('#consultation-form .save-button, #consultation-form .cancel-button').forEach(button => {
@@ -138,65 +138,142 @@ function cancelConsultationEdit() {
     });
 }
 
-let mediaRecorder;
-let fullAudioChunks = [];
-let audioStream;
-let interval;
-
+const transcription = document.getElementById('transcription');
 const startButton = document.getElementById('start-button');
 const stopButton = document.getElementById('stop-button');
-const transcription = document.getElementById('transcription');
+const recommendedAnswer = document.getElementById('translation-content');
+let mediaRecorder;
+let audioChunks = [];
 
+// 상담 시작 함수
 function startCounseling() {
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
-            audioStream = stream;
-            mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
-            mediaRecorder.start();
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'ko-KR';
+            let finalTranscript = '';
 
-            interval = setInterval(() => {
-                if (mediaRecorder.state === 'recording') {
-                    mediaRecorder.requestData();
-                }
-            }, 10000);  // 10초마다 데이터 요청
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
 
             mediaRecorder.ondataavailable = event => {
-                if (event.data.size > 0) {
-                    // fullAudioChunks에 현재 청크를 추가
-                    fullAudioChunks.push(event.data);
-
-                    // 청크 데이터의 길이 로그 출력
-                    console.log('Audio chunk size:', event.data.size);
-
-                    // 청크 데이터를 비동기적으로 전송
-                    sendAudioChunk(event.data);
-                }
+                audioChunks.push(event.data);
             };
 
-            startButton.disabled = true;
-            stopButton.disabled = false;
+            mediaRecorder.start();
+
+            // 기존의 interimDiv를 제거(중복생성 방지)
+            removeExistingInterimDiv();
+
+            // 새로운 interimDiv를 생성하여 추가
+            const interimDiv = document.createElement('div');
+            interimDiv.className = 'interim-msg';
+            transcription.appendChild(interimDiv);
+
+            // 음성 인식 시작 시 버튼 비활성화 및 로그 출력
+            recognition.onstart = () => {
+                startButton.disabled = true;
+                stopButton.disabled = false;
+                console.log('Counseling started');
+            };
+
+            // 음성 인식 결과 처리
+            recognition.onresult = event => {
+                let interimTranscript = '';
+                const results = event.results;
+
+                // 음성 인식을 실시간으로 보여주기 위한 for문
+                for (let i = event.resultIndex; i < results.length; i++) {
+                    if (results[i].isFinal) {
+                        finalTranscript += results[i][0].transcript + ' ';
+                    } else {
+                        interimTranscript += results[i][0].transcript;
+                    }
+                }
+
+                interimDiv.innerText = finalTranscript + interimTranscript;
+            };
+
+            // 음성 인식 오류 처리
+            recognition.onerror = event => {
+                console.error('Speech recognition error:', event.error);
+                startButton.disabled = false;
+                stopButton.disabled = true;
+            };
+
+            // 음성 인식 종료 시
+            recognition.onend = () => {
+                startButton.disabled = false;
+                stopButton.disabled = true;
+                console.log('Counseling ended');
+
+                if (finalTranscript.trim() !== '') {
+                    const finalDiv = createFinalDiv(finalTranscript);
+                    transcription.appendChild(finalDiv);
+                    sendTextToChatbot(finalTranscript);  // 텍스트 데이터를 챗봇에 전송
+                }
+
+                interimDiv.remove();
+                mediaRecorder.stop(); // 음성 녹음 중지
+            };
+
+            recognition.start();
+
+            // 외부에서 종료할 수 있도록 recognition과 audioStream을 저장
+            window.recognition = recognition;
+            window.audioStream = stream;
         })
         .catch(error => {
             console.error('Error accessing media devices.', error);
         });
 }
 
+// 상담 종료 함수
 function stopCounseling() {
-    if (mediaRecorder) {
+    if (window.recognition) {
+        window.recognition.stop();
+    }
+
+    if (window.audioStream) {
+        window.audioStream.getTracks().forEach(track => track.stop());
+    }
+
+    startButton.disabled = false;
+    stopButton.disabled = true;
+
+    // 녹음 중지 및 데이터 전송
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
+        mediaRecorder.onstop = () => {
+            // const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            // sendAudioToServer(audioBlob);
+        };
     }
+}
 
-    if (audioStream) {
-        audioStream.getTracks().forEach(track => track.stop());
+// interimDiv 제거 함수
+function removeExistingInterimDiv() {
+    const existingInterimDiv = document.querySelector('.interim-msg');
+    if (existingInterimDiv) {
+        existingInterimDiv.remove();
     }
+}
 
-    clearInterval(interval);
+// output-msg 생성(종료 버튼 클릭시 동작)
+function createFinalDiv(text) {
+    const finalDiv = document.createElement('div');
+    finalDiv.className = 'output-msg';
+    finalDiv.innerText = text;
+    return finalDiv;
+}
 
-    const fullAudioBlob = new Blob(fullAudioChunks, { type: 'audio/webm' });
-    fullAudioChunks = [];
-
+// 텍스트 데이터를 챗봇에 전송하는 함수(view.py에 전송)
+function sendTextToChatbot(text) {
     const formData = new FormData();
-    formData.append('audio', fullAudioBlob);
+    formData.append('text', text);
 
     fetch('/counseling/stt_chat/', {
         method: 'POST',
@@ -212,53 +289,56 @@ function stopCounseling() {
             return response.json();
         })
         .then(data => {
-            console.log(data);
             if (data.output) {
-                transcription.innerHTML += '<div class="output-msg">Final Output: ' + data.output + '</div>';
+                const childDiv = document.createElement('div');
+                childDiv.className = 'chatbot-response';
+                childDiv.innerText = data.output;
+                recommendedAnswer.appendChild(childDiv);  // 챗봇 응답을 recommended-answer div에 추가
             } else if (data.error) {
-                transcription.innerHTML += '<div class="error-msg"> Error: ' + data.error + '</div>';
+                console.error('Error from server:', data.error);
             }
         })
         .catch(error => {
             console.error('Error:', error);
-            transcription.innerHTML += '<div class="error-msg"> Error: ' + error.message + '</div>';
-        });
-
-    startButton.disabled = false;
-    stopButton.disabled = true;
-}
-
-function sendAudioChunk(chunk) {
-    const formData = new FormData();
-    formData.append('audio', chunk);
-
-    fetch('/counseling/stt/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': getCookie('csrftoken')
-        }
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log(data);
-            if (data.text) {
-                transcription.innerHTML += '<div class="input-msg">' + data.text + '</div>';
-            } else if (data.error) {
-                transcription.innerHTML += '<div class="error-msg"> Error: ' + data.error + '</div>';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            transcription.innerHTML += '<div class="error-msg"> Error: ' + error.message + '</div>';
         });
 }
 
+// 오디오 데이터를 서버로 전송하는 함수(임시로 로컬로 저장하게 구현)
+function sendAudioToServer(audioBlob) {
+    // const formData = new FormData();
+    // formData.append('audio', audioBlob);
+
+    // fetch('/counseling/stt_audio/', {
+    //     method: 'POST',
+    //     body: formData,
+    //     headers: {
+    //         'X-CSRFToken': getCookie('csrftoken')
+    //     }
+    // })
+    // .then(response => {
+    //     if (!response.ok) {
+    //         throw new Error('Network response was not ok');
+    //     }
+    //     return response.json();
+    // })
+    // .then(data => {
+    //     console.log('Audio data sent to server:', data);
+    // })
+    // .catch(error => {
+    //     console.error('Error:', error);
+    // });
+    const url = URL.createObjectURL(audioBlob);
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = url;
+    a.download = 'recording.webm';  // 파일명 설정
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+}
+
+// CSRF 토큰을 가져오는 함수
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {

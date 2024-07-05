@@ -4,6 +4,7 @@ from django.contrib.sessions.backends.db import SessionStore
 from django.conf import settings
 from django.contrib.auth.signals import user_logged_in
 
+
 class UserManager(BaseUserManager):
     """_summary_
 
@@ -24,11 +25,17 @@ class UserManager(BaseUserManager):
 
         if extra_fields.get('is_superuser') is not True:
             raise ValueError('Superuser must have is_superuser=True.')
+        
+        extra_fields.setdefault('active_status', True)
 
+        if extra_fields.get('active_status') is not True:
+            raise ValueError('Superuser must have active_status=True.')
+        
         return self.create_user(username, email, password, **extra_fields)
 
     def get_by_natural_key(self, username):
         return self.get(username=username)
+
 
 class User(AbstractBaseUser, PermissionsMixin):
     """
@@ -73,29 +80,39 @@ class User(AbstractBaseUser, PermissionsMixin):
     )
     
     phone_number = models.CharField(
+        null=True,
+        blank=True,
         max_length=20,
         verbose_name="User's Phone Number",
-        db_comment="User's Phone Number"
+        db_comment="User's Phone Number",
     )
 
     address_code = models.IntegerField(
+        null=True,
+        blank=True,
         verbose_name="User's Address",
         db_comment="User's Address"
     )
     
     address = models.CharField(
+        null=True,
+        blank=True,
         max_length=255,
         verbose_name="User's Address",
         db_comment="User's Address"
     )
 
     address_detail = models.CharField(
+        null=True,
+        blank=True,
         max_length=255,
         verbose_name="User's Address",
         db_comment="User's Address"
     )
     
     department = models.CharField(
+        null=True,
+        blank=True,
         max_length=255,
         verbose_name="User's Department",
         db_comment="User's Department"

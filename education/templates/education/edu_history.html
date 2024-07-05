@@ -13,15 +13,96 @@
     });
 </script>
 
-<form action="" method="GET">
+<head>
+    <link href="/static/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <script src="/static/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<style>
+    form {
+        height: 100%;
+        cursor: default;
+    }
+    
+    div {
+        padding: 5px;
+    }
+
+    .dashboard {
+        margin: 0;
+        padding: 0;
+        display: inline;
+    }
+    
+    .dashboard>div>ul>li {
+        display: inline;
+    }
+    
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+    
+    ul>li {
+        margin: 0;
+        padding: 0;
+    }
+    
+    table {
+        width: 100%;
+    }
+    
+    .styled-table {
+        border-collapse: collapse;
+        margin: 25px 0;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 400px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .styled-table thead tr {
+        background-color: #009879;
+        color: #ffffff;
+        text-align: left;
+    }
+    
+    .styled-table th,
+    .styled-table td {
+        padding: 12px 15px;
+    }
+    
+    .styled-table tbody tr {
+        border-bottom: 1px solid #dddddd;
+    }
+    
+    .styled-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+    }
+    
+    .styled-table tbody tr:last-of-type {
+        border-bottom: 2px solid #009879;
+    }
+    
+    .styled-table tbody tr.active-row {
+        font-weight: bold;
+        color: #009879;
+        cursor: pointer;
+    }
+</style>
+
+<form action="" method="POST">
     <div class="dashboard">
+        <div>
+            <h1> 교육 이력</h1>
+        </div>
         <div>
             <ul>
                 <li>
                     <input type="text" class="form-control" id="seachText" name="seachText" placeholder="검색창">
                 </li>
                 <li>
-                    <button>검색</button>
+                    <input type="submit" class="btn btn-primary" value="검색">
                 </li>
             </ul>
         </div>
@@ -31,24 +112,18 @@
         <div>
             <table class="styled-table">
                 <thead>
-                    <th>회원번호</th>
-                    <th>이름</th>
-                    <th>아이디</th>
-                    <th>E-mail</th>
-                    <th>소속</th>
-                    <th>역할</th>
-                    <th>가입일자</th>
+                    <th>id</th>
+                    <th>body</th>
+                    <th>create_time</th>
+                    <th>user_id</th>
                 </thead>
                 <tbody>
                     {% for item in data %}
                     <tr data-url="{% url 'education:edu_detail' item.id %}" class="active-row">
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.username }}</td>
-                        <td>{{ item.email }}</td>
-                        <td>{{ item.소속 }}</td>
-                        <td>{{ item.역할 }}</td>
-                        <td>{{ item.date_joined }}</td>
+                        <td>{{ log.id }}</td>
+                        <td>{{ log.body }}</td>
+                        <td>{{ log.create_time }}</td>
+                        <td>{{ log.user_id }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -57,15 +132,24 @@
     </div>
 </form>
 {% endblock %}
-        {% comment %} <tbody>
-            {% for log in logs %}
-                <tr>
-                    <td>{{ log.id }}</td>
-                    <td>{{ log.body }}</td>
-                    <td>{{ log.create_time }}</td>
-                    <td>{{ log.user_id }}</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{% comment %} <tbody>
+    {% for log in logs %}
+    <tr>
+        <td>{{ log.id }}</td>
+        <td>{{ log.body }}</td>
+        <td>{{ log.create_time }}</td>
+        <td>{{ log.user_id }}</td>
+    </tr>
+    {% endfor %}
+</tbody>
+</table>
 </div> {% endcomment %}
+
+<!-- #검색로직
+def search(request):
+    query = request.POST.get('seachText', '')
+    if query:
+        results = User.objects.filter(name__icontains=query)
+    else:
+        results = []
+    return render(request, 'management/manager_dashboard.html', {'results': results, 'query': query}) -->

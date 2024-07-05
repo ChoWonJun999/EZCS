@@ -2,7 +2,158 @@
 {% block title %}Edit User{% endblock %}
 
 {% block content %}
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <h1>직원정보 수정</h1>
+<form action="" method="POST">
+    {% csrf_token %}
+    <table class="styled-table-deail">
+        <tbody>
+            <tr>
+                <th>이름</th>
+                <td>
+                    <input type="text" id="name" name="name" class="form-control mb-2" value="{{ user.name }}">
+                </td>
+            </tr>
+            <tr>
+                <th>생년월일</th>
+                <td>
+                    <input type="date" id="birth_date" name="birth_date" class="form-control mb-2" value="{{ user.birth_date|date:'Y-m-d' }}">
+                </td>
+            </tr>
+            <tr>
+                <th>전화번호</th>
+                <td>
+                    <input type="text" id="phone" name="phone" class="form-control mb-2" value="{{ user.phone }}">
+                </td>
+            </tr>
+            <tr>
+                <th>ID</th>
+                <td>
+                    <input type="text" id="username" name="username" class="form-control mb-2" value="{{ user.username }}">
+                </td>
+            </tr>
+            <tr>
+                <th>이메일</th>
+                <td>
+                    
+                    {% comment %} <input type="email" id="email" name="email" class="form-control mb-2" value="{{ user.email|email_masker }}"> {% endcomment %}
+                    <input type="email" id="email" name="email" class="form-control mb-2" value="{{ user.email}}">
+                </td>
+            </tr>
+            <tr>
+                <th>주소</th>
+                <td>
+                    <input type="text" id="addressCode" name="addressCode" class="form-control mb-2" placeholder="우편번호" style="width: 50%; display: inline;" disabled value="{{ user.address_code }}">
+                    <input type="button" id="zipp_btn" class="btn btn-primary" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
+                    <input type="text" id="address" name="address" class="form-control mb-2" maxlength="40" placeholder="기본 주소를 입력하세요" required disabled value="{{ user.address }}">
+                    <input type="text" id="addressDetail" name="addressDetail" class="form-control mb-2" maxlength="40" placeholder="상세 주소를 입력하세요" value="{{ user.address_detail }}">
+                </td>
+            </tr>
+            <tr>
+                <th>소속</th>
+                <td>
+                    <input type="text" id="department" name="department" class="form-control mb-2" value="{{ user.department }}">
+                </td>
+            </tr>
+            <tr>
+                <th>역할</th>
+                <td>
+                    <input type="hidden" id="is_superuser" name="is_superuser" value="{{ user.is_superuser }}">
+                    <select id="is_superuser_select" name="is_superuser_select" class="form-control mb-2" onchange="chagneSelect(this);">
+                        <option value="True" {% if user.is_superuser%}selected{% endif %}>관리자</option>
+                        <option value="False" {% if not user.is_superuser%}selected{% endif %}>사용자</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>활동상태</th>
+                <td>
+                    <input type="hidden" class="form-control" id="active_status" name="active_status" value="{{ user.active_status }}">
+                    <select id="active_status_select" name="active_status_select" class="form-control mb-2" onchange="chagneSelect(this);">
+                        <option value="0" {% if user.active_status == 0 %}selected{% endif %}>Inactive</option>
+                        <option value="1" {% if user.active_status == 1 %}selected{% endif %}>Active</option>
+                        <option value="2" {% if user.active_status == 2 %}selected{% endif %}>On Leave</option>
+                        <option value="3" {% if user.active_status == 3 %}selected{% endif %}>Retired</option>
+                        <option value="4" {% if user.active_status == 4 %}selected{% endif %}>Rejection</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <input class="w-100 btn btn-lg btn-primary" type="submit" value="수정정보 저장하기">
+    </div>
+
+    <div>
+        <a href="{% url 'management:detail' user.id %}">취소</a>
+    </div>
+</form>
+<script>
+    function chagneSelect(obj) {
+        inputObj = obj.id.replace('_select', '');
+        $("#" + inputObj).val(obj.value);
+    }
+
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function (data) {
+                // 팝업을 통한 검색 결과 항목 클릭 시 실행
+                var addr = ""; // 주소_결과값이 없을 경우 공백
+                var extraAddr = ""; // 참고항목
+
+                //사용자가 선택한 주소 타입에 따라 해당 주소 값을 가져온다.
+                if (data.userSelectedType === "R") {
+                    // 도로명 주소를 선택
+                    addr = data.roadAddress;
+                } else {
+                    // 지번 주소를 선택
+                    addr = data.jibunAddress;
+                }
+
+                if (data.userSelectedType === "R") {
+                    if (data.bname !== "" && /[동|로|가]$/g.test(data.bname)) {
+                        extraAddr += data.bname;
+                    }
+                    if (data.buildingName !== "" && data.apartment === "Y") {
+                        extraAddr += extraAddr !== "" ? ", " + data.buildingName : data.buildingName;
+                    }
+                    if (extraAddr !== "") {
+                        extraAddr = " (" + extraAddr + ")";
+                    }
+                } else {
+                    document.getElementById("address").value = "";
+                }
+
+                // 선택된 우편번호와 주소 정보를 input 박스에 넣는다.
+                document.getElementById("addressCode").value = data.zonecode;
+                document.getElementById("address").value = addr;
+                document.getElementById("address").value += extraAddr;
+                document.getElementById("addressDetail").focus(); // 우편번호 + 주소 입력이 완료되었음으로 상세주소로 포커스 이동
+            }
+        }).open();
+    }
+
+    function toggleDropdown() {
+        var dropdown = document.getElementById("emailDropdown");
+        dropdown.classList.toggle("show");
+    }
+
+    function setEmailDomain(domain) {
+        $("#emailadd").val(domain);
+    }
+
+    function enableDirectInput() {
+        $("#emailadd").val("");
+        $("#emailadd").attr("readonly", false);
+        $("#emailadd").css("background-color", "#fff");
+        $("#emailadd").css("font-family", "#000");
+        $("#emailadd").focus();
+    }
+</script>
+{% endblock %}
+
+<!-- 
 <form action="" method="POST">
     <div class="dashboard">
         <h2>사용자 수정</h2>
@@ -13,8 +164,8 @@
         </div>
 
         <div>
-            <label for="birth">생년월일</label>
-            <input type="date"  id="birth" name="birth" value="{{ user.birth }}">
+            <label for="birth_date">생년월일</label>
+            <input type="date" id="birth_date" name="birth_date" value="{{ user.birth_date }}">
         </div>
 
         <div>
@@ -40,43 +191,43 @@
             <label for="address">주소</label>
             <input type="text" id="address" name="address" value="{{ user.address }}">
         </div>
-        
+
         <div>
             <label for="department">소속</label>
             <input type="text" id="department" name="department" value="{{ user.department }}">
         </div>
-        
+
         <div>
             <label for="is_superuser">역할</label>
             <input type="text" id="is_superuser" name="is_superuser" value="{{ user.is_superuser }}">
         </div>
-        
-        {% comment %} <div class="dropdown">
+
+        <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                 퇴사/휴직 여부 선택
             </button>
-            <ul class="dropdown-menu" >
+            <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="#">휴직</a></li>
                 <li><a class="dropdown-item" href="#">퇴사</a></li>
                 <li><a class="dropdown-item" href="#">보류</a></li>
                 <li><a class="dropdown-item" href="#">거부</a></li>
             </ul>
-        </div> {% endcomment %}
+        </div>
 
 
         <div class="form-group mt-2">
             <label for="status">활동상태</label>
             <input type="text" id="status" name="status" class="form-control" value="{{ user.active_status }}">
         </div>
-        
+
 
         <div>
             <input class="w-100 btn btn-lg btn-primary" type="submit" value="수정정보 저장하기">
         </div>
 
         <div>
-            <a href="{% url 'management:management_detail' user.id %}">취소</a>
+            <a href="{% url 'management:detail' user.id %}">취소</a>
         </div>
     </div>
 </form>
-{% endblock %}
+-->

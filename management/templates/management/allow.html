@@ -2,9 +2,8 @@
 {% block title %}가입승인{% endblock %}
 
 {% block content %}
-
-</script>
 <form action="" method="POST">
+    {% csrf_token %}
     <div>
         <h2>가입 승인 페이지</h2>
     </div>
@@ -15,7 +14,7 @@
                     <input type="text" class="form-control" id="seachText" name="seachText" placeholder="검색창">
                 </li>
                 <li>
-                    <button>검색</button>
+                    <input type="submit" class="btn btn-primary" value="검색">
                 </li>
             </ul>
         </div>
@@ -36,12 +35,12 @@
                 </thead>
                 <tbody>
                     {% for item in data %}
-                    <tr class="active-allow">
+                    <tr data-url="{% url 'management:detail' item.id %}" class="active-row">
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.name }}</td>
                         <td>{{ item.username }}</td>
                         <td>{{ item.email }}</td>
-                        <td>{{ item.소속}}</td>
+                        <td>{{ item.department}}</td>
                         <td>{{ item.is_superuser}}</td>
                         <td>{{ item.date_joined}}</td>
                         <td><a href="{% url 'management:approve_user' item.id %}" class="approve-btn">승인</a>
