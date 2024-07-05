@@ -264,7 +264,6 @@ function stopCounseling() {
         mediaRecorder.stop();
         mediaRecorder.onstop = () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
-
             if (userConfirmed) {
                 // 사용자가 "네"를 선택한 경우 파일 저장 프로세스 진행
                 sendAudioToServer(audioBlob);

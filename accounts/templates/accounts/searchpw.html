@@ -10,7 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     {% load static %}
-    <script src="{% static 'accounts\js\login.js' %}"></script>
+    <script src="{% static 'accounts\js\searchPW.js' %}"></script>
 
     <title>비밀번호 찾기</title>
 </head>
@@ -36,7 +36,10 @@
             <input type="date" id="birthdate" name="birthdate" placeholder="생년월일">
         </div>
         <div>
-            <input type="button" value="비밀번호 재설정 이메일 보내기">
+            <input type="tel" id="phone_number" name="phone_number" placeholder="전화번호">
+        </div>
+        <div>
+            <input type="button" value="비밀번호 재설정 요청" onclick="sendResetRequest()">
         </div>
         <div>
             <p><a href="{% url 'accounts:login' %}"> 로그인으로 돌아가기</a></p>
