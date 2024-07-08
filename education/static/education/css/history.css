@@ -1,47 +1,23 @@
-form {
-    height: 100%;
-    cursor: default;
-}
+/* .dashboard {
+    background-color: #f4f4f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+} */
 
-div {
-    padding: 5px;
-}
-
-.dashboard {
-    margin: 0;
-    padding: 0;
-    display: inline;
-}
-
-.dashboard>div>ul>li {
-    display: inline;
-}
-
-ul {
-    margin: 0;
-    padding: 0;
-}
-
-ul>li {
-    margin: 0;
-    padding: 0;
-}
-
-table {
-    width: 100%;
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 .styled-table {
+    width: 100%;
     border-collapse: collapse;
-    margin: 25px 0;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    min-width: 400px;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
 }
 
 .styled-table thead tr {
-    background-color: #011627;
+    background-color: #009879;
     color: #ffffff;
     text-align: left;
 }
@@ -53,77 +29,40 @@ table {
 
 .styled-table tbody tr {
     border-bottom: 1px solid #dddddd;
+    cursor: pointer;
 }
 
 .styled-table tbody tr:nth-of-type(even) {
     background-color: #f3f3f3;
 }
 
+.styled-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
 .styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid #011627;
+    border-bottom: 2px solid #009879;
 }
 
-.styled-table tbody tr.active-row {
-    font-weight: bold;
-    color: #011627;
-    cursor: pointer;
-}
-
-
-/* Button Styles */
-.submit-container {
-    text-align: right;
-    margin-top: 20px;
-}
-
-.submit-button {
-    background-color: #2ec4b6;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.submit-button:hover {
-    background-color: #2ec4b6;
-}
-
-/* Input Styles */
-.form-control {
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #dddddd;
-    border-radius: 4px;
-    width: 100%;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: #011627;
-}
-
-.btn-primary {
-    background-color: #092f4e;
-    border: none;
-    padding: 10px 20px;
-    color: white;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.btn-primary:hover {
-    background-color: #011627;
-}
-
-/* Flexbox 스타일을 사용하여 검색 창 정렬 */
-.search-container {
+.pagination {
     display: flex;
-    align-items: center;
-    gap: 10px;
+    justify-content: center;
+    padding: 10px 0;
 }
 
-.search-container .form-control {
-    flex-grow: 1;
+.pagination .step-links a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: #009879;
+}
+
+.pagination .step-links .current {
+    margin: 0 5px;
+}
+
+.loader {
+    text-align: center;
+    font-size: 16px;
+    color: #009879;
+    margin: 20px 0;
 }

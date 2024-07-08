@@ -9,6 +9,8 @@ from .models import Quiz, QuizHistroy, QuizHistroyItem
 from .forms import QuizForm
 from chat import Chatbot
 from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator  # Paginator 임포트
+from django.db.models import Q
 
 # 교육
 def list(request):
@@ -118,7 +120,36 @@ chatbot = Chatbot(os.getenv("OPENAI_API_KEY"), 'database/chroma.sqlite3')  # Cha
 @login_required
 def quiz_history(request):
     logs = QuizHistroy.objects.all().select_related('user_id')  # user_id 필드에 대한 역참조를 포함
-    return render(request, 'education/quiz_history.html', {'logs': logs})
+    
+    # 검색 필터링 처리
+    search_text = request.GET.get('searchText', '')
+    category = request.GET.get('category', '')
+    result = request.GET.get('result', '')
+
+    if search_text:
+        logs = logs.filter(
+            Q(user_id__username__icontains=search_text) |
+            Q(user_id__name__icontains=search_text)
+        )
+
+    if category:
+        logs = logs.filter(category=category)
+    
+    if result:
+        if result == 'pass':
+            logs = logs.filter(is_passed=True)
+        elif result == 'fail':
+            logs = logs.filter(is_passed=False)
+
+    # 페이지네이션 처리
+    paginator = Paginator(logs, 10)  # 페이지당 10개씩 표시
+    page = request.GET.get('page')
+    logs = paginator.get_page(page)
+
+    return render(request, 'education/quiz_history.html', {
+        'logs': logs,
+        'is_paginated': logs.has_other_pages()
+    })
 
 # 퀴즈 이력 상세
 @login_required

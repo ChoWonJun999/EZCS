@@ -14,17 +14,29 @@
 </script>
 <link rel="stylesheet" href="{% static 'education/css/history.css' %}">
 
-<form action="{% url 'management:search' %}" method="POST">
+<form action="{% url 'education:quiz_history' %}" method="GET">
     <div class="dashboard">
         <div>
             <h1>퀴즈 이력</h1>
         </div>
         <div class="search-container">
             <input type="text" class="form-control" id="searchText" name="searchText" placeholder="검색창">
+            <select name="category" class="form-control">
+                <option value="">카테고리 선택</option>
+                <option value="0">Additional</option>
+                <option value="1">Policies</option>
+                <option value="2">Charges</option>
+            </select>
+            <select name="result" class="form-control">
+                <option value="">결과 선택</option>
+                <option value="pass">통과</option>
+                <option value="fail">실패</option>
+            </select>
             <input type="submit" class="btn btn-primary" value="검색">
         </div>
+        <div class="loader" style="display:none;">Loading...</div>
         <div>
-            <p>총 {{ logs|length }}건</p>
+            <p>총 {{ logs.paginator.count }}건</p>
         </div>
         <div>
             <table class="styled-table">
@@ -38,10 +50,10 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if logs|length != 0 %}
+                    {% if logs %}
                     {% for log in logs %}
                     <tr data-url="{% url 'education:quiz_details' log.id %}">
-                        <td>{{ forloop.counter }}</td>
+                        <td>{{ forloop.counter0|add:logs.start_index }}</td>
                         <td>{{ log.get_category_display }}</td>
                         <td>{{ log.is_passed|yesno:"통과,실패" }}</td>
                         <td>{{ log.create_time|date:"Y-m-d H:i" }}</td>
@@ -55,6 +67,25 @@
                     {% endif %}
                 </tbody>
             </table>
+        </div>
+        <div class="pagination">
+            {% if is_paginated %}
+                <span class="step-links">
+                    {% if logs.has_previous %}
+                        <a href="?page=1">&laquo; 처음</a>
+                        <a href="?page={{ logs.previous_page_number }}">이전</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ logs.number }} of {{ logs.paginator.num_pages }}.
+                    </span>
+
+                    {% if logs.has_next %}
+                        <a href="?page={{ logs.next_page_number }}">다음</a>
+                        <a href="?page={{ logs.paginator.num_pages }}">마지막 &raquo;</a>
+                    {% endif %}
+                </span>
+            {% endif %}
         </div>
     </div>
 </form>
