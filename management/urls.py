@@ -18,4 +18,6 @@ urlpatterns = [
     path('reject_active/<int:id>/', views.reject_active, name='reject_active'), #보류자로 변경
     path('test/', views.test, name='test'), #테스트
     path('search/', views.search, name='search'), #검색기능
+    path('allow_search/', views.allow_search, name='allow_search'), #검색기능
+    path('inactive_search/', views.inactive_search, name='inactive_search'), #검색기능
 ]

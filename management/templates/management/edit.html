@@ -35,7 +35,9 @@
             <tr>
                 <th>이메일</th>
                 <td>
-                    <input type="email" id="email" name="email" class="form-control mb-2" value="{{ user.email|email_masker }}">
+
+                    {% comment %} <input type="email" id="email" name="email" class="form-control mb-2" value="{{ user.email|email_masker }}"> {% endcomment %}
+                    <input type="email" id="email" name="email" class="form-control mb-2" value="{{ user.email}}">
                 </td>
             </tr>
             <tr>

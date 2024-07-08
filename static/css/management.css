@@ -119,12 +119,10 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
-
 }
 
-.dashboard>button {
+.dashboard > button {
     width: 90px;
-
 }
 
 .card {
@@ -185,7 +183,7 @@ div {
     display: inline;
 }
 
-.dashboard>div>ul>li {
+.dashboard > div > ul > li {
     display: inline;
 }
 
@@ -194,7 +192,7 @@ ul {
     padding: 0;
 }
 
-ul>li {
+ul > li {
     margin: 0;
     padding: 0;
 }
@@ -240,8 +238,6 @@ table {
     color: #009879;
     cursor: pointer;
 }
-
-
 
 .styled-table-deail {
     border-collapse: collapse;

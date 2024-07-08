@@ -17,6 +17,7 @@ function sendResetRequest() {
         dataType: "json",
         success: function (data) {
             if (data.result === 'success') {
+
                 alert(data.msg);
                 location.href = "/accounts/reset-password/";
             } else {
