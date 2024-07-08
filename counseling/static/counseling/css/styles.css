@@ -23,6 +23,7 @@
     border-radius: 8px; /* 모서리 둥글게 */
     display: flex;
     flex-direction: column;
+    overflow: auto; /* 내용이 넘칠 경우 스크롤 가능하도록 설정 */
 }
 
 .stt-content {

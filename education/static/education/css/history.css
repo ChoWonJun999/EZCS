@@ -1,0 +1,129 @@
+form {
+    height: 100%;
+    cursor: default;
+}
+
+div {
+    padding: 5px;
+}
+
+.dashboard {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+.dashboard>div>ul>li {
+    display: inline;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+}
+
+ul>li {
+    margin: 0;
+    padding: 0;
+}
+
+table {
+    width: 100%;
+}
+
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 400px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.styled-table thead tr {
+    background-color: #011627;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #011627;
+}
+
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #011627;
+    cursor: pointer;
+}
+
+
+/* Button Styles */
+.submit-container {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.submit-button {
+    background-color: #2ec4b6;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.submit-button:hover {
+    background-color: #2ec4b6;
+}
+
+/* Input Styles */
+.form-control {
+    padding: 8px;
+    font-size: 16px;
+    border: 1px solid #dddddd;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #011627;
+}
+
+.btn-primary {
+    background-color: #092f4e;
+    border: none;
+    padding: 10px 20px;
+    color: white;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn-primary:hover {
+    background-color: #011627;
+}
+
+/* Flexbox 스타일을 사용하여 검색 창 정렬 */
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-container .form-control {
+    flex-grow: 1;
+}

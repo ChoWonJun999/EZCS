@@ -5,8 +5,14 @@
 {% block content %}
 {% load static %}
 
-<link rel="stylesheet" href="{% static 'education/css/details.css' %}">
+<link rel="stylesheet" href="{% static 'education/css/quiz.css' %}">
 
     <h3>퀴즈 이력 상세페이지</h3>
+    <form method="post" id="quiz-form">
+        {% csrf_token %}
+        <div class="quiz-container">
+            <p>퀴즈 내용</p>
+        </div>
+    </form>
 
 {% endblock %}
