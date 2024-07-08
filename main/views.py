@@ -35,3 +35,9 @@ def edit_profile(request):
         return JsonResponse({'result': True, 'msg': '회원정보가 성공적으로 수정되었습니다.'})
 
     return render(request, 'main/edit_profile.html', {'user': user})
+
+def contract(request):
+    return render(request, 'main/contract.html')
+
+def privacy(request):
+    return render(request, 'main/privacy.html')
