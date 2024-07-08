@@ -1,12 +1,13 @@
 from django.db import models
 from django.core.serializers.json import DjangoJSONEncoder
 from json import JSONDecoder
+from django.contrib.auth.models import User
 
 
 class EducationChatbotLog(models.Model):
     # 상담원의 챗봇 이용 기록
     user_id = models.ForeignKey(
-        "accounts.User",
+        User,
         on_delete=models.CASCADE,
         db_column='user_id', 
         verbose_name="User's ID",
@@ -121,7 +122,7 @@ class QuizHistroy(models.Model):
     상담원의 챗봇 이용 기록
     """
     user_id = models.ForeignKey(
-        "accounts.User",
+        User,
         on_delete=models.CASCADE,
         db_column='user_id', 
         verbose_name="User's ID",
