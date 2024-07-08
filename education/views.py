@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from .models import Quiz, QuizHistroy, QuizHistroyItem
+from .models import *
 from .forms import QuizForm
 from chat import Chatbot
 from django.shortcuts import get_object_or_404
@@ -154,6 +154,13 @@ def quiz_history(request):
 # 퀴즈 이력 상세
 @login_required
 def quiz_details(request, log_id):
+    
+    # 퀴즈 내역을 그대로 복원해서 html에 뿌려주세요 - ㅎㅅ
+    # quizhistory id == historyitems에 quiz_histo_id 에 quiz_id == quiz id 문제를 출력 해야 합니다. 
+    # log = get_object_or_404(QuizHistroy, id=log_id)
+    # items = QuizHistroyItem.objects.filter(quiz_history=log).select_related('quiz')
+    # return render(request, 'education/quiz_details.html', {'log': log, 'items': items})
+    
     log = get_object_or_404(QuizHistroy, id=log_id)
     return render(request, 'education/quiz_details.html', {'log': log})
 
