@@ -8,11 +8,18 @@ import logging
 from .models import CounselLog, CustomerInfo, User
 
 
-def list(request):
-    data = CustomerInfo.objects.get(phone_number='01011112222')
-    print(data)
-    return render(request, "counseling/index.html",{'data':data})
+# def list(request):
+#     data = CustomerInfo.objects.get(phone_number='01011112222')
+#     print(data)
+#     return render(request, "counseling/index.html",{'data':data})
 
+from django.http import HttpResponse
+
+def list(request):
+    # data = CustomerInfo.objects.get(phone_number='01011112222')
+    # print(data)
+    # return render(request, "counseling/index.html", {'data':data})
+    return render(request, "counseling/index.html")
 
 
 def test(request):

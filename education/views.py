@@ -9,11 +9,19 @@ from django.views.decorators.csrf import csrf_exempt
 from django.middleware.csrf import get_token
 from .models import EducationChatbotLog
 
+# 교육
 def list(request):
     return render(request, 'education/index.html')
 
-def details(request):
-    return render(request, 'education/details.html')
+# 교육 이력
+def edu_history(request):
+    logs = EducationChatbotLog.objects.all()
+
+    return render(request, 'education/edu_history.html', {'logs': logs})
+
+# 교육 이력 상세
+def edu_details(request):
+    return render(request, 'education/edu_details.html')
 
 # 퀴즈페이지
 from .models import Quiz, QuizHistroy
@@ -59,20 +67,6 @@ def quiz(request):
 
     return render(request, 'education/quiz.html', {'quizzes': quizzes, 'results': results})  # GET 요청일 경우 퀴즈 페이지 렌더링
 
-
-# 교육이력페이지
-def edu_history(request):
-    logs = EducationChatbotLog.objects.all()
-
-    return render(request, 'education/edu_history.html', {'logs': logs})
-
-# 교육이력페이지
-def edu_history(request):
-    logs = EducationChatbotLog.objects.filter(user_id=request.session['_auth_user_id'])
-
-    return render(request, 'education/edu_history.html', {'logs': logs})
-
-
 # 웹에서 동작하는 Chatbot(미완성)
 messages ="너는 통신회사의 고객센터 상담사를 육성하는 챗봇이다.  \
       '시작'이라는 신호를 받으면 고객센터에 전화하는 고객 역할을 맡고, 나에게 민원을 제기한다. \
@@ -83,6 +77,18 @@ messages ="너는 통신회사의 고객센터 상담사를 육성하는 챗봇�
                         고객이 명세서를 확인할 수 있는 방법과 구체적인 확인 사항을 안내하고, 문제 해결을 위한 추가 조치를 제시한다."
 
 chatbot = Chatbot(os.getenv("OPENAI_API_KEY"), 'database/chroma.sqlite3') # chatbot 객체 생성
+
+
+# 퀴즈 이력
+def quiz_history(request):
+    logs = EducationChatbotLog.objects.all()
+
+    return render(request, 'education/quiz_history.html', {'logs': logs})
+
+# 퀴즈 이력 상세
+def quiz_details(request):
+    return render(request, 'education/quiz_details.html')
+
 
 
 def chat_view(request):

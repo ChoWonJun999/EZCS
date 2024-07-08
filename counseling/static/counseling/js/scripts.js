@@ -282,6 +282,7 @@ function stopCounseling() {
         mediaRecorder.stop();
         mediaRecorder.onstop = () => {
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+
             if (userConfirmed) {
                 // 사용자가 "네"를 선택한 경우 파일 저장 프로세스 진행
                 sendAudioToServer(audioBlob);
@@ -312,8 +313,7 @@ function sendTextToChatbot(text) {
     formData.append('text', text);
     // DB 저장을 위한 데이터(미완성)
     formData.append('username', '홍길동')
-    formData.append('phone_number', '01000000000')
-
+    
     fetch('/counseling/stt_chat/', {
         method: 'POST',
         body: formData,
