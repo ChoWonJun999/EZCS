@@ -26,11 +26,15 @@
     overflow: auto; /* 내용이 넘칠 경우 스크롤 가능하도록 설정 */
 }
 
+.customer-info, .memo-section {
+    max-height: 350px;
+}
+
 .stt-content {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    max-height: 300px; /* 최대 높이를 설정하여 전체 길이가 늘어나지 않도록 함 */
+    max-height: 500px; /* 최대 높이를 설정하여 전체 길이가 늘어나지 않도록 함 */
     overflow: hidden; /* 내부 요소가 넘칠 경우 숨기기 */
 }
 
