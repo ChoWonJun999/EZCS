@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class UserCounselLog(models.Model):
@@ -12,7 +13,7 @@ class UserCounselLog(models.Model):
     )
     
     user_id = models.ForeignKey(
-        "accounts.User",
+        User,
         on_delete=models.CASCADE,
         verbose_name="User's ID",
         db_comment="User's ID",
@@ -44,7 +45,7 @@ class UserCounselChatbotLog(models.Model):
     )
     
     user_id = models.ForeignKey(
-        "accounts.User",
+        User,
         on_delete=models.CASCADE,
         verbose_name="User's ID",
         db_comment="User's ID",
@@ -75,7 +76,7 @@ class UserEducationChatbotLog(models.Model):
     )
     
     user_id = models.ForeignKey(
-        "accounts.User",
+        User,
         on_delete=models.CASCADE,
         verbose_name="User's ID",
         db_comment="User's ID",
@@ -106,7 +107,7 @@ class UserEducationQuiz(models.Model):
     )
     
     user_id = models.ForeignKey(
-        "accounts.User",
+        User,
         on_delete=models.CASCADE,
         verbose_name="User's ID",
         db_comment="User's ID",

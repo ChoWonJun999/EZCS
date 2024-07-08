@@ -2,43 +2,47 @@
 {% block title %}로그인{% endblock %}
 
 {% block content %}
-<form id="loginForm" data-url="{% url 'accounts:login' %}" data-csrf="{{ csrf_token }}">
-    <input type="hidden" name="testUrl" id="testUrl" data-url="{% url 'accounts:login_pass' %}" data-csrf="{{ csrf_token }}">
-    <div class="container-sm my_container">
-        <div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
-            21조에 오신 것을 환영합니다! 👋
-        </div>
-        <div>
-            <h2>로그인</h2>
-        </div>
-        <div class="form-floating mb-3 my-form">
-            <input type="text" class="form-control" id="loginUsername" name="username" {% if username %} value="{{ username }}" {% endif %} maxlength="41">
-            <label for="loginUsername">ID</label>
-        </div>
-        <div class="form-floating mb-3 my-form">
-            <input type="password" class="form-control" id="loginPassword" name="loginPassword" maxlength="64">
-            <label for="loginPassword">Password</label>
-        </div>
-        <div class="form-check form-switch my-form">
-            <!--<input class="form-check-input" type="checkbox" role="switch" id="rememberMe" name="remember_me"> 수정-->
-            <input class="form-check-input" type="checkbox" role="switch" id="rememberMe" name="remember_me" {% if remember_me %} checked {% endif %}>
-            <label class="form-check-label" for="rememberMe">로그인 정보 저장</label>
-        </div>
-        <div>
-            <!-- <input type="button" value="로그인" class="btn btn-outline-primary" style="width: 5cm;" onclick="check_login(0)"> -->
-            <input type="button" value="로그인" class="btn btn-outline-primary" style="width: 5cm;" onclick="check_login_pass(0)">
-        </div>
-        <div>
-            <!-- <input type="button" value="관리자 로그인" class="btn btn-outline-primary" style="width: 5cm;" onclick="check_login(1)"> -->
-            <input type="button" value="관리자 로그인" class="btn btn-outline-primary" style="width: 5cm;" onclick="check_login_pass(1)">
-        </div>
-        <div>
-            <p>
-                <a href="{% url 'accounts:signup' %}">회원가입</a>
-                |
-                <a href="{% url 'accounts:searchPW' %}">비밀번호 찾기</a>
-            </p>
+<div class="container">
+    <div class="input-form-backgroud row">
+        <div class="input-form col-md-12 mx-auto">
+            <form id="loginForm" data-url="{% url 'accounts:login' %}" data-csrf="{{ csrf_token }}">
+                <input type="hidden" name="testUrl" id="testUrl" data-url="{% url 'accounts:login' %}" data-csrf="{{ csrf_token }}">
+                <div class="container-sm my_container">
+                    <div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
+                        21조에 오신 것을 환영합니다! 👋
+                    </div>
+                    <div>
+                        <h2>로그인</h2>
+                    </div>
+                    <div class="form-floating mb-3 my-form">
+                        <input type="text" class="form-control" id="loginUsername" name="username" {% if username %} value="{{ username }}" {% endif %} maxlength="41">
+                        <label for="loginUsername">ID</label>
+                    </div>
+                    <div class="form-floating mb-3 my-form">
+                        <input type="password" class="form-control" id="loginPassword" name="loginPassword" maxlength="64">
+                        <label for="loginPassword">Password</label>
+                    </div>
+                    <div class="form-check form-switch my-form">
+                        <!--<input class="form-check-input" type="checkbox" role="switch" id="rememberMe" name="remember_me"> 수정-->
+                        <input class="form-check-input" type="checkbox" role="switch" id="rememberMe" name="remember_me" {% if remember_me %} checked {% endif %}>
+                        <label class="form-check-label" for="rememberMe">로그인 정보 저장</label>
+                    </div>
+                    <div>
+                        <input type="button" value="로그인" class="btn btn-outline-primary" style="width: 5cm;" onclick="check_login(0)">
+                    </div>
+                    <div>
+                        <input type="button" value="관리자 로그인" class="btn btn-outline-primary" style="width: 5cm;" onclick="check_login(1)">
+                    </div>
+                    <div>
+                        <p>
+                            <a href="{% url 'accounts:signup' %}">회원가입</a>
+                            |
+                            <a href="{% url 'accounts:searchPW' %}">비밀번호 찾기</a>
+                        </p>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-</form>
+</div>
 {% endblock %}

@@ -154,9 +154,10 @@ def quiz_history(request):
 # 퀴즈 이력 상세
 @login_required
 def quiz_details(request, log_id):
-    
+
     # 퀴즈 내역을 그대로 복원해서 html에 뿌려주세요 - ㅎㅅ
     # quizhistory id == historyitems에 quiz_histo_id 에 quiz_id == quiz id 문제를 출력 해야 합니다. 
+    # 아래는 임시 
     # log = get_object_or_404(QuizHistroy, id=log_id)
     # items = QuizHistroyItem.objects.filter(quiz_history=log).select_related('quiz')
     # return render(request, 'education/quiz_details.html', {'log': log, 'items': items})

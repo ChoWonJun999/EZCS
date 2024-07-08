@@ -1,14 +1,123 @@
-function signup() {
-    let username = $("#loginUsername").val();
-    let name = $("#name").val();
-    let phone = $("#phone").val();
+function nameChange(obj) {
+    if (obj.value != $("#usernameChk").val()) {
+        $("#usernameVaild").hide();
+        $("#usernameError").hide();
+        if (obj.classList.contains("is-invalid")) {
+            obj.classList.remove("is-invalid");
+        }
+        if (obj.classList.contains("is-valid")) {
+            obj.classList.remove("is-valid");
+        }
+        $("#usernameChk").val("");
+    }
+}
+
+function chkUserName() {
+    let username = $("#loginUsername");
+
+    if (username.val().trim() == "") {
+        $("#usernameError").text("아이디를 입력하세요.");
+        $("#usernameError").show();
+        username.addClass("is-invalid");
+        if (username.hasClass("is-valid")) {
+            username.removeClass("is-valid");
+        }
+        username.focus();
+        return;
+    }
 
     if (containsKorean(username)) {
         $("#usernameError").text("아이디는 한글을 포함할 수 없습니다.");
         $("#usernameError").show();
-        return false;
+        return;
     } else {
         $("#usernameError").hide();
+    }
+
+    $.ajax({
+        url: $("#usernameChkUrl").val(),
+        type: "post",
+        data: { username: username.val() },
+        dataType: "json",
+        headers: {
+            "X-CSRFToken": $("#csrf").val()
+        },
+        success: function (data) {
+            if (data.is_taken) {
+                $("#usernameError").text("이미 가입된 아이디입니다.");
+                $("#usernameError").show();
+                $("#usernameVaild").hide();
+                username.addClass("is-invalid");
+                if (username.hasClass("is-valid")) {
+                    username.removeClass("is-valid");
+                }
+                username.focus();
+                $("#usernameChk").val("");
+            } else {
+                $("#usernameVaild").text("사용 가능한 아이디입니다.");
+                $("#usernameVaild").show();
+                $("#usernameError").hide();
+                if (username.hasClass("is-invalid")) {
+                    username.removeClass("is-invalid");
+                }
+                username.addClass("is-valid");
+                $("#usernameChk").val(username.val());
+            }
+        }
+    });
+}
+
+function emailDomainChange(obj) {
+    $("#emailDomain").val(obj.value);
+    if (obj.value == "") {
+        $("#emailDomain").attr("disabled", false);
+    } else {
+        $("#emailDomain").attr("disabled", true);
+    }
+}
+
+function pwBlur() {
+    if ($("#password").val() != $("#pwChk").val()) {
+        $("#passwordError").text("비밀번호가 다릅니다.");
+        $("#passwordError").show();
+        $("#pwChk").addClass("is-invalid");
+        $("#pwChk").focus();
+    } else {
+        $("#passwordError").hide();
+        if ($("#pwChk").hasClass("is-invalid")) {
+            $("#pwChk").removeClass("is-invalid");
+        }
+    }
+}
+
+function signup() {
+    let username = $("#loginUsername");
+    let name = $("#name").val();
+    let phone = $("#phone").val();
+
+    if (username.val().trim() == "") {
+        $("#usernameError").text("아이디를 입력하세요.");
+        $("#usernameError").show();
+        username.addClass("is-invalid");
+        if (username.hasClass("is-valid")) {
+            username.removeClass("is-valid");
+        }
+        username.focus();
+        return;
+    }
+
+    if ("" == $("#usernameChk").val()) {
+        $("#usernameError").text("아이디 중복 확인을 하세요.");
+        $("#usernameError").show();
+        $("#usernameVaild").hide();
+        username.addClass("is-invalid");
+        if (username.hasClass("is-valid")) {
+            username.removeClass("is-valid");
+        }
+
+        // ERROR focus 안잡힘
+        username.focus();
+        return;
     }
 
     if (!isKorean(name)) {
@@ -19,20 +128,21 @@ function signup() {
         $("#nameError").hide();
     }
 
-    let password = $("#password").val();
-    let password_confirm = $("#pwChk").val();
+    let password = $("#password").val().toLowerCase();
+    let password_confirm = $("#pwChk").val().toLowerCase();
 
     if (password != password_confirm) {
         alert("비밀번호가 일치하지 않습니다.");
         return false;
     }
-    if (!validatePassword(password)) {
-        $("#passwordError").text("비밀번호는 최소 8자 이상이어야 하며, 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.");
-        $("#passwordError").show();
-        return false;
-    } else {
-        $("#passwordError").hide();
-    }
+
+    // if (!validatePassword(password)) {
+    //     $("#passwordError").text("비밀번호는 최소 8자 이상이어야 하며, 문자, 숫자, 특수문자를 포함해야 합니다.");
+    //     $("#passwordError").show();
+    //     return false;
+    // } else {
+    //     $("#passwordError").hide();
+    // }
 
     if (password !== password_confirm) {
         $("#passwordConfirmError").text("비밀번호가 일치하지 않습니다.");
@@ -42,10 +152,8 @@ function signup() {
         $("#passwordConfirmError").hide();
     }
 
-    $("#addressCode").removeAttr("disabled");
-
-    let email = $("#email").val();
-    let emailDomain = $("#emailadd").val();
+    let email = $("#emailLocal").val();
+    let emailDomain = $("#emailDomain").val();
     if (!email || !emailDomain) {
         $("#emailError").text("이메일을 입력해 주세요.");
         $("#emailError").show();
@@ -64,7 +172,7 @@ function signup() {
         $("#userAdd2Error").hide();
     }
     let param = {
-        username: username,
+        username: username.val(),
         password: password,
         name: name,
         phone_number: phone,
@@ -99,98 +207,13 @@ function signup() {
     });
 }
 
-$(document).ready(function () {
-    if (window.location.pathname === "/accounts/signup/") {
-        $("#loginUsername").on("input", function () {
-            let username = $(this).val();
-            let csrf = $("#signupForm").data("csrf");
-
-            $.ajax({
-                url: "/accounts/check-username/",
-                type: "get",
-                data: { username: username },
-                dataType: "json",
-                headers: {
-                    "X-CSRFToken": csrf
-                },
-                success: function (data) {
-                    if (data.is_taken) {
-                        $("#usernameError").text("이미 가입된 아이디입니다.");
-                        $("#usernameError").show();
-                        $("#loginUsername").addClass("is-invalid");
-                    } else {
-                        $("#usernameError").hide();
-                        $("#loginUsername").removeClass("is-invalid");
-                    }
-                }
-            });
-        });
-
-        $("#email").on("input", function () {
-            let email = $(this).val();
-            let csrf = $("#signupForm").data("csrf");
-
-            $.ajax({
-                url: "/accounts/check-email/",
-                type: "get",
-                data: { email: email + "@" + $("#emailadd").val() },
-                dataType: "json",
-                headers: {
-                    "X-CSRFToken": csrf
-                },
-                success: function (data) {
-                    if (data.is_taken) {
-                        $("#emailError").text("이미 가입된 이메일입니다.");
-                        $("#emailError").show();
-                        $("#email").addClass("is-invalid");
-                    } else {
-                        $("#emailError").hide();
-                        $("#email").removeClass("is-invalid");
-                    }
-                }
-            });
-        });
-
-        $("#phone").on("input", function () {
-            let phone = $(this).val();
-            let csrf = $("#signupForm").data("csrf");
-
-            $.ajax({
-                url: "/accounts/check-phone/",
-                type: "get",
-                data: { phone_number: phone },
-                dataType: "json",
-                headers: {
-                    "X-CSRFToken": csrf
-                },
-                success: function (data) {
-                    if (data.is_taken) {
-                        $("#phoneError").text("이미 가입된 전화번호입니다.");
-                        $("#phoneError").show();
-                        $("#phone").addClass("is-invalid");
-                    } else {
-                        $("#phoneError").hide();
-                        $("#phone").removeClass("is-invalid");
-                    }
-                }
-            });
-        });
-    }
-    $("#UserAdd2").on("input", function () {
-        let addressDetail = $(this).val();
-        if (addressDetail) {
-            $("#userAdd2Error").hide();
-        }
-    });
-});
-
 function isKorean(text) {
     var koreanRegex = /^[가-힣]+$/;
     return koreanRegex.test(text);
 }
 
 function containsKorean(text) {
-    var koreanRegex = /[ㄱ-ㅎㅏ-ㅣ가-힣]/;
+    var koreanRegex = /^[A-Za-z0-9]+$/;
     return koreanRegex.test(text);
 }
 
@@ -198,6 +221,7 @@ function validatePassword(password) {
     var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     return passwordRegex.test(password);
 }
+
 function displayErrors(errors) {
     for (let key in errors) {
         let errorDiv = $("#" + key + "Error");

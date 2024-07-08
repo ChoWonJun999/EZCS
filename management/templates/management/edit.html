@@ -11,7 +11,7 @@
             <tr>
                 <th>이름</th>
                 <td>
-                    <input type="text" id="name" name="name" class="form-control mb-2" value="{{ user.name }}">
+                    <input type="text" id="name" name="name" class="form-control mb-2" value="{{ user.auth_user.name }}">
                 </td>
             </tr>
             <tr>
@@ -23,21 +23,21 @@
             <tr>
                 <th>전화번호</th>
                 <td>
-                    <input type="text" id="phone" name="phone" class="form-control mb-2" value="{{ user.phone }}">
+                    <input type="text" id="phone" name="phone" class="form-control mb-2" value="{{ user.phone_number }}">
                 </td>
             </tr>
             <tr>
                 <th>ID</th>
                 <td>
-                    <input type="text" id="username" name="username" class="form-control mb-2" value="{{ user.username }}">
+                    <input type="text" id="username" name="username" class="form-control mb-2" value="{{ user.auth_user.username }}">
                 </td>
             </tr>
             <tr>
                 <th>이메일</th>
                 <td>
 
-                    {% comment %} <input type="email" id="email" name="email" class="form-control mb-2" value="{{ user.email|email_masker }}"> {% endcomment %}
-                    <input type="email" id="email" name="email" class="form-control mb-2" value="{{ user.email}}">
+                    {% comment %} <input type="email" id="email" name="email" class="form-control mb-2" value="{{ user.auth_user.email|email_masker }}"> {% endcomment %}
+                    <input type="email" id="email" name="email" class="form-control mb-2" value="{{ user.auth_user.email}}">
                 </td>
             </tr>
             <tr>
@@ -58,10 +58,10 @@
             <tr>
                 <th>역할</th>
                 <td>
-                    <input type="hidden" id="is_superuser" name="is_superuser" value="{{ user.is_superuser }}">
+                    <input type="hidden" id="is_superuser" name="is_superuser" value="{{ user.auth_user.is_superuser }}">
                     <select id="is_superuser_select" name="is_superuser_select" class="form-control mb-2" onchange="chagneSelect(this);">
-                        <option value="True" {% if user.is_superuser%}selected{% endif %}>관리자</option>
-                        <option value="False" {% if not user.is_superuser%}selected{% endif %}>사용자</option>
+                        <option value="True" {% if user.auth_user.is_superuser%}selected{% endif %}>관리자</option>
+                        <option value="False" {% if not user.auth_user.is_superuser%}selected{% endif %}>사용자</option>
                     </select>
                 </td>
             </tr>
@@ -86,7 +86,8 @@
     </div>
 
     <div>
-        <a href="{% url 'management:detail' user.id %}">취소</a>
+        <a onclick="history.back()" class="w-100 btn btn-lg btn-primary">취소</a>
+        <!-- <a href="{% url 'management:detail' user.id %}">취소</a>ㅋㅋ -->
     </div>
 </form>
 <script>
