@@ -32,14 +32,14 @@
             </div>
             <div id="feedback-{{ quiz.id }}" class="feedback">
                 {% if results and results|get_item:quiz.id %}
-                    {% if results|get_item:quiz.id|get_item:'is_correct' %}
-                    <span class="feedback-correct">정답입니다.</span>
-                    {% else %}
-                    <span class="feedback-incorrect">오답입니다!</span>
-                    {% endif %}
+                {% if results|get_item:quiz.id|get_item:'is_correct' %}
+                <span class="feedback-correct">정답입니다.</span>
+                {% else %}
+                <span class="feedback-incorrect">오답입니다!</span>
+                {% endif %}
                 {% endif %}
             </div>
-            <div id="explanation-{{ quiz.id }}" class="explanation" {% if not results %}style="display:none;"{% endif %}>
+            <div id="explanation-{{ quiz.id }}" class="explanation" {% if not results %}style="display:none;" {% endif %}>
                 <div class="explanation-title">퀴즈 해설</div>
                 <div class="explanation-content">
                     {{ quiz.commentary }}
@@ -47,10 +47,10 @@
             </div>
             {% endfor %}
         </div>
-        <div class="submit-container">
-            <button type="submit" class="submit-button">제출하기</button>
-        </div>
     </form>
+</div>
+<div class="submit-container">
+    <button type="submit" class="submit-button">제출</button>
 </div>
 
 <script src="{% static 'education/js/quiz.js' %}"></script>

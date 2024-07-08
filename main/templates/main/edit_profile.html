@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}회원정보 수정{% endblock %}
+
+{% block content %}
+<div class="container-sm my_container">
+    <h2>회원정보 수정</h2>
+    <form id="editProfileForm" method="POST" data-url="{% url 'main:edit_profile' %}" data-csrf="{{ csrf_token }}">
+        {% csrf_token %}
+        <div class="form-floating mb-3 my-form">
+            <input type="text" class="form-control" id="name" name="name" value="{{ user.name }}">
+            <label for="name">이름</label>
+        </div>
+        <div class="form-floating mb-3 my-form">
+            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+            <label for="email">이메일</label>
+        </div>
+        <div class="form-floating mb-3 my-form">
+            <input type="tel" class="form-control" id="phone_number" name="phone_number" value="{{ user.phone_number }}">
+            <label for="phone_number">전화번호</label>
+        </div>
+        <div class="form-floating mb-3 my-form">
+            <input type="date" class="form-control" id="birth_date" name="birth_date" value="{{ user.birth_date|date:'Y-m-d' }}">
+            <label for="birth_date">생년월일</label>
+        </div>
+        <div class="form-floating mb-3 my-form">
+            <input type="text" class="form-control" id="address_code" name="address_code" value="{{ user.address_code }}">
+            <label for="address_code">우편번호</label>
+        </div>
+        <div class="form-floating mb-3 my-form">
+            <input type="text" class="form-control" id="address" name="address" value="{{ user.address }}">
+            <label for="address">주소</label>
+        </div>
+        <div class="form-floating mb-3 my-form">
+            <input type="text" class="form-control" id="address_detail" name="address_detail" value="{{ user.address_detail }}">
+            <label for="address_detail">상세 주소</label>
+        </div>
+        <!-- 비밀번호 재설정 필드 추가 -->
+        <div class="form-floating mb-3 my-form">
+            <input type="password" class="form-control" id="password" name="password">
+            <label for="password">새 비밀번호</label>
+        </div>
+        <div class="form-floating mb-3 my-form">
+            <input type="password" class="form-control" id="password_confirm" name="password_confirm">
+            <label for="password_confirm">새 비밀번호 확인</label>
+        </div>
+        <button type="button" class="btn btn-outline-primary" onclick="submitProfile()">저장</button>
+    </form>
+</div>
+
+{% endblock %}

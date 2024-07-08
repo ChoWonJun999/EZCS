@@ -126,7 +126,7 @@ body {
 
 .logout {
     cursor: pointer;
-    background-color: #2EC4B6;
+    background-color: #2ec4b6;
     color: white;
     padding: 10px 20px;
     border-radius: 5px;
@@ -140,7 +140,7 @@ body {
 }
 
 .logout:hover {
-    background-color: #E71D36;
+    background-color: #e71d36;
 }
 
 .main-content {

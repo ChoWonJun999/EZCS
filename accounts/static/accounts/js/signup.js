@@ -19,7 +19,6 @@ function signup() {
         $("#nameError").hide();
     }
 
-    
     let password = $("#password").val();
     let password_confirm = $("#pwChk").val();
 
@@ -35,7 +34,6 @@ function signup() {
         $("#passwordError").hide();
     }
 
-
     if (password !== password_confirm) {
         $("#passwordConfirmError").text("비밀번호가 일치하지 않습니다.");
         $("#passwordConfirmError").show();
@@ -45,7 +43,6 @@ function signup() {
     }
 
     $("#addressCode").removeAttr("disabled");
-
 
     let email = $("#email").val();
     let emailDomain = $("#emailadd").val();
@@ -103,7 +100,7 @@ function signup() {
 }
 
 $(document).ready(function () {
-    if (window.location.pathname === '/accounts/signup/'){
+    if (window.location.pathname === "/accounts/signup/") {
         $("#loginUsername").on("input", function () {
             let username = $(this).val();
             let csrf = $("#signupForm").data("csrf");
@@ -153,7 +150,7 @@ $(document).ready(function () {
                 }
             });
         });
-        
+
         $("#phone").on("input", function () {
             let phone = $(this).val();
             let csrf = $("#signupForm").data("csrf");
@@ -178,7 +175,6 @@ $(document).ready(function () {
                 }
             });
         });
-
     }
     $("#UserAdd2").on("input", function () {
         let addressDetail = $(this).val();
@@ -187,7 +183,6 @@ $(document).ready(function () {
         }
     });
 });
-
 
 function isKorean(text) {
     var koreanRegex = /^[가-힣]+$/;
@@ -228,7 +223,6 @@ function enableDirectInput() {
     $("#emailadd").css("color", "#000");
     $("#emailadd").focus();
     toggleDropdown();
-
 }
 
 function execDaumPostcode() {

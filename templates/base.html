@@ -7,6 +7,8 @@
     <title>{% block title %}Investor Dashboard{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 </head>
 
 <body>
@@ -30,9 +32,7 @@
         </div>
         <div>
             <ul class="menu">
-                <li><a href="#">Community</a></li>
-                <li><a href="#">Help & Support</a></li>
-                <li><a href="#">Settings</a></li>
+                <li><a href="#">내 정보</a></li>
             </ul>
         </div>
     </div>
@@ -40,10 +40,13 @@
         <div class="header">
             <button class="sidebar-toggle" id="sidebarToggle">☰</button>
             <div class="header-right">
-                {% if user %}
-                <div class="profile-info">{{ user }}님, 오늘 하루도 화이팅 하세요.</div>
+                {% if request.session.user %}
+                <div class="profile-info">{{ request.session.user }}님, 오늘 하루도 화이팅 하세요.</div>
                 <div class="logout">
                     <a href="{% url 'accounts:logout' %}">로그아웃</a>
+                </div>
+                <div class="profile-edit">
+                    <a href="{% url 'main:edit_profile' %}">회원정보 수정</a> <!-- 추가 -->
                 </div>
                 {% else %}
                 <div class="logout">
@@ -65,7 +68,9 @@
             </div>
         </footer>
     </div>
-    <script src="{% static 'js/menu.js' %}"></script>
+    <script src="{% static 'js/scripts.js' %}"></script>
+    <script src="{% static 'main/js/edit_profile.js' %}"></script> <!-- 수정 -->
+
 </body>
 
 </html>

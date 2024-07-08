@@ -111,9 +111,28 @@ def test(request):
 #검색로직
 def search(request):
     query = request.POST.get('seachText', '')
+   
     if query:
         results = User.objects.filter(name__icontains=query)
     else:
         results = []
-    return render(request, 'management/dashboard.html', {'results': results, 'query': query})
+    return render(request, 'management/dashboard.html', {'data': results, 'query': query})
+         
+def allow_search(request):
+    query = request.POST.get('seachText', '')
+   
+    if query:
+        results = User.objects.filter(name__icontains=query)
+    else:
+        results = []
+    return render(request, 'management/allow.html', {'data': results, 'query': query})
+       
+def inactive_search(request):
+    query = request.POST.get('seachText', '')
+   
+    if query:
+        results = User.objects.filter(name__icontains=query)
+    else:
+        results = []
+    return render(request, 'management/inactive.html', {'data': results, 'query': query})
          
