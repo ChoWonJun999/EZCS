@@ -1,9 +1,4 @@
-/* .dashboard {
-    background-color: #f4f4f9;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-} */
+/* 기존 스타일 */
 
 .search-container {
     display: flex;
@@ -11,6 +6,33 @@
     margin-bottom: 20px;
 }
 
+.search-input, .search-select, .search-button {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.search-input {
+    flex: 2;
+}
+
+.search-select {
+    flex: 1;
+}
+
+.search-button {
+    background-color: #009879;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.search-button:hover {
+    background-color: #007a63;
+}
+
+/* 테이블 스타일 */
 .styled-table {
     width: 100%;
     border-collapse: collapse;
@@ -41,9 +63,10 @@
 }
 
 .styled-table tbody tr:last-of-type {
-    border-bottom: 2px solid #009879;
+    border-bottom: 2px solid #2EC4B6;
 }
 
+/* 페이지네이션 스타일 */
 .pagination {
     display: flex;
     justify-content: center;
@@ -53,16 +76,19 @@
 .pagination .step-links a {
     margin: 0 5px;
     text-decoration: none;
-    color: #009879;
+    color: #2EC4B6;
 }
 
 .pagination .step-links .current {
     margin: 0 5px;
+    font-weight: bold;
+    color: #2EC4B6;
 }
 
+/* 로더 스타일 */
 .loader {
     text-align: center;
     font-size: 16px;
-    color: #009879;
+    color: #2EC4B6;
     margin: 20px 0;
 }

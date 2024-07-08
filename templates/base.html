@@ -46,9 +46,9 @@
                 <div class="logout">
                     <a href="{% url 'accounts:logout' %}">로그아웃</a>
                 </div>
-                <div class="profile-edit">
+                {% comment %} <div class="profile-edit">
                     <a href="{% url 'main:edit_profile' %}">회원정보 수정</a> <!-- 추가 -->
-                </div>
+                </div> {% endcomment %}
                 {% else %}
                 <div class="logout">
                     <a href="{% url 'accounts:login' %}">로그인</a>
