@@ -1,18 +1,16 @@
-<!-- education/templates/education/detail.html -->
 {% extends 'base.html' %}
 
-{% block title %}Education Detail{% endblock %}
+{% block title %}Quiz Detail{% endblock %}
+
 {% block content %}
-{% load static %}
-
-<link rel="stylesheet" href="{% static 'education/css/quiz.css' %}">
-
-    <h3>퀴즈 이력 상세페이지</h3>
-    <form method="post" id="quiz-form">
-        {% csrf_token %}
-        <div class="quiz-container">
-            <p>퀴즈 내용</p>
-        </div>
-    </form>
-
+<div class="dashboard">
+    <h1>퀴즈 상세보기</h1>
+    <div class="log-detail">
+        <p><strong>번호:</strong> {{ log.id }}</p>
+        <p><strong>카테고리:</strong> {{ log.get_category_display }}</p>
+        <p><strong>결과:</strong> {{ log.is_passed|yesno:"통과,실패" }}</p>
+        <p><strong>날짜:</strong> {{ log.create_time|date:"Y-m-d H:i" }}</p>
+        <p><strong>사용자:</strong> {{ log.user_id.username }}</p>
+    </div>
+</div>
 {% endblock %}

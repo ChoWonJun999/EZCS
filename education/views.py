@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Quiz, QuizHistroy, QuizHistroyItem
 from .forms import QuizForm
 from chat import Chatbot
+from django.shortcuts import get_object_or_404
 
 # 교육
 def list(request):
@@ -114,13 +115,16 @@ messages = (
 chatbot = Chatbot(os.getenv("OPENAI_API_KEY"), 'database/chroma.sqlite3')  # Chatbot 객체 생성
 
 # 퀴즈 이력
+@login_required
 def quiz_history(request):
-    logs = EducationChatbotLog.objects.all()
+    logs = QuizHistroy.objects.all().select_related('user_id')  # user_id 필드에 대한 역참조를 포함
     return render(request, 'education/quiz_history.html', {'logs': logs})
 
 # 퀴즈 이력 상세
-def quiz_details(request):
-    return render(request, 'education/quiz_details.html')
+@login_required
+def quiz_details(request, log_id):
+    log = get_object_or_404(QuizHistroy, id=log_id)
+    return render(request, 'education/quiz_details.html', {'log': log})
 
 # Chatbot 뷰
 def chat_view(request):

@@ -30,25 +30,27 @@
             <table class="styled-table">
                 <thead>
                     <tr>
-                        <th>id</th>
-                        <th>body</th>
-                        <th>create_time</th>
-                        <th>user_id</th>
+                        <th>번호</th>
+                        <th>카테고리</th>
+                        <th>결과</th>
+                        <th>날짜</th>
+                        <th>사용자</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% if logs|length != 0 %}
                     {% for log in logs %}
-                    <tr data-url="{% url 'log_detail' log.id %}">
+                    <tr data-url="{% url 'education:quiz_details' log.id %}">
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ log.body }}</td>
-                        <td>{{ log.create_time }}</td>
-                        <td>{{ log.user_id }}</td>
+                        <td>{{ log.get_category_display }}</td>
+                        <td>{{ log.is_passed|yesno:"통과,실패" }}</td>
+                        <td>{{ log.create_time|date:"Y-m-d H:i" }}</td>
+                        <td>{{ log.user_id.username }}</td>
                     </tr>
                     {% endfor %}
                     {% else %}
                     <tr>
-                        <td colspan="4">교육 이력이 없습니다.</td>
+                        <td colspan="5">퀴즈 이력이 없습니다.</td>
                     </tr>
                     {% endif %}
                 </tbody>
