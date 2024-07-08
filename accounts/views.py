@@ -1,27 +1,20 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
-from .models import User
-from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-import re
+from .models import *
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 import logging
-from django.contrib.auth import password_validation
-from django.core.exceptions import ValidationError
-import requests
+
+
 logger = logging.getLogger(__name__)
 
-def login_pass(request):
-    username = request.POST.get('username', None)
-    if username == "test":
-        request.session['user'] = username
-        return JsonResponse({'result' : 'all'})
 
-def login(request):
+def user_login(request):
     """
         request.method == 'GET': 접속
         request.method == 'POST': 로그인/관리자 로그인
         request.method == *: 잘못된 접근
     """
-
     if request.method == 'GET':
         context = {}
         if 'remember_me' in request.COOKIES:
@@ -40,7 +33,7 @@ def login(request):
             if user.active_status != 1:
                 result = '로그인 권한이 없습니다.'
             else:
-                auth_login(request, user)
+                login(request, user)
                 request.session['user'] = user.name
                 if user.is_superuser == True:
                     result = 'manager'
@@ -60,11 +53,12 @@ def login(request):
     return JsonResponse({'result': result})
 
 
-def logout(request):
+def user_logout(request):
     """
         로그아웃
     """
-    auth_logout(request)
+    logout(request)
+    del request.session['user']
     return redirect('/')
 
 
@@ -81,7 +75,6 @@ def signup(request):
     if request.method == 'GET':
         return render(request, 'accounts/signup.html')
     elif request.method == 'POST':
-        result = True
         username = request.POST.get('username')
         password = request.POST.get('password')
         name = request.POST.get('name')
@@ -92,28 +85,34 @@ def signup(request):
         address = request.POST.get('address')
         address_detail = request.POST.get('addressDetail')
 
-        User.objects.create_user(
+        user = User.objects.create_user(
             username = username,
             password = password,
-            name = name,
+            first_name = name,
             email = email,
-            birth_date = birth_date,
-            phone_number = phone_number,
-            address_code = address_code,
-            address = address,
-            address_detail = address_detail
         )
-        msg = "회원가입 요청이 완료되었습니다."
-    else:
-        result = False
-        msg = '잘못된 접근입니다.'
+        
+        CounselorProfile.objects.create(
+            auth_user=User.objects.get(id=user.id)
+            , birth_date=birth_date
+            , phone_number=phone_number
+            , address_code=address_code
+            , address=address
+            , address_detail=address_detail
+            # , department=department
+            # , active_status=active_status
+        )
 
-    return JsonResponse({'result': result, 'msg': msg})
+        result = True
+        msg = "회원가입 요청이 완료되었습니다."
+
+        return JsonResponse({'result': result, 'msg': msg})
 
 
 def check_username(request):
-    username = request.GET.get('username')
+    username = request.POST.get('username')
     is_taken = User.objects.filter(username=username).exists()
+    print(is_taken)
     return JsonResponse({'is_taken': is_taken})
 
 def check_email(request):
