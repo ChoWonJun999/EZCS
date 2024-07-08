@@ -43,8 +43,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 for (const [quizId, result] of Object.entries(data.results)) {
                     const feedback = document.getElementById(`feedback-${quizId}`);
                     const explanation = document.getElementById(`explanation-${quizId}`);
+                    const correctAnswer = document.getElementById(`correct-answer-${quizId}`);
                     const input = document.getElementById(`input-${quizId}`);
-                    if (feedback && explanation) {
+                    if (feedback && explanation && correctAnswer) {
                         if (result.is_correct) {
                             feedback.innerHTML = '<span class="feedback-correct">정답입니다.</span>';
                         } else {
@@ -55,6 +56,8 @@ document.addEventListener("DOMContentLoaded", function () {
                         }
                         explanation.style.display = "block";
                         explanation.querySelector('.explanation-content').innerText = result.commentary || "해설 없음";
+                        correctAnswer.style.display = "block";
+                        correctAnswer.querySelector('.correct-answer-content').innerText = result.correct_answer || "정답 없음";
                     }
                 }
             }

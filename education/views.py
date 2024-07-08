@@ -60,7 +60,8 @@ def quiz(request):
                 results[quiz.id] = {  # 결과 딕셔너리에 현재 퀴즈의 정답 여부와 사용자의 답변 저장
                     'is_correct': is_correct,
                     'user_answer': answer,
-                    'commentary': quiz.commentary  # 해설 추가
+                    'commentary': quiz.commentary,  # 해설 추가
+                    'correct_answer': quiz.answer
                 }
 
             is_passed = correct_answers >= 3  # 3개 이상의 정답이면 통과로 설정
