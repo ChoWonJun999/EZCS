@@ -8,7 +8,7 @@
         <tbody>
             <tr>
                 <th>이름</th>
-                <td>{{ data.name }}</td>
+                <td>{{ data.auth_user.first_name }}</td>
             </tr>
             <tr>
                 <th>생년월일</th>
@@ -16,15 +16,15 @@
             </tr>
             <tr>
                 <th>전화번호</th>
-                <td>{{ data.phone }}</td>
+                <td>{{ data.phone_number }}</td>
             </tr>
             <tr>
                 <th>ID</th>
-                <td>{{ data.username }}</td>
+                <td>{{ data.auth_user.username }}</td>
             </tr>
             <tr>
                 <th>이메일</th>
-                <td>{{ data.email }}</td>
+                <td>{{ data.auth_user.email }}</td>
             </tr>
             <tr>
                 <th>주소</th>
@@ -41,7 +41,7 @@
             <tr>
                 <th>역할</th>
                 <td>
-                    {% if data.is_superuser %}
+                    {% if data.auth_user.is_superuser %}
                     관리자
                     {% else %}
                     사용자
@@ -66,71 +66,11 @@
             </tr>
         </tbody>
     </table>
-    <!--
-    <div class="form-floating mb-3">
-        <label for="name">이름</label>
-        <input type="text" class="form-control" id="name" name="name" value="{{ data.name }}" disabled>
-    </div>
-
-    <div class="form-floating mb-3">
-        <label for="birth_date">생년월일</label>
-        <input type="date" class="form-control" id="birth_date" name="birth_date" value="{{ data.birth_date|date:'Y-m-d' }}" disabled>
-    </div>
-
-    <div class="form-floating mb-3">
-        <label for="phone">전화번호</label>
-        <input type="text" class="form-control" id="phone" name="phone" value="{{ data.phone }}" disabled>
-    </div>
-
-    <div class="form-floating mb-3">
-        <label for="username">ID</label>
-        <input type="text" class="form-control" id="username" name="username" value="{{ data.username }}" disabled>
-    </div>
-
-    <div class="form-floating mb-3">
-        <label for="username">PW</label>
-        <input type="text" class="form-control" id="password" name="password" value="{{ data.password }}" disabled>
-    </div>
-
-    <div class="form-floating mb-3">
-        <label for="email">이메일:</label>
-        <input type="email" class="form-control" id="email" name="email" value="{{ data.email }}" disabled>
-    </div>
-
-    <div class="form-floating mb-3">
-        <label for="address">주소</label>
-        <input type="text" class="form-control" id="address" name="address" value="{{ data.address }}" disabled>
-    </div>
-
-    <div class="form-floating mb-3">
-        <label for="department">소속</label>
-        <input type="text" class="form-control" id="department" name="department" value="{{ data.department }}" disabled>
-    </div>
-
-    <div class="form-floating mb-3">
-        <label for="is_superuser">역할</label>
-        <input type="text" class="form-control" id="is_superuser " name="is_superuser " value="{{ data.is_superuser}}" disabled>
-    </div>
-
-    <div class="form-floating mb-3">
-        <input type="text" class="form-control" id="active_status" name="active_status" value="{{ data.active_status }}">
-        <label for="subject">활동상태</label>
-        <select id="subject" name="subject" onchange="chagneSelect(this);">
-            <option value="0" {% if data.active_status == 0 %}selected{% endif %}>C언어</option>
-            <option value="1" {% if data.active_status == 1 %}selected{% endif %}>JAVA</option>
-            <option value="2" {% if data.active_status == 2 %}selected{% endif %}>HTML</option>
-            <option value="3" {% if data.active_status == 3 %}selected{% endif %}>CSS</option>
-            <option value="4" {% if data.active_status == 4 %}selected{% endif %}>PYTHON</option>
-        </select>
-    </div>
-    -->
 
     <div class="mb-3">
-        <a href="{% url 'management:dashboard' %}" class="w-100 btn btn-lg btn-secondary">사용자 리스트로 돌아가기</a>
-        <a href="{% url 'management:edit' data.id %}">수정하기</a>
-    </div>
-    <div>
-        <a href="{% url 'management:inactive' %}">뒤로 돌아가기</a>
+        <a onclick="history.back()" class="w-100 btn btn-lg btn-secondary">사용자 리스트로 돌아가기</a>
+        <!-- <a href="{% url 'management:dashboard' %}" class="w-100 btn btn-lg btn-secondary">사용자 리스트로 돌아가기</a> -->
+        <a href="{% url 'management:edit' data.id %}" class="w-100 btn btn-lg btn-secondary">수정하기</a>
     </div>
 </form>
 <script>

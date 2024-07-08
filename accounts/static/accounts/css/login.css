@@ -10,7 +10,7 @@ div {
     max-width: 400px;
     text-align: -webkit-center;
     position: relative;
-    top: 150px;
+    /* top: 150px; */
 }
 
 .my-form {

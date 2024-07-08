@@ -1,7 +1,7 @@
 from django.db import models
 from django.core.serializers.json import DjangoJSONEncoder
 from json import JSONDecoder
-from accounts.models import User
+from django.contrib.auth.models import User
 
 class CounselLog(models.Model):
     # 상담원의 상담 내역
@@ -118,7 +118,7 @@ class CounselManual(models.Model):
 class CounselChatbotLog(models.Model):
     # 상담원의 챗봇 이용 기록
     user_id = models.ForeignKey(
-        "accounts.User",
+        User,
         on_delete=models.CASCADE,
         verbose_name="User's ID",
         db_comment="User's ID",

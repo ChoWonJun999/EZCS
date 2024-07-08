@@ -1,23 +1,51 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from accounts.models import User
-from django.http import HttpResponse, Http404
-from django.urls import reverse
+from accounts.models import CounselorProfile
 from django.db.models import Q
 
-#관리자 메인페이지 DB에서 정보 받아오는 부분
+
 def dashboard(request):
-    data = User.objects.all()
-    return render(request, 'management/dashboard.html',{'data':data})
+    """
+    관리자 메인페이지 DB에서 정보 받아오는 부분
+    """
+    search_select = request.GET.get("searchSelect", "")
+    search_text = request.GET.get("searchText", "")
+    query = Q()
+
+    if search_select:
+        valid_fields = {
+            'name': 'auth_user__first_name__icontains',
+            'id': 'auth_user__username__icontains',
+            'email': 'auth_user__email__icontains',
+        }
+
+        if search_select == 'all':
+            for val in valid_fields.values():
+                print(val)
+                query |= Q(**{val: search_text})
+        else:
+            search_field = valid_fields[search_select]
+            query = Q(**{search_field: search_text})
+
+    data = CounselorProfile.objects.select_related('auth_user').filter(query)
+
+    context = {
+        'data': data,
+        'searchSelect': search_select,
+        'searchText': search_text,
+    }
+
+    return render(request, 'management/dashboard.html', context)
+
 
 #유저상세페이지
 def detail(request, id):
-    data = get_object_or_404(User, id=id)
+    data = get_object_or_404(CounselorProfile.objects.select_related('auth_user'), id=id)
     return render(request, 'management/detail.html', {'data':data}) 
 
 
 #개인정보 수정
 def manager_edit(request, id):
-    user = get_object_or_404(User, id=id)
+    user = get_object_or_404(CounselorProfile, id=id)
     data = {'user': user}
     #get으로 들어올시 기존값 반환
     if request.method == 'GET':
@@ -42,14 +70,14 @@ def manager_edit(request, id):
 
 # 가입승인페이지
 def allow(request):
-    data = User.objects.filter(active_status = 0)
+    data = CounselorProfile.objects.filter(active_status = 0)
     return render(request, 'management/allow.html',{'data':data})
 
 
 #승인
 def approve_user(request, id):
-    user = User.objects.get(id=id)
-    data = User.objects.filter(active_status = 0) 
+    user = CounselorProfile.objects.get(id=id)
+    data = CounselorProfile.objects.filter(active_status = 0) 
     user.active_status = 1  
     user.save()  # 변경 사항 저장
     return render(request, 'management/allow.html',{'data':data}) 
@@ -58,22 +86,22 @@ def approve_user(request, id):
 
 #활동중인 인원 구분 및 보류 위한 페이지
 def inactive(request):
-    data = User.objects.filter(~Q(active_status = 0)) #여기서 사용하는 Q는 장고에서 쓰는 or
+    data = CounselorProfile.objects.filter(~Q(active_status = 0)) #여기서 사용하는 Q는 장고에서 쓰는 or
     return render(request, 'management/inactive.html', {'data':data})
 
 
 #비활성화 기능
 def disable(request, id):
-    user = get_object_or_404(User, id=id)
-    data = User.objects.all()
+    user = get_object_or_404(CounselorProfile, id=id)
+    data = CounselorProfile.objects.all()
     user.active_status = 0 
     user.save() 
     return render(request, 'management/detail.html', {'data':data}) 
 
 #활성화 기능
 def active(request, id):
-    user = get_object_or_404(User, id=id)
-    data = User.objects.all()
+    user = get_object_or_404(CounselorProfile, id=id)
+    data = CounselorProfile.objects.all()
     user.active_status = 1  
     user.save() 
     return render(request, 'management/detail.html', {'data':data}) 
@@ -81,31 +109,31 @@ def active(request, id):
 
 #휴직자 활성화기능
 def leave_active(request, id):
-    user = get_object_or_404(User, id=id)
-    data = User.objects.all()
+    user = get_object_or_404(CounselorProfile, id=id)
+    data = CounselorProfile.objects.all()
     user.active_status = 2  
     user.save() 
     return render(request, 'management/detail.html', {'data':data}) 
 
 #퇴사자 활성화기능
 def retire_active(request, id):
-    user = get_object_or_404(User, id=id)
-    data = User.objects.all()
+    user = get_object_or_404(CounselorProfile, id=id)
+    data = CounselorProfile.objects.all()
     user.active_status = 3  
     user.save() 
     return render(request, 'management/detail.html', {'data':data})
 
 # 보류자 활성화기능
 def reject_active(request, id):
-    user = get_object_or_404(User, id=id)
-    data = User.objects.all()
+    user = get_object_or_404(CounselorProfile, id=id)
+    data = CounselorProfile.objects.all()
     user.active_status = 4 
     user.save()
     return render(request, 'management/detail.html', {'data':data})
 
 #테스트페이지
 def test(request):
-    data = User.objects.all()
+    data = CounselorProfile.objects.all()
     return render(request, 'management/test.html',{'data':data})
 
 #검색로직
@@ -113,7 +141,7 @@ def search(request):
     query = request.POST.get('seachText', '')
    
     if query:
-        results = User.objects.filter(name__icontains=query)
+        results = CounselorProfile.objects.filter(name__icontains=query)
     else:
         results = []
     return render(request, 'management/dashboard.html', {'data': results, 'query': query})
@@ -122,7 +150,7 @@ def allow_search(request):
     query = request.POST.get('seachText', '')
    
     if query:
-        results = User.objects.filter(name__icontains=query)
+        results = CounselorProfile.objects.filter(name__icontains=query)
     else:
         results = []
     return render(request, 'management/allow.html', {'data': results, 'query': query})
@@ -131,7 +159,7 @@ def inactive_search(request):
     query = request.POST.get('seachText', '')
    
     if query:
-        results = User.objects.filter(name__icontains=query)
+        results = CounselorProfile.objects.filter(name__icontains=query)
     else:
         results = []
     return render(request, 'management/inactive.html', {'data': results, 'query': query})
