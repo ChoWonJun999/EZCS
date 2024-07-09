@@ -93,7 +93,7 @@ function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== "") {
         const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
+        for (let i = 0; cookies.length; i++) {
             const cookie = cookies[i].trim();
             if (cookie.substring(0, name.length + 1) === name + "=") {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
@@ -110,7 +110,7 @@ const chatContent = document.getElementById('chat-content');
 let mediaRecorder;
 let audioChunks = [];
 
-// 상담 시작 함수
+// 롤플레잉 시작 함수
 function startEducation() {
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
@@ -197,7 +197,7 @@ function startEducation() {
         });
 }
 
-// 상담 종료 함수
+// 롤플레잉 종료 함수
 function stopEducation() {
     if (window.recognition) {
         window.recognition.stop();
@@ -240,19 +240,6 @@ function createFinalDiv(text) {
     return finalDiv;
 }
 
-// 오디오 데이터를 서버로 전송하는 함수(임시로 로컬로 저장하게 구현)
-function sendAudioToServer(audioBlob) {
-    // const url = URL.createObjectURL(audioBlob);
-    // const a = document.createElement('a');
-    // a.style.display = 'none';
-    // a.href = url;
-    // a.download = 'recording.webm';  // 파일명 설정
-    // document.body.appendChild(a);
-    // a.click();
-    // window.URL.revokeObjectURL(url);
-    // document.body.removeChild(a);
-}
-
 function scrollToBottom() {
     chatContent.scrollTop = chatContent.scrollHeight;
 }
@@ -266,4 +253,27 @@ function appendMessageToReadonly(sender, message) {
         .join("");
     document.getElementById("readonly-chat-content").appendChild(messageElement);
     document.getElementById("readonly-chat-content").scrollTop = document.getElementById("readonly-chat-content").scrollHeight;
+}
+
+function saveChatData() {
+    const selectedCategory = document.getElementById('selected-category').innerText;
+    const chatContent = document.getElementById('chat-content').innerText;
+
+    const data = {
+        category: selectedCategory,
+        chat: chatContent,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: '{% url "save_chat_data" %}',  // URL을 동적으로 생성
+        data: data,
+        success: function(response) {
+            alert('Data saved successfully');
+        },
+        error: function(response) {
+            alert('Failed to save data');
+        }
+    });
 }
