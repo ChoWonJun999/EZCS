@@ -116,7 +116,7 @@ function signup() {
         }
 
         // ERROR focus 안잡힘
-        username.focus();
+        //username.focus();
         return;
     }
 
