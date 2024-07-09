@@ -1,37 +1,39 @@
-function validatePassword(password) {
-    var passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return passwordRegex.test(password);
-}
-
 function resetPassword() {
     let new_password = $("#new_password").val();
     let confirm_password = $("#confirm_password").val();
-    let csrf = $("input[name='csrfmiddlewaretoken']").val();
-    let url = $("#resetPasswordForm").data("url");
 
-    if (!validatePassword(new_password)) {
-        alert("비밀번호는 최소 8자 이상이어야 하며, 대문자, 소문자, 숫자, 특수문자를 포함해야 합니다.");
+    if (!new_password || !confirm_password) {
+        alert("모든 필드를 채워주세요.");
         return;
     }
+
     if (new_password !== confirm_password) {
         alert("비밀번호가 일치하지 않습니다.");
         return;
     }
 
+    let data = {
+        new_password: new_password
+    };
+
+    let form = $("#resetPasswordForm");
+    let url = form.data("url");
+    let csrf = $("input[name=csrfmiddlewaretoken]").val();
+
     $.ajax({
         url: url,
         type: "post",
-        data: {
-            new_password: new_password,
-            csrfmiddlewaretoken: csrf
-        },
+        data: data,
         dataType: "json",
-        success: function (data) {
-            if (data.result === 'success') {
-
-                location.href = "/accounts/";
+        headers: {
+            "X-CSRFToken": csrf
+        },
+        success: function (response) {
+            if (response.result === 'success') {
+                alert(response.msg);
+                window.location.href = "/accounts/";
             } else {
-                alert(data.msg);
+                alert(response.msg);
             }
         }
     });
