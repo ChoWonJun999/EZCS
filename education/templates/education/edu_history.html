@@ -17,20 +17,15 @@
 <form method="GET" action="{% url 'education:edu_history' %}">
     <div class="dashboard">
         <div>
-            <h1>롤플레잉이력 이력(색 조합 고민중)</h1>
+            <h1>롤플레잉 이력</h1>
         </div>
         <div class="search-container">
             <input type="text" class="form-control search-input" id="searchText" name="searchText" placeholder="검색창">
             <select class="form-control search-select" name="category">
                 <option value="">카테고리 선택</option>
-                <option value="0">부가서비스</option>
-                <option value="1">서비스정책</option>
-                <option value="2">요금관련</option>
-            </select>
-            <select class="form-control search-select" name="result">
-                <option value="">결과 선택</option>
-                <option value="pass">통과</option>
-                <option value="fail">실패</option>
+                <option value="부가서비스">부가서비스</option>
+                <option value="서비스정책">서비스정책</option>
+                <option value="요금관련">요금관련</option>
             </select>
             <button type="submit" class="btn btn-primary search-button">검색</button>
         </div>
@@ -43,7 +38,6 @@
                     <tr>
                         <th>번호</th>
                         <th>카테고리</th>
-                        <th>결과</th>
                         <th>날짜</th>
                         <th>사용자</th>
                     </tr>
@@ -51,17 +45,16 @@
                 <tbody>
                     {% if logs %}
                     {% for log in logs %}
-                    <tr data-url="{% url 'education:edu_history' log.id %}">
+                    <tr data-url="{% url 'education:edu_detail' log.id %}">
                         <td>{{ forloop.counter0|add:logs.start_index }}</td>
-                        <td>{{ log.get_category_display }}</td>
-                        <td>{{ log.is_passed|yesno:"통과,실패" }}</td>
+                        <td>{{ log.body.category }}</td>
                         <td>{{ log.create_time|date:"Y-m-d H:i" }}</td>
                         <td>{{ log.user_id.username }}</td>
                     </tr>
                     {% endfor %}
                     {% else %}
                     <tr>
-                        <td colspan="5">롤플레잉 이력이 없습니다.</td>
+                        <td colspan="4">롤플레잉 이력이 없습니다.</td>
                     </tr>
                     {% endif %}
                 </tbody>
