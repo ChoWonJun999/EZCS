@@ -64,15 +64,18 @@
         <div class="stt">
             <div id="transcription">여기에 음성 입력 내용이 표시됩니다...</div>
             <div class="button-container">
-                <button id="start-button" class="mic-button" onclick="startCounseling()">
-                    <i class="fas fa-microphone"></i> 마이크 연결
+                <button id="customer-start-button" class="customer-mic-button" onclick="startCustomerCounseling()">
+                    <i class="fas fa-microphone"></i> 고객 마이크 연결
+                </button>
+                <button id="counselor-start-button" class="mic-button" onclick="startCounselorCounseling()">
+                    <i class="fas fa-microphone"></i> 상담원 마이크 연결
                 </button>
                 <button id="stop-button" class="mic-button" onclick="stopCounseling()" disabled>
                     <i class="fas fa-microphone-slash"></i> 마이크 연결 끊기
                 </button>
             </div>
         </div>
-    </div>
+    </div>    
     <div class="stt-content">
         <h2>고객음성번역-챗봇추천응대멘트</h2>
         <div class="translation">
@@ -80,8 +83,10 @@
         </div>
     </div>
     <div class="submit-container">
-        <button type="submit" class="submit-button">저장</button>
-    </div>
+        <button id="save-button" type="button" class="submit-button">
+            <i class="fas fa-save"></i> 저장
+        </button>
+    </div>    
 </div>
 
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
