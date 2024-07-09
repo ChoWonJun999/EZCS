@@ -10,7 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
     {% load static %}
-    <script src="{% static 'accounts\js\searchPW.js' %}"></script>
+    <script src="{% static 'accounts/js/searchPW.js' %}"></script>
 
     <title>비밀번호 찾기</title>
 </head>
@@ -24,28 +24,29 @@
 </style>
 
 <body>
-    <form id="showForgotPasswordForm" data-url="{% url 'accounts:searchPW' %}" data-csrf="{{ csrf_token }}"></form>
     <div class="container-fluid my_container">
         <div>
             <h4>비밀번호를 잊으셨나요?🔒</h4>
         </div>
-        <div>
-            <input type="text" id="forgotPasswordUsername" name="forgotPasswordUsername" placeholder="사용자 이름">
-        </div>
-        <div>
-            <input type="date" id="birthdate" name="birthdate" placeholder="생년월일">
-        </div>
-        <div>
-            <input type="tel" id="phone_number" name="phone_number" placeholder="전화번호">
-        </div>
-        <div>
-            <input type="button" value="비밀번호 재설정 요청" onclick="sendResetRequest()">
-        </div>
-        <div>
-            <p><a href="{% url 'accounts:login' %}"> 로그인으로 돌아가기</a></p>
-        </div>
-
+        <form id="forgotPasswordForm" data-url="{% url 'accounts:searchPW' %}" data-csrf="{{ csrf_token }}">
+            {% csrf_token %}
+            <div>
+                <input type="text" id="forgotPasswordUsername" name="forgotPasswordUsername" placeholder="사용자 이름">
+            </div>
+            <div>
+                <input type="date" id="birthdate" name="birthdate" placeholder="생년월일">
+            </div>
+            <div>
+                <input type="tel" id="phone_number" name="phone_number" placeholder="전화번호">
+            </div>
+            <div>
+                <input type="button" value="비밀번호 재설정 요청" onclick="sendResetRequest()">
+            </div>
+            <div>
+                <p><a href="{% url 'accounts:login' %}"> 로그인으로 돌아가기</a></p>
+            </div>
         </form>
+    </div>
 </body>
 
 </html>

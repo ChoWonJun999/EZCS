@@ -67,6 +67,67 @@ function chkUserName() {
     });
 }
 
+function checkKoreanName(obj) {
+    if (!isKorean(obj.value)) {
+        $("#nameError").text("이름은 한글만 포함해야 합니다.");
+        $("#nameError").show();
+        obj.classList.add("is-invalid");
+        if (obj.classList.contains("is-valid")) {
+            obj.classList.remove("is-valid");
+        }
+    } else {
+        $("#nameError").hide();
+        obj.classList.remove("is-invalid");
+        obj.classList.add("is-valid");
+    }
+}
+
+function chkPhoneNumber() {
+    let phone = $("#phone").val();
+    $.ajax({
+        url: $("#phoneChkUrl").val(),
+        type: "get",
+        data: { phone_number: phone },
+        dataType: "json",
+        headers: {
+            "X-CSRFToken": $("#csrf").val()
+        },
+        success: function (data) {
+            if (data.is_taken) {
+                $("#phoneError").text("이미 가입된 전화번호입니다.");
+                $("#phoneError").show();
+                $("#phone").addClass("is-invalid");
+            } else {
+                $("#phoneError").hide();
+                $("#phone").removeClass("is-invalid");
+            }
+        }
+    });
+}
+
+function chkEmail() {
+    let email = $("#emailLocal").val() + "@" + $("#emailDomain").val();
+    $.ajax({
+        url: $("#emailChkUrl").val(),
+        type: "get",
+        data: { email: email },
+        dataType: "json",
+        headers: {
+            "X-CSRFToken": $("#csrf").val()
+        },
+        success: function (data) {
+            if (data.is_taken) {
+                $("#emailError").text("이미 가입된 이메일입니다.");
+                $("#emailError").show();
+                $("#emailLocal").addClass("is-invalid");
+            } else {
+                $("#emailError").hide();
+                $("#emailLocal").removeClass("is-invalid");
+            }
+        }
+    });
+}
+
 function emailDomainChange(obj) {
     $("#emailDomain").val(obj.value);
     if (obj.value == "") {
@@ -77,7 +138,10 @@ function emailDomainChange(obj) {
 }
 
 function pwBlur() {
-    if ($("#password").val() != $("#pwChk").val()) {
+    let password = $("#password").val().toLowerCase();
+    let password_confirm = $("#pwChk").val().toLowerCase();
+
+    if (password !== password_confirm) {
         $("#passwordError").text("비밀번호가 다릅니다.");
         $("#passwordError").show();
         $("#pwChk").addClass("is-invalid");
@@ -87,6 +151,19 @@ function pwBlur() {
         if ($("#pwChk").hasClass("is-invalid")) {
             $("#pwChk").removeClass("is-invalid");
         }
+    }
+}
+
+function chkAddressDetail() {
+    let addressDetail = $("#UserAdd2").val();
+    if (!addressDetail) {
+        $("#userAdd2Error").text("상세 주소를 입력해 주세요.");
+        $("#userAdd2Error").show();
+        $("#UserAdd2").addClass("is-invalid");
+    } else {
+        $("#userAdd2Error").hide();
+        $("#UserAdd2").removeClass("is-invalid");
+        $("#UserAdd2").addClass("is-valid");
     }
 }
 
@@ -115,8 +192,6 @@ function signup() {
             username.removeClass("is-valid");
         }
 
-        // ERROR focus 안잡힘
-        username.focus();
         return;
     }
 
@@ -135,14 +210,6 @@ function signup() {
         alert("비밀번호가 일치하지 않습니다.");
         return false;
     }
-
-    // if (!validatePassword(password)) {
-    //     $("#passwordError").text("비밀번호는 최소 8자 이상이어야 하며, 문자, 숫자, 특수문자를 포함해야 합니다.");
-    //     $("#passwordError").show();
-    //     return false;
-    // } else {
-    //     $("#passwordError").hide();
-    // }
 
     if (password !== password_confirm) {
         $("#passwordConfirmError").text("비밀번호가 일치하지 않습니다.");
@@ -163,7 +230,9 @@ function signup() {
     }
 
     let fullEmail = email + "@" + emailDomain;
+    
     let addressDetail = $("#UserAdd2").val();
+    /*
     if (!addressDetail) {
         $("#userAdd2Error").text("상세 주소를 입력해 주세요.");
         $("#userAdd2Error").show();
@@ -171,6 +240,8 @@ function signup() {
     } else {
         $("#userAdd2Error").hide();
     }
+        */
+
     let param = {
         username: username.val(),
         password: password,
@@ -280,3 +351,4 @@ function execDaumPostcode() {
         }
     }).open();
 }
+

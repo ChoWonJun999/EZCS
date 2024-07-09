@@ -62,9 +62,7 @@
                 <div class="logout">
                     <a href="{% url 'accounts:logout' %}">로그아웃</a>
                 </div>
-                {% comment %} <div class="profile-edit">
-                    <a href="{% url 'main:edit_profile' %}">회원정보 수정</a> <!-- 추가 -->
-                </div> {% endcomment %}
+
                 {% else %}
                 <div class="logout">
                     <a href="{% url 'accounts:login' %}">로그인</a>
@@ -85,6 +83,7 @@
             </div>
         </footer>
     </div>
+
     <script src="{% static 'js/scripts.js' %}"></script>
     <script src="{% static 'main/js/edit_profile.js' %}"></script> <!-- 수정 -->
 </body>

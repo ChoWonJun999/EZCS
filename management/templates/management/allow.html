@@ -2,16 +2,32 @@
 {% block title %}가입승인{% endblock %}
 
 {% block content %}
-<form action="" method="POST">
+<script>
+    window.onkeydown = function () {
+        var kcode = event.keyCode;
+        if (kcode == 116) {
+            history.replaceState({}, null, location.pathname);
+        }
+    }
+</script>
+    <form id="frm" name="frm" action="{% url 'management:allow' %}" method="GET">
     {% csrf_token %}
-    <div>
-        <h2>가입 승인 페이지</h2>
-    </div>
     <div class="dashboard">
+        <div>
+            <h2>직원 관리</h2>
+        </div>
         <div>
             <ul>
                 <li>
-                    <input type="text" class="form-control" id="seachText" name="seachText" placeholder="검색창">
+                    <select name="searchSelect" id="searchSelect">
+                        <option value="all" {% if searchSelect == 'all' %}selected{% endif %}>전체</option>
+                        <option value="name" {% if searchSelect == 'name' %}selected{% endif %}>이름</option>
+                        <option value="id" {% if searchSelect == 'id' %}selected{% endif %}>아이디</option>
+                        <option value="email" {% if searchSelect == 'email' %}selected{% endif %}>E-mail</option>
+                    </select>
+                </li>
+                <li>
+                    <input type="text" class="form-control" id="searchText" name="searchText" placeholder="검색창" value="{{ searchText }}">
                 </li>
                 <li>
                     <input type="submit" class="btn btn-primary" value="검색">
@@ -34,20 +50,23 @@
                     <th>회원 가입 승인</th>
                 </thead>
                 <tbody>
+                    {% if data %}
                     {% for item in data %}
                     <tr data-url="{% url 'management:detail' item.id %}" class="active-row">
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.username }}</td>
-                        <td>{{ item.email }}</td>
-                        <td>{{ item.department}}</td>
-                        <td>{{ item.is_superuser}}</td>
-                        <td>{{ item.date_joined}}</td>
-                        <td><a href="{% url 'management:approve_user' item.id %}" class="approve-btn">승인</a>
-                            {% comment %} <a href="{% url 'management:reject_user' item.id %}" class="reject-btn">거부</a> {% endcomment %}
-                        </td>
+                        <td>{{ item.auth_user.first_name }}</td>
+                        <td>{{ item.auth_user.username }}</td>
+                        <td>{{ item.auth_user.email }}</td>
+                        <td>{{ item.department }}</td>
+                        <td>{{ item.auth_user.is_superuser }}</td>
+                        <td>{{ item.auth_user.date_joined }}</td>
                     </tr>
                     {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="7">데이터 없음</td>
+                    </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>

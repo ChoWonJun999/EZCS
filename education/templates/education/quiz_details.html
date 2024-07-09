@@ -27,7 +27,7 @@
 
     <div class="quiz-history">
         <h3>퀴즈 창 복원 영역</h3>
-        {% comment %} <h2>퀴즈 결과</h2>
+        {% comment %} {% comment %} <h2>퀴즈 결과</h2> {% endcomment %}
         {% for item in items %}
         <div class="question">
             <p>{{ forloop.counter }}. {{ item.quiz.question }}</p>
@@ -60,8 +60,8 @@
                 <div class="correct-answer-title">정답</div>
                 <div class="correct-answer-content">{{ item.quiz.answer }}</div>
             </div>
-        </div> {% endcomment %}
-        {% comment %} {% endfor %} {% endcomment %}
+        </div>
+        {% endfor %}
     </div>
 </div>
 
