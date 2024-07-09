@@ -10,7 +10,7 @@ urlpatterns = [
     # 교육 이력 페이지
     path('edu_history/', views.edu_history, name='edu_history'),
     # 교육이력 상세 페이지
-    path('edu_details/<int:log_id>/', views.edu_detail, name='edu_detail'),
+    path('edu_details/<int:log_id>/', views.edu_details, name='edu_details'),
 
     # 임시
     # path('save_chat_data/', views.save_chat_data, name='save_chat_data'),

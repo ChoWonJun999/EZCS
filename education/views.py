@@ -38,7 +38,7 @@ def edu_history(request):
 
 
 # 교육 이력 상세
-def edu_detail(request, log_id):
+def edu_details(request, log_id):
     log = get_object_or_404(EducationChatbotLog, id=log_id)
     return render(request, 'education/edu_details.html', {'log': log})
 

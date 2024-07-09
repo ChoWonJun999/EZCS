@@ -16,7 +16,7 @@ from .models import CounselLog, CustomerInfo, User
 from django.http import HttpResponse
 
 def list(request):
-    data = CustomerInfo.objects.get(phone_number='01011112222')
+    data = ''
     print(data)
     return render(request, "counseling/index.html",{'data':data})
 
