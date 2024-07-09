@@ -47,6 +47,8 @@ function saveCustomerInfo() {
         return;
     }
 
+    const formData = new FormData(form);
+
     fetch('/counseling/save_customer_info/', {
         method: 'POST',
         body: formData,
