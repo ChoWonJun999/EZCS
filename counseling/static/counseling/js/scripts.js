@@ -1,3 +1,17 @@
+const phoneInput = document.getElementById('phone');
+const transcription = document.getElementById('transcription');
+const customerStartButton = document.getElementById('customer-start-button');
+const counselorStartButton = document.getElementById('counselor-start-button');
+const stopButton = document.getElementById('stop-button');
+const saveButton = document.getElementById('save-button');
+const translationContent = document.getElementById('translation-content');
+let mediaRecorder;
+let audioChunks = [];
+let recognition;
+let currentStream;
+let audioBlob;
+let currentInterimDiv;  // 현재 interim 메시지 div
+
 document.addEventListener('DOMContentLoaded', function () {
     // 고객 정보 폼
     document.getElementById('customer-form').addEventListener('keypress', function (event) {
@@ -40,13 +54,12 @@ function saveCustomerInfo() {
     const inputs = form.querySelectorAll('input:not([type="button"])');
 
     // 고객 정보를 저장하는 로직 추가, 예: 서버로 데이터 전송
-    const phoneInput = document.getElementById('phone');
     if (phoneInput.value.length !== 11 || !/^\d{11}$/.test(phoneInput.value)) {
         alert('전화번호는 11자리 숫자여야 합니다.');
         phoneInput.disabled = false; // 입력 필드 다시 활성화
         return;
     }
-    
+
     const formData = new FormData(form);
     fetch('/counseling/save_customer_info/', {
         method: 'POST',
@@ -163,19 +176,6 @@ function cancelConsultationEdit() {
         button.style.display = 'none';
     });
 }
-
-const transcription = document.getElementById('transcription');
-const customerStartButton = document.getElementById('customer-start-button');
-const counselorStartButton = document.getElementById('counselor-start-button');
-const stopButton = document.getElementById('stop-button');
-const saveButton = document.getElementById('save-button');
-const translationContent = document.getElementById('translation-content');
-let mediaRecorder;
-let audioChunks = [];
-let recognition;
-let currentStream;
-let audioBlob;
-let currentInterimDiv;  // 현재 interim 메시지 div
 
 // 기본 메시지 저장
 const defaultTranscriptionMessage = transcription.innerHTML;
@@ -333,7 +333,7 @@ function sendTextToChatbot(text) {
     const formData = new FormData();
     formData.append('text', text);
     formData.append('username', '홍길동');
-    
+
     fetch('/counseling/stt_chat/', {
         method: 'POST',
         body: formData,
@@ -365,10 +365,107 @@ function sendTextToChatbot(text) {
 function addCustomerMessageToTranslationContent(text) {
     const translationDiv = document.createElement('div');
     translationDiv.className = 'output-msg customer';
-    translationDiv.innerHTML = '<strong>고객:</strong> ' + text;
+    translationDiv.innerHTML = '<strong>번역:</strong> ' + text;
     translationContent.appendChild(translationDiv);
 }
 
+function saveCounselingLog() {
+    const raw_data = [];
+    const chatbot_data = [];
+
+    const username = '상담원';
+    const phoneInput = document.getElementById('phone');
+    const phone_number = phoneInput.value;
+
+    // 전화번호 유효성 검사
+    if (phoneInput.value.length !== 11 || !/^\d{11}$/.test(phoneInput.value)) {
+        alert('고객의 전화번호를 입력하여주세요.');
+        phoneInput.disabled = false; // 입력 필드 다시 활성화
+        return;
+    }
+
+    const inquiry_text = document.getElementById('inquiry-text').value;
+    const action_text = document.getElementById('action-text').value;
+
+    // 채팅 내역에서 필요한 요소를 가져옴
+    const transcriptionElements = document.querySelectorAll('#transcription .output-msg, #transcription .chatbot-response');
+    const translationElements = document.querySelectorAll('#translation-content .output-msg, #translation-content .chatbot-response');
+
+    // 요소들의 순서대로 인덱스 번호를 매김
+    transcriptionElements.forEach((element, index) => {
+        if (element.classList.contains('customer')) {
+            raw_data.push({
+                index: index + 1,
+                type: 'customer',
+                text: element.innerText.replace('고객:', '').trim()
+            });
+        } else if (element.classList.contains('counselor')) {
+            raw_data.push({
+                index: index + 1,
+                type: 'counselor',
+                text: element.innerText.replace('상담원:', '').trim()
+            });
+        }
+    });
+
+    // 챗봇 데이터는 별개로 인덱스를 매김
+    translationElements.forEach((element, index) => {
+        if (element.classList.contains('customer')) {
+            chatbot_data.push({
+                index: index + 1,
+                type: 'translated',
+                text: element.innerText.replace('번역:', '').trim()
+            });
+        } else if (element.classList.contains('chatbot-response')) {
+            chatbot_data.push({
+                index: index + 1,
+                type: 'chatbot',
+                text: element.innerText.trim()
+            });
+        }
+    });
+
+    // 상담 로그 데이터 객체 생성
+    const counselingLog = {
+        username: username,
+        phone_number: phone_number,
+        chat_data: {
+            raw_data: raw_data,
+            chatbot_data: chatbot_data
+        },
+        memo_data: {
+            inquiry_text: inquiry_text,
+            action_text: action_text
+        }
+    };
+
+    // CSRF 토큰 가져오기
+    const csrftoken = getCookie('csrftoken');
+
+    // 상담 로그 데이터 서버로 전송
+    fetch('/counseling/save_counseling_log/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify(counselingLog)
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('상담 로그가 저장되었습니다.');
+            } else {
+                alert('상담 로그 저장에 실패했습니다.');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('상담 로그 저장 중 오류가 발생했습니다.');
+        });
+}
+
+// 파일 저장은 임시로 사용하지 않음
 function saveRecording() {
     if (!audioBlob) {
         alert("녹음된 파일이 없습니다.");
@@ -384,7 +481,7 @@ function saveRecording() {
 function sendAudioToServer(audioBlob) {
     const formData = new FormData();
     formData.append('audio', audioBlob, 'recording.webm');
-    
+
     fetch('/counseling/save_audio/', {
         method: 'POST',
         body: formData,
@@ -392,26 +489,23 @@ function sendAudioToServer(audioBlob) {
             'X-CSRFToken': getCookie('csrftoken')
         }
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        alert('파일이 성공적으로 저장되었습니다.');
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            alert('파일이 성공적으로 저장되었습니다.');
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }
-
-saveButton.addEventListener('click', saveRecording);
 
 function scrollToBottom() {
     transcription.scrollTop = transcription.scrollHeight;
 }
-
 
 // 텍스트 데이터를 챗봇에 전송하는 함수(view.py에 전송)
 function sendTextToChatbot(text) {
@@ -419,7 +513,7 @@ function sendTextToChatbot(text) {
     formData.append('text', text);
     // DB 저장을 위한 데이터(미완성)
     formData.append('username', '홍길동')
-    
+
     fetch('/counseling/stt_chat/', {
         method: 'POST',
         body: formData,

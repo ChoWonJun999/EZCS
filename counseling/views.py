@@ -6,6 +6,7 @@ from chat import Chatbot
 from django.views.decorators.csrf import csrf_exempt
 import logging
 from .models import CounselLog, CustomerInfo, User
+import json
 
 
 # def list(request):
@@ -14,6 +15,7 @@ from .models import CounselLog, CustomerInfo, User
 #     return render(request, "counseling/index.html",{'data':data})
 
 from django.http import HttpResponse
+
 
 def list(request):
     data = ''
@@ -56,8 +58,9 @@ messages = "너는 친절하고 상냥하고 유능한 고객센터 상담원이
       고객의 질문에 대해 고객센터 매뉴얼을 참고해서 완벽한 답변 대본을 작성해줘.\
       예시: 네, 고객님 해당 문의 내용은 월사용요금을 kt에서 신용카드사로 청구하면 고객이 신용카드사에 결제대금을 납부하는 제도입니다."
 
-
-chatbot = Chatbot(os.getenv("OPENAI_API_KEY"), "database/chroma.sqlite3", behavior_policy=messages)  # chatbot 객체 생성
+chatbot = Chatbot(
+    os.getenv("OPENAI_API_KEY"), "database/chroma.sqlite3", behavior_policy=messages
+)  # chatbot 객체 생성
 
 
 # def stt_chat(request):
@@ -100,24 +103,24 @@ def stt_chat(request):
 
 
         if text:
-                print("#########################")
-                print("text", text)
-                print("username", username)
-                print("phone_number", phone_number)
-                print("#########################")
+            print("#########################")
+            print("text", text)
+            print("username", username)
+            print("phone_number", phone_number)
+            print("#########################")
 
-                output = chatbot.chat(text)
-                # customer_info = CustomerInfo.objects.get(phone_number=phone_number)
-                # print(customer_info)
-                
-                # counselLog_instance = CounselLog(
-                #     username=username,
-                #     body={"prompt": text, "output": output},
-                #     phone_number=customer_info,
-                # )
-                # counselLog_instance.save()
+            output = chatbot.chat(text)
+            # customer_info = CustomerInfo.objects.get(phone_number=phone_number)
+            # print(customer_info)
 
-                return JsonResponse({"text": text, "output": output})
+            # counselLog_instance = CounselLog(
+            #     username=username,
+            #     body={"prompt": text, "output": output},
+            #     phone_number=customer_info,
+            # )
+            # counselLog_instance.save()
+
+            return JsonResponse({"text": text, "output": output})
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
@@ -149,6 +152,44 @@ def save_customer_info(request):
 
             return JsonResponse({"success": True})
         except Exception as e:
+            return JsonResponse({"success": False, "error": str(e)})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
+
+
+@csrf_exempt
+def save_counseling_log(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body.decode("utf-8"))
+            
+            username = data.get("username")
+            phone_number_str = data.get("phone_number")
+
+            try:
+                phone_number = CustomerInfo.objects.get(phone_number=phone_number_str)
+            except CustomerInfo.DoesNotExist:
+                return JsonResponse({"success": False, "error": "CustomerInfo not found"})
+
+            chat_data = json.dumps(data.get("chat_data", {}), ensure_ascii=False)
+            memo_data = json.dumps(data.get("memo_data", {}), ensure_ascii=False)
+            
+            print(f"Username: {username}")
+            print(f"Phone Number: {phone_number}")
+            print(f"Chat Data: {chat_data}")
+            print(f"Memo Data: {memo_data}")
+
+            counselLog = CounselLog(
+                username=username,
+                phone_number=phone_number,
+                body=chat_data,
+                memo=memo_data,
+            )
+            counselLog.save()
+
+            return JsonResponse({"success": True})
+        except Exception as e:
+            print(f"Error: {str(e)}")
             return JsonResponse({"success": False, "error": str(e)})
 
     return JsonResponse({"error": "Invalid request"}, status=400)
