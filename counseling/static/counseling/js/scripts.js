@@ -172,10 +172,10 @@ const saveButton = document.getElementById('save-button');
 const translationContent = document.getElementById('translation-content');
 let mediaRecorder;
 let audioChunks = [];
-let currentTranscriptionDiv;
 let recognition;
 let currentStream;
 let audioBlob;
+let currentInterimDiv;  // 현재 interim 메시지 div
 
 // 기본 메시지 저장
 const defaultTranscriptionMessage = transcription.innerHTML;
@@ -207,20 +207,6 @@ function startCounseling(type) {
 
             mediaRecorder.start();
 
-            removeExistingInterimDiv();
-
-            // 기본 메시지 숨기기
-            transcription.innerHTML = '';
-
-            currentTranscriptionDiv = document.createElement('div');
-            currentTranscriptionDiv.className = 'interim-msg';
-            if (type === 'customer') {
-                currentTranscriptionDiv.innerHTML = '<strong>고객:</strong> ';
-            } else {
-                currentTranscriptionDiv.innerHTML = '<strong>상담원:</strong> ';
-            }
-            transcription.appendChild(currentTranscriptionDiv);
-
             recognition.onstart = () => {
                 if (type === 'customer') {
                     customerStartButton.disabled = true;
@@ -229,6 +215,15 @@ function startCounseling(type) {
                 }
                 stopButton.disabled = false;
                 console.log('Counseling started');
+
+                // 기존 interimDiv 제거
+                removeExistingInterimDiv();
+
+                // 새로운 interimDiv 생성
+                currentInterimDiv = document.createElement('div');
+                currentInterimDiv.className = 'interim-msg';
+                transcription.appendChild(currentInterimDiv);
+                scrollToBottom();  // 항상 하단으로 스크롤
             };
 
             recognition.onresult = event => {
@@ -243,7 +238,9 @@ function startCounseling(type) {
                     }
                 }
 
-                currentTranscriptionDiv.innerHTML = (type === 'customer' ? '<strong>고객:</strong> ' : '<strong>상담원:</strong> ') + finalTranscript + interimTranscript;
+                // interim 메시지 업데이트
+                currentInterimDiv.innerHTML = (type === 'customer' ? '<strong>고객:</strong> ' : '<strong>상담원:</strong> ') + finalTranscript + interimTranscript;
+                scrollToBottom();  // 항상 하단으로 스크롤
             };
 
             recognition.onerror = event => {
@@ -275,13 +272,16 @@ function startCounseling(type) {
                     }
                 }
 
-                currentTranscriptionDiv.remove();
                 mediaRecorder.stop();
 
-                // 기본 메시지를 다시 표시
+                // interim 메시지 제거
+                removeExistingInterimDiv();
+
+                // 기본 메시지를 다시 표시하지 않음
                 if (transcription.innerHTML.trim() === '') {
                     transcription.innerHTML = defaultTranscriptionMessage;
                 }
+                scrollToBottom();  // 항상 하단으로 스크롤
             };
 
             recognition.start();
@@ -407,6 +407,10 @@ function sendAudioToServer(audioBlob) {
 }
 
 saveButton.addEventListener('click', saveRecording);
+
+function scrollToBottom() {
+    transcription.scrollTop = transcription.scrollHeight;
+}
 
 
 // 텍스트 데이터를 챗봇에 전송하는 함수(view.py에 전송)
