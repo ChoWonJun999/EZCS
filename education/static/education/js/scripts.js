@@ -82,6 +82,11 @@ function appendMessage(sender, message) {
     document.getElementById("chat-content").appendChild(messageElement);
     document.getElementById("question").value = "";
     document.getElementById("chat-content").scrollTop = document.getElementById("chat-content").scrollHeight;
+
+    // Append user message to readonly chat box if sender is user
+    if (sender === "user") {
+        appendMessageToReadonly(sender, message);
+    }
 }
 
 function getCookie(name) {
@@ -129,7 +134,7 @@ function startEducation() {
 
             // 새로운 interimDiv를 생성하여 추가
             const interimDiv = document.createElement('div');
-            interimDiv.className = 'interim-msg';
+            interimDiv.className = 'interim-msg message';
             chatContent.appendChild(interimDiv);
 
             // 음성 인식 시작 시 버튼 비활성화 및 로그 출력
@@ -154,6 +159,7 @@ function startEducation() {
                 }
 
                 interimDiv.innerText = finalTranscript + interimTranscript;
+                scrollToBottom();
             };
 
             // 음성 인식 오류 처리
@@ -172,11 +178,12 @@ function startEducation() {
                 if (finalTranscript.trim() !== '') {
                     const finalDiv = createFinalDiv(finalTranscript);
                     chatContent.appendChild(finalDiv);
-                    // sendTextToChatbot(finalTranscript);  // 텍스트 데이터를 챗봇에 전송
+                    appendMessageToReadonly("user", finalTranscript);
                 }
 
                 interimDiv.remove();
                 mediaRecorder.stop(); // 음성 녹음 중지
+                scrollToBottom();
             };
 
             recognition.start();
@@ -192,7 +199,6 @@ function startEducation() {
 
 // 상담 종료 함수
 function stopEducation() {
-
     if (window.recognition) {
         window.recognition.stop();
     }
@@ -229,7 +235,7 @@ function removeExistingInterimDiv() {
 // output-msg 생성(종료 버튼 클릭시 동작)
 function createFinalDiv(text) {
     const finalDiv = document.createElement('div');
-    finalDiv.className = 'output-msg';
+    finalDiv.className = 'message user';
     finalDiv.innerText = text;
     return finalDiv;
 }
@@ -245,4 +251,19 @@ function sendAudioToServer(audioBlob) {
     // a.click();
     // window.URL.revokeObjectURL(url);
     // document.body.removeChild(a);
+}
+
+function scrollToBottom() {
+    chatContent.scrollTop = chatContent.scrollHeight;
+}
+
+function appendMessageToReadonly(sender, message) {
+    const messageElement = document.createElement("div");
+    messageElement.className = "message " + sender;
+    messageElement.innerHTML = message
+        .split("\n")
+        .map((line) => `<div>${line}</div>`)
+        .join("");
+    document.getElementById("readonly-chat-content").appendChild(messageElement);
+    document.getElementById("readonly-chat-content").scrollTop = document.getElementById("readonly-chat-content").scrollHeight;
 }
