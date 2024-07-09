@@ -60,4 +60,19 @@
     </div>
 </body>
 
+<script>
+    $(document).ready(function () {
+        {% if messages %}
+        var messages = [
+            {% for message in messages %}
+                    "{{ message }}"{% if not loop.last %}, {% endif %}
+    {% endfor %}
+                ];
+    if (messages.length > 0) {
+        alert(messages.join("\n"));
+    }
+    {% endif %}
+    });
+</script>
+
 </html>
