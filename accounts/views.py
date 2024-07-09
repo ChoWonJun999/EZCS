@@ -30,11 +30,15 @@ def user_login(request):
         logger.log(1, user)
 
         if user is not None:
-            if user.active_status != 1:
+            counselor = CounselorProfile.objects.filter(auth_user_id=user.id).first()
+            admin = AdministratorProfile.objects.filter(auth_user_id=user.id).first()
+
+            if (counselor and counselor.active_status != 1) or (admin and admin.active_status != 1):
                 result = '로그인 권한이 없습니다.'
             else:
                 login(request, user)
-                request.session['user'] = user.name
+                request.session['user'] = user.first_name if user.first_name else user.username
+
                 if user.is_superuser == True:
                     result = 'manager'
                 else:
@@ -58,7 +62,7 @@ def user_logout(request):
         로그아웃
     """
     logout(request)
-    del request.session['user']
+    request.session.pop('user', None)
     return redirect('/')
 
 

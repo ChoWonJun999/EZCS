@@ -18,9 +18,6 @@ urlpatterns = [
     path('quiz/', views.quiz, name='quiz'),
 
     # 퀴즈 이력 페이지
-    path('quiz_history/', views.quiz_history, name='quiz_history'),
-
-    # 퀴즈 이력 상세 페이지
-    path('quiz_details/', views.quiz_details, name='quiz_details'),
-
+ path('quiz_history/', views.quiz_history, name='quiz_history'),
+    path('quiz_details/<int:log_id>/', views.quiz_details, name='quiz_details'),  # URL 패턴 및 이름 확인
 ]

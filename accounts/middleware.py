@@ -23,7 +23,7 @@ class LoginSessionMiddleware:
         if request.path == '/favicon.ico' or 'logout' in request.path:
             return self.get_response(request)
 
-        user = request.session.get('user', None)
+        user = request.session.get('_auth_user_id', None)
 
         if 'accounts' in request.path:
             if user:

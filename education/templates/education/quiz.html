@@ -11,46 +11,42 @@
     <h1>퀴즈페이지</h1>
     <form method="post" id="quiz-form">
         {% csrf_token %}
+        {{ form.answers }}
+        {{ form.quiz_ids }}
         <div class="quiz-container">
             {% for quiz in quizzes %}
             <div class="question">
                 <p>{{ forloop.counter }}. {{ quiz.question }}</p>
                 {% if quiz.flag == 0 %}
                 <div class="input-container">
-                    <input id="input-{{ quiz.id }}" type="text" name="answers" class="answer-input" {% if results %}value="{{ results|get_item:quiz.id|get_item:'user_answer' }}" readonly{% endif %}>
-                    <input type="hidden" name="quiz_ids" value="{{ quiz.id }}">
+                    <input id="input-{{ quiz.id }}" type="text" name="answers_{{ quiz.id }}" class="answer-input">
+                    <input type="hidden" name="quiz_ids_{{ quiz.id }}" value="{{ quiz.id }}">
                 </div>
                 {% else %}
                 <div>
-                    <label><input type="radio" id="answer-{{ quiz.id }}-1" name="answers_{{ quiz.id }}" value="1" {% if results and results|get_item:quiz.id|get_item:'user_answer' == "1" %}checked{% endif %} {% if results %}disabled{% endif %}> {{ quiz.choice1 }}</label><br>
-                    <label><input type="radio" id="answer-{{ quiz.id }}-2" name="answers_{{ quiz.id }}" value="2" {% if results and results|get_item:quiz.id|get_item:'user_answer' == "2" %}checked{% endif %} {% if results %}disabled{% endif %}> {{ quiz.choice2 }}</label><br>
-                    <label><input type="radio" id="answer-{{ quiz.id }}-3" name="answers_{{ quiz.id }}" value="3" {% if results and results|get_item:quiz.id|get_item:'user_answer' == "3" %}checked{% endif %} {% if results %}disabled{% endif %}> {{ quiz.choice3 }}</label><br>
-                    <label><input type="radio" id="answer-{{ quiz.id }}-4" name="answers_{{ quiz.id }}" value="4" {% if results and results|get_item:quiz.id|get_item:'user_answer' == "4" %}checked{% endif %} {% if results %}disabled{% endif %}> {{ quiz.choice4 }}</label>
-                    <input type="hidden" name="quiz_ids" value="{{ quiz.id }}">
+                    <label><input type="radio" id="answer-{{ quiz.id }}-1" name="answers_{{ quiz.id }}" value="1"> {{ quiz.choice1 }}</label><br>
+                    <label><input type="radio" id="answer-{{ quiz.id }}-2" name="answers_{{ quiz.id }}" value="2"> {{ quiz.choice2 }}</label><br>
+                    <label><input type="radio" id="answer-{{ quiz.id }}-3" name="answers_{{ quiz.id }}" value="3"> {{ quiz.choice3 }}</label><br>
+                    <label><input type="radio" id="answer-{{ quiz.id }}-4" name="answers_{{ quiz.id }}" value="4"> {{ quiz.choice4 }}</label>
+                    <input type="hidden" name="quiz_ids_{{ quiz.id }}" value="{{ quiz.id }}">
                 </div>
                 {% endif %}
             </div>
-            <div id="feedback-{{ quiz.id }}" class="feedback">
-                {% if results and results|get_item:quiz.id %}
-                {% if results|get_item:quiz.id|get_item:'is_correct' %}
-                <span class="feedback-correct">정답입니다.</span>
-                {% else %}
-                <span class="feedback-incorrect">오답입니다!</span>
-                {% endif %}
-                {% endif %}
-            </div>
-            <div id="explanation-{{ quiz.id }}" class="explanation" {% if not results %}style="display:none;" {% endif %}>
+            <div id="feedback-{{ quiz.id }}" class="feedback"></div>
+            <div id="explanation-{{ quiz.id }}" class="explanation" style="display:none;">
                 <div class="explanation-title">퀴즈 해설</div>
-                <div class="explanation-content">
-                    {{ quiz.commentary }}
-                </div>
+                <div class="explanation-content"></div>
+            </div>
+            <div id="correct-answer-{{ quiz.id }}" class="correct-answer" style="display:none;">
+                <div class="correct-answer-title">정답</div>
+                <div class="correct-answer-content"></div>
             </div>
             {% endfor %}
         </div>
+        <div class="submit-container">
+            <button type="submit" class="submit-button">제출</button>
+        </div>
     </form>
-</div>
-<div class="submit-container">
-    <button type="submit" class="submit-button">제출</button>
 </div>
 
 <script src="{% static 'education/js/quiz.js' %}"></script>

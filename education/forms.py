@@ -1,6 +1,5 @@
 from django import forms
 
-
-# 퀴즈 제출 폼
 class QuizForm(forms.Form):
-    answers = forms.JSONField()
+    answers = forms.CharField(widget=forms.HiddenInput())
+    quiz_ids = forms.CharField(widget=forms.HiddenInput())
