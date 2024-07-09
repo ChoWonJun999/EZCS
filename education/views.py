@@ -66,6 +66,7 @@ def quiz(request):
                     'commentary': quiz.commentary,  # 해설 추가
                     'correct_answer': quiz.answer
                 }
+                print(results)
 
             is_passed = correct_answers >= 3  # 3개 이상의 정답이면 통과로 설정
             categories = [Quiz.objects.get(id=quiz_id).category for quiz_id in quiz_ids]  # 퀴즈 ID로 각 퀴즈의 카테고리 가져오기
