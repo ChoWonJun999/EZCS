@@ -19,11 +19,50 @@ def list(request):
 # 교육 이력
 def edu_history(request):
     logs = EducationChatbotLog.objects.all()
-    return render(request, 'education/edu_history.html', {'logs': logs})
+
+    # 검색 기능을 추가합니다.
+    search_text = request.GET.get('searchText', '')
+    category = request.GET.get('category', '')
+
+    if search_text:
+        logs = logs.filter(body__icontains=search_text)
+    if category:
+        logs = logs.filter(body__icontains=category)
+
+    # 페이지네이션
+    paginator = Paginator(logs, 10)  # 페이지당 10개씩 표시
+    page_number = request.GET.get('page')
+    logs_page = paginator.get_page(page_number)
+
+    return render(request, 'education/edu_history.html', {'logs': logs_page})
+
 
 # 교육 이력 상세
-def edu_details(request):
-    return render(request, 'education/edu_details.html')
+def edu_detail(request, log_id):
+    log = get_object_or_404(EducationChatbotLog, id=log_id)
+    return render(request, 'education/edu_details.html', {'log': log})
+
+# 롤플레잉 저장 함수 - 미완성
+@csrf_exempt
+def save_chat_data(request):
+    if request.method == 'POST':
+        user = request.user
+        category = request.POST.get('category')
+        chat = request.POST.get('chat')
+
+        body = {
+            "category": category,
+            "chat": chat
+        }
+
+        EducationChatbotLog.objects.create(
+            user_id=user,
+            body=body
+        )
+
+        return JsonResponse({"message": "Data saved successfully"})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
 
 # 퀴즈페이지
 @csrf_exempt
