@@ -82,13 +82,18 @@ function appendMessage(sender, message) {
     document.getElementById("chat-content").appendChild(messageElement);
     document.getElementById("question").value = "";
     document.getElementById("chat-content").scrollTop = document.getElementById("chat-content").scrollHeight;
+
+    // Append user message to readonly chat box if sender is user
+    if (sender === "user") {
+        appendMessageToReadonly(sender, message);
+    }
 }
 
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== "") {
         const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
+        for (let i = 0; cookies.length; i++) {
             const cookie = cookies[i].trim();
             if (cookie.substring(0, name.length + 1) === name + "=") {
                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
@@ -105,7 +110,7 @@ const chatContent = document.getElementById('chat-content');
 let mediaRecorder;
 let audioChunks = [];
 
-// 상담 시작 함수
+// 롤플레잉 시작 함수
 function startEducation() {
     navigator.mediaDevices.getUserMedia({ audio: true })
         .then(stream => {
@@ -129,7 +134,7 @@ function startEducation() {
 
             // 새로운 interimDiv를 생성하여 추가
             const interimDiv = document.createElement('div');
-            interimDiv.className = 'interim-msg';
+            interimDiv.className = 'interim-msg message';
             chatContent.appendChild(interimDiv);
 
             // 음성 인식 시작 시 버튼 비활성화 및 로그 출력
@@ -154,6 +159,7 @@ function startEducation() {
                 }
 
                 interimDiv.innerText = finalTranscript + interimTranscript;
+                scrollToBottom();
             };
 
             // 음성 인식 오류 처리
@@ -172,11 +178,12 @@ function startEducation() {
                 if (finalTranscript.trim() !== '') {
                     const finalDiv = createFinalDiv(finalTranscript);
                     chatContent.appendChild(finalDiv);
-                    // sendTextToChatbot(finalTranscript);  // 텍스트 데이터를 챗봇에 전송
+                    appendMessageToReadonly("user", finalTranscript);
                 }
 
                 interimDiv.remove();
                 mediaRecorder.stop(); // 음성 녹음 중지
+                scrollToBottom();
             };
 
             recognition.start();
@@ -190,9 +197,8 @@ function startEducation() {
         });
 }
 
-// 상담 종료 함수
+// 롤플레잉 종료 함수
 function stopEducation() {
-
     if (window.recognition) {
         window.recognition.stop();
     }
@@ -229,20 +235,45 @@ function removeExistingInterimDiv() {
 // output-msg 생성(종료 버튼 클릭시 동작)
 function createFinalDiv(text) {
     const finalDiv = document.createElement('div');
-    finalDiv.className = 'output-msg';
+    finalDiv.className = 'message user';
     finalDiv.innerText = text;
     return finalDiv;
 }
 
-// 오디오 데이터를 서버로 전송하는 함수(임시로 로컬로 저장하게 구현)
-function sendAudioToServer(audioBlob) {
-    // const url = URL.createObjectURL(audioBlob);
-    // const a = document.createElement('a');
-    // a.style.display = 'none';
-    // a.href = url;
-    // a.download = 'recording.webm';  // 파일명 설정
-    // document.body.appendChild(a);
-    // a.click();
-    // window.URL.revokeObjectURL(url);
-    // document.body.removeChild(a);
+function scrollToBottom() {
+    chatContent.scrollTop = chatContent.scrollHeight;
+}
+
+function appendMessageToReadonly(sender, message) {
+    const messageElement = document.createElement("div");
+    messageElement.className = "message " + sender;
+    messageElement.innerHTML = message
+        .split("\n")
+        .map((line) => `<div>${line}</div>`)
+        .join("");
+    document.getElementById("readonly-chat-content").appendChild(messageElement);
+    document.getElementById("readonly-chat-content").scrollTop = document.getElementById("readonly-chat-content").scrollHeight;
+}
+
+function saveChatData() {
+    const selectedCategory = document.getElementById('selected-category').innerText;
+    const chatContent = document.getElementById('chat-content').innerText;
+
+    const data = {
+        category: selectedCategory,
+        chat: chatContent,
+        csrfmiddlewaretoken: '{{ csrf_token }}'
+    };
+
+    $.ajax({
+        type: 'POST',
+        url: '{% url "save_chat_data" %}',  // URL을 동적으로 생성
+        data: data,
+        success: function(response) {
+            alert('Data saved successfully');
+        },
+        error: function(response) {
+            alert('Failed to save data');
+        }
+    });
 }

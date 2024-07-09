@@ -126,7 +126,7 @@ def check_email(request):
 
 def check_phone(request): 
     phone_number = request.GET.get('phone_number')
-    is_taken = User.objects.filter(phone_number=phone_number).exists()
+    is_taken = CounselorProfile.objects.filter(phone_number=phone_number).exists()
     return JsonResponse({'is_taken': is_taken})
 
 def searchPW(request):
@@ -136,13 +136,14 @@ def searchPW(request):
         phone_number = request.POST.get('phone_number')
 
         try:
-            user = User.objects.get(username=username, birth_date=birthdate, phone_number=phone_number)
+            user = User.objects.get(username=username)
+            counselor_profile = CounselorProfile.objects.get(auth_user=user, birth_date=birthdate, phone_number=phone_number)
             # 인증 정보가 맞다면 비밀번호 재설정 페이지로 이동
             request.session['reset_user_id'] = user.id
             return JsonResponse({'result': 'success', 'msg': '인증 성공. 비밀번호 재설정 페이지로 이동합니다.'})
-        except User.DoesNotExist:
+        except (User.DoesNotExist, CounselorProfile.DoesNotExist):
             return JsonResponse({'result': 'error', 'msg': '해당 정보의 사용자를 찾을 수 없습니다.'})
-    return render(request, 'accounts/searchpw.html')
+    return render(request, 'accounts/searchPW.html')
 
 def reset_password(request):
     if request.method == 'POST':

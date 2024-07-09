@@ -2,26 +2,42 @@ function sendResetRequest() {
     let username = $("#forgotPasswordUsername").val();
     let birthdate = $("#birthdate").val();
     let phone_number = $("#phone_number").val();
-    let csrf = $("#showForgotPasswordForm").data("csrf");
-    let url = $("#showForgotPasswordForm").data("url");
+    let csrf = $("#csrf").val();
+    let url = $("#searchPWForm").data("url");
+
 
     $.ajax({
         url: url,
         type: "post",
-        data: {
-            username: username,
-            birthdate: birthdate,
-            phone_number: phone_number,
-            csrfmiddlewaretoken: csrf
-        },
+        data: data,
         dataType: "json",
-        success: function (data) {
-            if (data.result === "success") {
-                alert(data.msg);
-                location.href = "/accounts/reset-password/";
+        headers: {
+            "X-CSRFToken": csrf
+        },
+        success: function (response) {
+            if (response.result === 'success') {
+                alert(response.msg);
+                window.location.href = "/accounts/reset_password/";
             } else {
-                alert(data.msg);
+                alert(response.msg);
             }
         }
     });
+}
+
+function chkUserName() {
+    let username = $("#forgotPasswordUsername");
+    let name = $("#name").val();
+    let phone = $("#phone").val();
+
+    if (username.val().trim() == "") {
+        $("#usernameError").text("아이디를 입력하세요.");
+        $("#usernameError").show();
+        username.addClass("is-invalid");
+        if (username.hasClass("is-valid")) {
+            username.removeClass("is-valid");
+        }
+        username.focus();
+        return;
+    }
 }

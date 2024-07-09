@@ -18,10 +18,10 @@ from django.http import HttpResponse
 
 
 def list(request):
-    # data = CustomerInfo.objects.get(phone_number='01011112222')
-    # print(data)
-    # return render(request, "counseling/index.html", {'data':data})
-    return render(request, "counseling/index.html")
+    data = ''
+    print(data)
+    return render(request, "counseling/index.html",{'data':data})
+
 
 
 def test(request):
@@ -99,6 +99,8 @@ def stt_chat(request):
         text = request.POST.get("text")
         username = request.POST.get("username")
         phone_number = request.POST.get("phone_number")
+        print(text)
+
 
         if text:
             print("#########################")
