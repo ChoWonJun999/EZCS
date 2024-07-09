@@ -98,3 +98,151 @@ function getCookie(name) {
     }
     return cookieValue;
 }
+
+const startButton = document.getElementById('start-button');
+const stopButton = document.getElementById('stop-button');
+const chatContent = document.getElementById('chat-content');
+let mediaRecorder;
+let audioChunks = [];
+
+// 상담 시작 함수
+function startEducation() {
+    navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'ko-KR';
+            let finalTranscript = '';
+
+            mediaRecorder = new MediaRecorder(stream);
+            audioChunks = [];
+
+            mediaRecorder.ondataavailable = event => {
+                audioChunks.push(event.data);
+            };
+
+            mediaRecorder.start();
+
+            // 기존의 interimDiv를 제거(중복생성 방지)
+            removeExistingInterimDiv();
+
+            // 새로운 interimDiv를 생성하여 추가
+            const interimDiv = document.createElement('div');
+            interimDiv.className = 'interim-msg';
+            chatContent.appendChild(interimDiv);
+
+            // 음성 인식 시작 시 버튼 비활성화 및 로그 출력
+            recognition.onstart = () => {
+                startButton.disabled = true;
+                stopButton.disabled = false;
+                console.log('Education started');
+            };
+
+            // 음성 인식 결과 처리
+            recognition.onresult = event => {
+                let interimTranscript = '';
+                const results = event.results;
+
+                // 음성 인식을 실시간으로 보여주기 위한 for문
+                for (let i = event.resultIndex; i < results.length; i++) {
+                    if (results[i].isFinal) {
+                        finalTranscript += results[i][0].transcript + ' ';
+                    } else {
+                        interimTranscript += results[i][0].transcript;
+                    }
+                }
+
+                interimDiv.innerText = finalTranscript + interimTranscript;
+            };
+
+            // 음성 인식 오류 처리
+            recognition.onerror = event => {
+                console.error('Speech recognition error:', event.error);
+                startButton.disabled = false;
+                stopButton.disabled = true;
+            };
+
+            // 음성 인식 종료 시
+            recognition.onend = () => {
+                startButton.disabled = false;
+                stopButton.disabled = true;
+                console.log('Education ended');
+
+                if (finalTranscript.trim() !== '') {
+                    const finalDiv = createFinalDiv(finalTranscript);
+                    chatContent.appendChild(finalDiv);
+                    // sendTextToChatbot(finalTranscript);  // 텍스트 데이터를 챗봇에 전송
+                }
+
+                interimDiv.remove();
+                mediaRecorder.stop(); // 음성 녹음 중지
+            };
+
+            recognition.start();
+
+            // 외부에서 종료할 수 있도록 recognition과 audioStream을 저장
+            window.recognition = recognition;
+            window.audioStream = stream;
+        })
+        .catch(error => {
+            console.error('Error accessing media devices.', error);
+        });
+}
+
+// 상담 종료 함수
+function stopEducation() {
+
+    if (window.recognition) {
+        window.recognition.stop();
+    }
+
+    if (window.audioStream) {
+        window.audioStream.getTracks().forEach(track => track.stop());
+    }
+
+    startButton.disabled = false;
+    stopButton.disabled = true;
+
+    // 녹음 중지 및 데이터 전송
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+
+            if (userConfirmed) {
+                // 사용자가 "네"를 선택한 경우 파일 저장 프로세스 진행
+                sendAudioToServer(audioBlob);
+            }
+        };
+    }
+}
+
+// interimDiv 제거 함수
+function removeExistingInterimDiv() {
+    const existingInterimDiv = document.querySelector('.interim-msg');
+    if (existingInterimDiv) {
+        existingInterimDiv.remove();
+    }
+}
+
+// output-msg 생성(종료 버튼 클릭시 동작)
+function createFinalDiv(text) {
+    const finalDiv = document.createElement('div');
+    finalDiv.className = 'output-msg';
+    finalDiv.innerText = text;
+    return finalDiv;
+}
+
+// 오디오 데이터를 서버로 전송하는 함수(임시로 로컬로 저장하게 구현)
+function sendAudioToServer(audioBlob) {
+    // const url = URL.createObjectURL(audioBlob);
+    // const a = document.createElement('a');
+    // a.style.display = 'none';
+    // a.href = url;
+    // a.download = 'recording.webm';  // 파일명 설정
+    // document.body.appendChild(a);
+    // a.click();
+    // window.URL.revokeObjectURL(url);
+    // document.body.removeChild(a);
+}
