@@ -1,0 +1,94 @@
+.dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.dashboard-header h1 {
+    font-size: 24px;
+    color: #333;
+}
+
+.dashboard-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.status-section, .announcement-section, .community-section, .self-study-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.status-section h2, .announcement-section h2, .community-section h2, .self-study-section h2 {
+    font-size: 18px;
+    color: #009879;
+    margin-bottom: 15px;
+}
+
+.status-overview {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.status-circle {
+    flex: 1;
+}
+
+.circle {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #009879;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.status-details {
+    flex: 2;
+}
+
+.status-details p {
+    margin: 5px 0;
+    color: #333;
+}
+
+.announcement-section ul, .community-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.announcement-section li, .community-section li {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.announcement-section a, .community-section a {
+    color: #009879;
+    text-decoration: none;
+}
+
+.announcement-section a:hover, .community-section a:hover {
+    text-decoration: underline;
+}
+
+.study-content {
+    text-align: center;
+    color: #999;
+}

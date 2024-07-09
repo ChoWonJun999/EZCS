@@ -4,8 +4,8 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
-    position: relative; /* 상대 위치 설정 */
-    min-height: 200px; /* 퀴즈 컨테이너의 최소 높이 설정 */
+    position: relative;
+    min-height: 200px;
 }
 .question {
     margin-bottom: 20px;
@@ -14,6 +14,7 @@
 .question p {
     font-size: 18px;
     font-weight: bold;
+    margin-bottom: 10px;
 }
 
 .question img {
@@ -42,11 +43,18 @@
     font-weight: bold;
 }
 
+.feedback-incorrect {
+    color: red;
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .explanation {
     background-color: #fff;
     padding: 20px;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
+    margin-bottom: 20px; /* 추가된 여백 */
 }
 
 .explanation-title {
@@ -60,13 +68,33 @@
     line-height: 1.5;
 }
 
+.correct-answer {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 20px; /* 추가된 여백 */
+}
+
+.correct-answer-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #007bff; /* 새로운 색상 추가 */
+}
+
+.correct-answer-content {
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333; /* 새로운 색상 추가 */
+}
+
 .submit-container {
-    padding: 20px; /* 추가적인 패딩을 넣어 위치 조정 */
+    padding: 20px;
     margin-left: auto;
     display: flex;
     justify-content: flex-end;
 }
-
 
 .submit-button {
     padding: 10px 20px;

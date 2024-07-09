@@ -1,12 +1,17 @@
-<!-- main/templates/main/admin_dashboard.html -->
 {% extends 'base_manager.html' %}
 
 {% block title %}직원관리{% endblock %}
 
 {% block content %}
-
-
-<form action="{% url 'management:search' %}" method="POST">
+<script>
+    window.onkeydown = function () {
+        var kcode = event.keyCode;
+        if (kcode == 116) {
+            history.replaceState({}, null, location.pathname);
+        }
+    }
+</script>
+<form id="frm" name="frm" action="{% url 'management:dashboard' %}" method="GET">
     {% csrf_token %}
     <div class="dashboard">
         <div>
@@ -15,7 +20,15 @@
         <div>
             <ul>
                 <li>
-                    <input type="text" class="form-control" id="searchText" name="searchText" placeholder="검색창">
+                    <select name="searchSelect" id="searchSelect">
+                        <option value="all" {% if searchSelect == 'all' %}selected{% endif %}>전체</option>
+                        <option value="name" {% if searchSelect == 'name' %}selected{% endif %}>이름</option>
+                        <option value="id" {% if searchSelect == 'id' %}selected{% endif %}>아이디</option>
+                        <option value="email" {% if searchSelect == 'email' %}selected{% endif %}>E-mail</option>
+                    </select>
+                </li>
+                <li>
+                    <input type="text" class="form-control" id="searchText" name="searchText" placeholder="검색창" value="{{ searchText }}">
                 </li>
                 <li>
                     <input type="submit" class="btn btn-primary" value="검색">
@@ -28,7 +41,7 @@
         <div>
             <table class="styled-table">
                 <thead>
-                    <th>회원번호</th>
+                    <th>순번</th>
                     <th>이름</th>
                     <th>아이디</th>
                     <th>E-mail</th>
@@ -37,19 +50,47 @@
                     <th>가입일자</th>
                 </thead>
                 <tbody>
+                    {% if data %}
                     {% for item in data %}
                     <tr data-url="{% url 'management:detail' item.id %}" class="active-row">
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.username }}</td>
-                        <td>{{ item.email }}</td>
-                        <td>{{ item.소속 }}</td>
-                        <td>{{ item.is_superuser }}</td>
-                        <td>{{ item.date_joined }}</td>
+                        <td>{{ item.auth_user.first_name }}</td>
+                        <td>{{ item.auth_user.username }}</td>
+                        <td>{{ item.auth_user.email }}</td>
+                        <td>{{ item.department }}</td>
+                        <td>{{ item.auth_user.is_superuser }}</td>
+                        <td>{{ item.auth_user.date_joined }}</td>
                     </tr>
                     {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="7">데이터 없음</td>
+                    </tr>
+                    {% endif %}
                 </tbody>
             </table>
+        </div>
+    </div>
+    <!-- <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <a class="page-link"><</a>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">></a>
+            </li>
+        </ul>
+    </nav> -->
+    <!-- .페이지번호 -->
+    <div class="row align-items-center py-5">
+        <div class="col-lg-3">Pagination (1 of 10)</div>
+        <div class="col-lg-6 text-center">
+            <div class="custom-pagination" id="inquiryPaging">
+                <!-- 페이지번호 temp_html -->
+            </div>
         </div>
     </div>
 </form>

@@ -1,12 +1,172 @@
-<!-- education/templates/education/detail.html -->
 {% extends 'base.html' %}
 
-{% block title %}Education Detail{% endblock %}
+{% block title %}Quiz Detail{% endblock %}
 {% block content %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'education/css/detail.css' %}">
 
-<link rel="stylesheet" href="{% static 'education/css/details.css' %}">
+<div class="dashboard">
+    <h1>퀴즈 상세보기</h1>
+    <div class="log-detail">
+        <div class="detail-item">
+            <p><strong>번호:</strong> {{ log.id }}</p>
+        </div>
+        <div class="detail-item">
+            <p><strong>카테고리:</strong> {{ log.get_category_display }}</p>
+        </div>
+        <div class="detail-item">
+            <p><strong>결과:</strong> <span class="{{ log.is_passed|yesno:'pass,fail' }}">{{ log.is_passed|yesno:"통과,실패" }}</span></p>
+        </div>
+        <div class="detail-item">
+            <p><strong>날짜:</strong> {{ log.create_time|date:"Y-m-d H:i" }}</p>
+        </div>
+        <div class="detail-item">
+            <p><strong>사용자:</strong> {{ log.user.username }}</p>
+        </div>
+    </div>
 
-    <h3>퀴즈 이력 상세페이지</h3>
+    <div class="quiz-history">
+        <h3>퀴즈 창 복원 영역</h3>
+        {% comment %} <h2>퀴즈 결과</h2>
+        {% for item in items %}
+        <div class="question">
+            <p>{{ forloop.counter }}. {{ item.quiz.question }}</p>
+            {% if item.quiz.flag == 0 %}
+            <div class="input-container">
+                <input type="text" value="{{ item.answer }}" readonly>
+            </div>
+            {% else %}
+            <div>
+                <label><input type="radio" {% if item.answer == '1' %}checked{% endif %} disabled> {{ item.quiz.choice1 }}</label><br>
+                <label><input type="radio" {% if item.answer == '2' %}checked{% endif %} disabled> {{ item.quiz.choice2 }}</label><br>
+                <label><input type="radio" {% if item.answer == '3' %}checked{% endif %} disabled> {{ item.quiz.choice3 }}</label><br>
+                <label><input type="radio" {% if item.answer == '4' %}checked{% endif %} disabled> {{ item.quiz.choice4 }}</label>
+            </div>
+            {% endif %}
+            <div class="feedback">
+                {% if item.is_correct %}
+                <span class="feedback-correct">정답입니다.</span>
+                {% else %}
+                <span class="feedback-incorrect">오답입니다!</span>
+                {% endif %}
+            </div>
+            <div class="explanation">
+                <div class="explanation-title">퀴즈 해설</div>
+                <div class="explanation-content">
+                    {{ item.quiz.commentary }}
+                </div>
+            </div>
+            <div class="correct-answer">
+                <div class="correct-answer-title">정답</div>
+                <div class="correct-answer-content">{{ item.quiz.answer }}</div>
+            </div>
+        </div> {% endcomment %}
+        {% comment %} {% endfor %} {% endcomment %}
+    </div>
+</div>
+
+<style>
+    .dashboard {
+        background-color: #f9f9f9;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-top: 20px;
+    }
+    
+    h1 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+    
+    .log-detail, .quiz-history {
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+    
+    .detail-item {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-bottom: 1px solid #eeeeee;
+    }
+    
+    .detail-item p {
+        margin: 0;
+        font-size: 16px;
+    }
+    
+    .detail-item strong {
+        font-weight: bold;
+    }
+    
+    .pass {
+        color: green;
+        font-weight: bold;
+    }
+    
+    .fail {
+        color: red;
+        font-weight: bold;
+    }
+    
+    .question {
+        margin-bottom: 20px;
+    }
+    
+    .question p {
+        font-size: 18px;
+        font-weight: bold;
+    }
+    
+    .answer-input {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    
+    .feedback {
+        margin-bottom: 20px;
+    }
+    
+    .feedback-correct {
+        color: green;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    
+    .feedback-incorrect {
+        color: red;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    
+    .explanation {
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .explanation-title, .correct-answer-title {
+        font-size: 18px;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+    
+    .explanation-content, .correct-answer-content {
+        font-size: 16px;
+        line-height: 1.5;
+    }
+    
+</style>
 
 {% endblock %}

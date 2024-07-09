@@ -1,0 +1,94 @@
+/* 기존 스타일 */
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-input, .search-select, .search-button {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.search-input {
+    flex: 2;
+}
+
+.search-select {
+    flex: 1;
+}
+
+.search-button {
+    background-color: #009879;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.search-button:hover {
+    background-color: #007a63;
+}
+
+/* 테이블 스타일 */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+    cursor: pointer;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #2EC4B6;
+}
+
+/* 페이지네이션 스타일 */
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding: 10px 0;
+}
+
+.pagination .step-links a {
+    margin: 0 5px;
+    text-decoration: none;
+    color: #2EC4B6;
+}
+
+.pagination .step-links .current {
+    margin: 0 5px;
+    font-weight: bold;
+    color: #2EC4B6;
+}
+
+/* 로더 스타일 */
+.loader {
+    text-align: center;
+    font-size: 16px;
+    color: #2EC4B6;
+    margin: 20px 0;
+}
