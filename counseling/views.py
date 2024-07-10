@@ -18,9 +18,14 @@ from django.http import HttpResponse
 
 
 def list(request):
-    data = ''
-    print(data)
-    return render(request, "counseling/index.html",{'data':data})
+    if request.user.is_authenticated:
+        # 유저 세션 정보를 템플릿으로 전달
+        username = request.user.username
+    else:
+        username = None
+    print(username)
+    
+    return render(request, "counseling/index.html",{'username':username})
 
 
 # 상담이력 뷰
@@ -104,28 +109,13 @@ def stt_chat(request):
 
     if request.method == "POST":
         text = request.POST.get("text")
-        username = request.POST.get("username")
-        phone_number = request.POST.get("phone_number")
-        print(text)
-
 
         if text:
             print("#########################")
             print("text", text)
-            print("username", username)
-            print("phone_number", phone_number)
             print("#########################")
 
             output = chatbot.chat(text)
-            # customer_info = CustomerInfo.objects.get(phone_number=phone_number)
-            # print(customer_info)
-
-            # counselLog_instance = CounselLog(
-            #     username=username,
-            #     body={"prompt": text, "output": output},
-            #     phone_number=customer_info,
-            # )
-            # counselLog_instance.save()
 
             return JsonResponse({"text": text, "output": output})
 
