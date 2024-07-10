@@ -22,4 +22,5 @@ urlpatterns = [
     path('quiz_history/', views.quiz_history, name='quiz_history'),
     # 퀴즈 이력 상세페이지
     path('quiz_details/<int:log_id>/', views.quiz_details, name='quiz_details'),  # URL 패턴 및 이름 확인
+    path('evaluation_chat/', views.evaluation_chat, name='evaluation_chat'),  # 상담사의 응답 평가
 ]

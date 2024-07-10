@@ -329,39 +329,6 @@ function createFinalDiv(text, type) {
     return finalDiv;
 }
 
-function sendTextToChatbot(text) {
-    const formData = new FormData();
-    formData.append('text', text);
-    formData.append('username', '홍길동');
-
-    fetch('/counseling/stt_chat/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': getCookie('csrftoken')
-        }
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.output) {
-                const childDiv = document.createElement('div');
-                childDiv.className = 'chatbot-response';
-                childDiv.innerText = data.output;
-                translationContent.appendChild(childDiv);
-            } else if (data.error) {
-                console.error('Error from server:', data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
-
 function addCustomerMessageToTranslationContent(text) {
     const translationDiv = document.createElement('div');
     translationDiv.className = 'output-msg customer';
@@ -507,10 +474,11 @@ function scrollToBottom() {
 }
 
 // 텍스트 데이터를 챗봇에 전송하는 함수(view.py에 전송)
-function sendTextToChatbot(text) {
+function evaluationTextToChatbot(text) {
     const formData = new FormData();
+    formData.append('text', text);
 
-    fetch('/counseling/stt_chat/', {
+    fetch('/counseling/evaluation_chat/', {
         method: 'POST',
         body: formData,
         headers: {
