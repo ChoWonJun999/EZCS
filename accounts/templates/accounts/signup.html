@@ -12,7 +12,7 @@
                 <div class="row">
                     <div class="col-md-6 mb-3 my-form">
                         <label for="name">ID</label>
-                        <input type="text" class="form-control" id="loginUsername" name="loginUsername" required onchange="nameChange(this);">
+                        <input type="text" class="form-control" id="loginUsername" name="loginUsername" maxlength="10" required onchange="nameChange(this);">
                         <div id="usernameVaild" class="valid-feedback"></div>
                         <div id="usernameError" class="invalid-feedback"></div>
                         <input type="hidden" name="usernameChk" id="usernameChk" value="">
@@ -23,20 +23,23 @@
 
                 <div class="mb-3 my-form">
                     <label for="name">사용자 이름</label>
-                    <input type="text" class="form-control" id="name" name="name" maxlength="10">
-                    <div id="nameError" class="error-message"></div>
+                    <input type="text" class="form-control" id="name" name="name" maxlength="10" onblur="checkKoreanName(this);">
+                    <div id="nameError" class="invalid-feedback"></div>
                 </div>
 
                 <div class="mb-3 my-form">
                     <label for="phone">핸드폰</label>
-                    <input type="text" class="form-control" id="phone" name="phone" maxlength="11">
-                    <div id="phoneError" class="error-message"></div>
+                    <input type="text" class="form-control" id="phone" name="phone" maxlength="11" onblur="chkPhoneNumber();">
+                    <div id="phoneError" class="invalid-feedback"></div>
+                    <input type="hidden" name="phoneChk" id="phoneChk" value="">
+                    <input type="hidden" name="phoneChkUrl" id="phoneChkUrl" value="{% url 'accounts:check_phone' %}">
                 </div>
 
                 <div class="mb-3 my-form">
                     <label for="email">email</label>
                     <div id="email">
-                        <input type="email" class="form-control" id="emailLocal" name="emailLocal" maxlength="41">
+                        <input type="email" class="form-control" id="emailLocal" name="emailLocal" maxlength="20" onblur="chkEmail();">
+
                         <span style="font-size: 40px;">@</span>
                         <input type="text" class="form-control" name="emailDomain" id="emailDomain" value="naver.com" disabled>
                         <select id="emailDomainSelect" name="emailDomainSelect" class="form-control" onchange="emailDomainChange(this);">
@@ -47,9 +50,11 @@
                             <option value="">직접입력</option>
                         </select>
                         <div id="emailError" class="invalid-feedback"></div>
+                        <input type="hidden" name="emailChk" id="emailChk" value="">
+                        <input type="hidden" name="emailChkUrl" id="emailChkUrl" value="{% url 'accounts:check_email' %}">
                     </div>
                 </div>
-
+                
                 <div class="mb-3 my-form">
                     <label for="password">비밀번호</label>
                     <input type="password" class="form-control" id="password" name="password" maxlength="64">
@@ -67,6 +72,7 @@
                     </div>
                     <div>
                         <input type="date" id="birthdate" name="birthdate">
+                        <div id="birthdateError" class="invalid-feedback"></div>
                     </div>
                 </div>
 
@@ -77,8 +83,8 @@
                         <input type="button" id="zipp_btn" class="btn btn-primary" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
                         <input type="text" class="form-control mb-2" name="user_add1" id="UserAdd1" maxlength="40" placeholder="기본 주소를 입력하세요" required disabled>
                         <div class="invalid-feedback">주소를 입력해주시기 바랍니다!</div>
-                        <input type="text" class="form-control" name="user_add2" id="UserAdd2" maxlength="40" placeholder="상세 주소를 입력하세요">
-                        <div id="userAdd2Error" class="error-message"></div>
+                        <input type="text" class="form-control" name="user_add2" id="UserAdd2" maxlength="40" placeholder="상세 주소를 입력하세요" onblur="chkAddressDetail();">
+                        <div id="userAdd2Error" class="invalid-feedback"></div>
                     </div>
                 </div>
                 <hr class="mb-4">

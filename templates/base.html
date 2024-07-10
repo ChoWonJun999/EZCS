@@ -39,7 +39,7 @@
                     <a href="{% url 'education:chat_view' %}">교육</a>
                     <ul class="submenu">
                         <li><a href="{% url 'education:edu_history' %}" class="{% if request.path == '/education/edu_history' %}active{% endif %}">롤플레잉 이력</a></li>
-                        <li><a href="{% url 'education:edu_details' %}" class="{% if request.path == '/education/edu_details/' %}active{% endif %}">롤플레잉 이력 상세(개발용)</a></li>
+                        {% comment %} <li><a href="{% url 'education:edu_details' %}" class="{% if request.path == '/education/edu_details/' %}active{% endif %}">롤플레잉 이력 상세(개발용)</a></li> {% endcomment %}
                         <li><a href="{% url 'education:quiz' %}" class="{% if request.path == '/education/quiz/' %}active{% endif %}">퀴즈</a></li>
                         <li><a href="{% url 'education:quiz_history' %}" class="{% if request.path == '/education/quiz_history/' %}active{% endif %}">퀴즈 이력</a></li>
                         {% comment %} <li><a href="{% url 'education:quiz_details' %}" class="{% if request.path == '/education/quiz_details/' %}active{% endif %}">퀴즈 이력 상세</a></li> {% endcomment %}
@@ -49,7 +49,7 @@
         </div>
         <div>
             <ul class="menu">
-                <li><a href="#">내 정보</a></li>
+                <li><a href="{% url 'main:edit_profile' %}">내 정보</a></li>
             </ul>
         </div>
     </div>
@@ -62,9 +62,7 @@
                 <div class="logout">
                     <a href="{% url 'accounts:logout' %}">로그아웃</a>
                 </div>
-                {% comment %} <div class="profile-edit">
-                    <a href="{% url 'main:edit_profile' %}">회원정보 수정</a> <!-- 추가 -->
-                </div> {% endcomment %}
+
                 {% else %}
                 <div class="logout">
                     <a href="{% url 'accounts:login' %}">로그인</a>
@@ -85,6 +83,7 @@
             </div>
         </footer>
     </div>
+
     <script src="{% static 'js/scripts.js' %}"></script>
     <script src="{% static 'main/js/edit_profile.js' %}"></script> <!-- 수정 -->
 </body>
