@@ -2,8 +2,21 @@ function sendResetRequest() {
     let username = $("#forgotPasswordUsername").val();
     let birthdate = $("#birthdate").val();
     let phone_number = $("#phone_number").val();
-    let csrf = $("#csrf").val();
-    let url = $("#searchPWForm").data("url");
+
+    if (!username || !birthdate || !phone_number) {
+        alert("모든 필드를 채워주세요.");
+        return;
+    }
+
+    let data = {
+        username: username,
+        birthdate: birthdate,
+        phone_number: phone_number
+    };
+
+    let form = $("#forgotPasswordForm");
+    let url = form.data("url");
+    let csrf = $("input[name=csrfmiddlewaretoken]").val();
 
 
     $.ajax({
