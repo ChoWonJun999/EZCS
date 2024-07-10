@@ -1,35 +1,3 @@
-function check_login_pass(obj) {
-    username = $("#loginUsername");
-    if (username.val() == "") {
-        alert("아이디 입력");
-        username.focus();
-        return;
-    }
-
-    var testUrl = $("#testUrl");
-    var url = testUrl.data("url");
-    var csrf = testUrl.data("csrf");
-    $.ajax({
-        url: url,
-        type: "post",
-        data: { username: username.val() },
-        dataType: "json",
-        headers: {
-            "X-CSRFToken": csrf
-        },
-        success: function (data) {
-            if (data.result == "all") {
-                if (obj == 0) {
-                    location.href = "/";
-                } else if (obj == 1) {
-                    location.href = "/management";
-                } else {
-                    alert("관리자 권한이 없습니다.");
-                }
-            }
-        }
-    });
-}
 function check_login(obj) {
     username = $("#loginUsername");
     password = $("#loginPassword");
@@ -40,6 +8,7 @@ function check_login(obj) {
         username.focus();
         return;
     }
+
     if (password.val() == "") {
         alert("password 입력");
         password.focus();
@@ -49,7 +18,8 @@ function check_login(obj) {
     let param = {
         username: username.val(),
         password: password.val(),
-        remember_me: rememberMe
+        remember_me: rememberMe,
+        flag: obj
     };
 
     var from = $("#loginForm");
@@ -71,7 +41,7 @@ function check_login(obj) {
                 if ((obj == 0 && data.result == "user") || (obj == 0 && data.result == "manager")) {
                     location.href = "/";
                 } else if (obj == 1 && data.result == "manager") {
-                    location.href = "/management";
+                    location.href = "/management/list/m";
                 } else {
                     alert("관리자 권한이 없습니다.");
                 }

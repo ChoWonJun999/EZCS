@@ -1,16 +1,30 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from accounts.models import CounselorProfile
 from django.db.models import Q
+from django.core.paginator import Paginator
+from datetime import datetime, timedelta
+from django.urls import resolve
 
 
-def dashboard(request):
+def list(request, flag):
     """
     관리자 메인페이지 DB에서 정보 받아오는 부분
     """
     search_select = request.GET.get("searchSelect", "")
     search_text = request.GET.get("searchText", "")
-    query = Q()
 
+    start_date = request.GET.get("startDate", "")
+    end_date = request.GET.get("endDate", "")
+
+    query = Q()
+    if flag == 'm':
+        query &= Q(auth_user__is_superuser=False)
+        query &= Q(active_status=1)
+    else:
+        query &= Q(auth_user__is_superuser=False)
+        query &= Q(active_status=0)
+
+    query1 = Q()
     if search_select:
         valid_fields = {
             'name': 'auth_user__first_name__icontains',
@@ -21,30 +35,83 @@ def dashboard(request):
         if search_select == 'all':
             for val in valid_fields.values():
                 print(val)
-                query |= Q(**{val: search_text})
+                query1 |= Q(**{val: search_text})
         else:
             search_field = valid_fields[search_select]
-            query = Q(**{search_field: search_text})
+            query1 = Q(**{search_field: search_text})
 
-    data = CounselorProfile.objects.select_related('auth_user').filter(query)
+    query2 = Q()
+    if start_date and end_date:
+        query2 &= Q(auth_user__date_joined__gte=start_date)
+        query2 &= Q(auth_user__date_joined__lte=end_date)
+    else:
+        one_month_ago = datetime.now() - timedelta(days=30)
+        query2 &= Q(auth_user__date_joined__gte=one_month_ago)
+        query2 &= Q(auth_user__date_joined__lte=datetime.now())
+        start_date = one_month_ago.strftime('%Y-%m-%d')
+        end_date = datetime.now().strftime('%Y-%m-%d')
+
+    data = CounselorProfile.objects.select_related('auth_user').filter(query & query1 & query2)
+    paginator = Paginator(data, 10)
+    page = request.GET.get('page')
+    data = paginator.get_page(page)
 
     context = {
+        'flag': flag,
         'data': data,
         'searchSelect': search_select,
         'searchText': search_text,
+        'startDate': start_date,
+        'endDate': end_date,
+        'is_paginated': data.has_other_pages(),
     }
 
-    return render(request, 'management/dashboard.html', context)
+    return render(request, 'management/list.html', context)
 
 
-#유저상세페이지
 def detail(request, id):
+    """
+    유저 상세 페이지
+    """
     data = get_object_or_404(CounselorProfile.objects.select_related('auth_user'), id=id)
     return render(request, 'management/detail.html', {'data':data}) 
 
 
-#개인정보 수정
+def update_auth(id, status):
+    """
+    UPDATE counselor_profile SET active_status = ?
+    """
+    user = CounselorProfile.objects.get(id=id)
+    user.active_status = status
+    user.save()
+    
+    flag = 'm'
+    if status == 1:
+        flag = 'a'
+
+    return redirect('management:list', flag)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 def manager_edit(request, id):
+    """
+    개인정보 수정
+    """
     user = get_object_or_404(CounselorProfile, id=id)
     data = {'user': user}
     #get으로 들어올시 기존값 반환
@@ -66,6 +133,18 @@ def manager_edit(request, id):
         user.save()
         return redirect("management:detail", id)
 
+
+
+
+def approve_user(request, id):
+    """
+    가입 요청 승인
+    """
+    user = CounselorProfile.objects.get(id=id)
+    data = CounselorProfile.objects.filter(active_status=0)
+    user.active_status = 1
+    user.save()
+    return render(request, 'management/allow.html', {'data':data})
 
 
 # 가입승인페이지
@@ -98,16 +177,6 @@ def allow(request):
     }
 
     return render(request, 'management/allow.html', context)
-
-
-#승인
-def approve_user(request, id):
-    user = CounselorProfile.objects.get(id=id)
-    data = CounselorProfile.objects.filter(active_status = 0) 
-    user.active_status = 1  
-    user.save()  # 변경 사항 저장
-    return render(request, 'management/allow.html',{'data':data}) 
-
 
 
 #활동중인 인원 구분 및 보류 위한 페이지

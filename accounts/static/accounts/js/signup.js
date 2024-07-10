@@ -239,19 +239,6 @@ function chkBirthdate() {
     }
 }
 
-function chkAddressDetail() {
-    let addressDetail = $("#UserAdd2").val();
-    if (!addressDetail) {
-        $("#userAdd2Error").text("상세 주소를 입력해 주세요.");
-        $("#userAdd2Error").show();
-        $("#UserAdd2").addClass("is-invalid");
-    } else {
-        $("#userAdd2Error").hide();
-        $("#UserAdd2").removeClass("is-invalid");
-        $("#UserAdd2").addClass("is-valid");
-    }
-}
-
 function signup() {
     let username = $("#loginUsername");
     let name = $("#name").val();
@@ -340,6 +327,7 @@ function signup() {
     let password_confirm = $("#pwChk").val().toLowerCase();
 
     if (password.length < 8 || !/\W/.test(password)) { 
+
         $("#passwordError").text("비밀번호는 8자리 이상이어야 하며, 특수문자를 포함해야 합니다.");
         $("#passwordError").show();
         $("#password").addClass("is-invalid");
@@ -385,7 +373,6 @@ function signup() {
     }
 
     let addressDetail = $("#UserAdd2").val();
-    /*
     if (!addressDetail) {
         $("#userAdd2Error").text("상세 주소를 입력해 주세요.");
         $("#userAdd2Error").show();

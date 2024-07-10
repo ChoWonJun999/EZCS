@@ -4,3 +4,8 @@ $(document).ready(function () {
         window.location.href = url;
     });
 });
+
+function approval(obj) {
+    let url = $(obj).data("url");
+    location.href = url;
+}
