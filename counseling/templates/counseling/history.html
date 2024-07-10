@@ -22,14 +22,10 @@
             <h3> 상담 이력</h3>
         </div>
         <div>
-            <ul>
-                <li>
-                    <input type="text" class="form-control" id="searchText" name="searchText" placeholder="검색창">
-                </li>
-                <li>
-                    <input type="submit" class="btn btn-primary" value="검색">
-                </li>
-            </ul>
+            <div class="search-container">
+                    <input type="text" class="form-control search-input" id="searchText" name="searchText" placeholder="검색창">
+                    <button type="submit" class="btn btn-primary search-button">검색</button>
+            </div>
         </div>
         <div>
             <p>총 {{ logs|length }}건</p>

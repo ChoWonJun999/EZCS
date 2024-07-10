@@ -1,4 +1,37 @@
 /* 기본 스타일 */
+
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.search-input, .search-select, .search-button {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.search-input {
+    flex: 2;
+}
+
+.search-select {
+    flex: 1;
+}
+
+.search-button {
+    background-color: #009879;
+    color: white;
+    cursor: pointer;
+    border: none;
+}
+
+.search-button:hover {
+    background-color: #007a63;
+}
+
 .dashboard {
     padding: 20px;
     margin: 20px auto;
@@ -12,16 +45,6 @@ h1 {
     font-size: 24px;
     margin-bottom: 20px;
     color: #333;
-}
-
-ul {
-    list-style-type: none;
-    padding: 0;
-}
-
-ul li {
-    display: inline;
-    margin-right: 10px;
 }
 
 .form-control {
