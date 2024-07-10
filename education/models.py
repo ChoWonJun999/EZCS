@@ -126,7 +126,8 @@ class QuizHistroy(models.Model):
         on_delete=models.CASCADE,
         db_column='user_id', 
         verbose_name="User's ID",
-        db_comment="User's ID"
+        db_comment="User's ID",
+        related_name="history_user"
     )
     
     CATEGORY_CHOICES = [
@@ -168,7 +169,8 @@ class QuizHistroyItem(models.Model):
         on_delete=models.CASCADE,
         db_column='quiz_histroy_id',
         verbose_name="Quiz Histroy Id",
-        db_comment="Quiz Histroy Id"
+        db_comment="Quiz Histroy Id",
+        related_name="item_header"
     )
 
     education_quiz_id = models.ForeignKey(
@@ -176,7 +178,8 @@ class QuizHistroyItem(models.Model):
         on_delete=models.CASCADE,
         db_column='quiz_id',
         verbose_name="Quiz Id",
-        db_comment="Quiz Id"
+        db_comment="Quiz Id",
+        related_name="item_quiz"
     )
 
     answer = models.TextField(

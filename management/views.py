@@ -70,8 +70,34 @@ def manager_edit(request, id):
 
 # 가입승인페이지
 def allow(request):
-    data = CounselorProfile.objects.filter(active_status = 0)
-    return render(request, 'management/allow.html',{'data':data})
+    search_select = request.GET.get("searchSelect", "")
+    search_text = request.GET.get("searchText", "")
+    query = Q()
+
+    if search_select:
+        valid_fields = {
+            'name': 'auth_user__first_name__icontains',
+            'id': 'auth_user__username__icontains',
+            'email': 'auth_user__email__icontains',
+        }
+
+        if search_select == 'all':
+            for val in valid_fields.values():
+                print(val)
+                query |= Q(**{val: search_text})
+        else:
+            search_field = valid_fields[search_select]
+            query = Q(**{search_field: search_text})
+
+    data = CounselorProfile.objects.select_related('auth_user').filter(query)
+
+    context = {
+        'data': data,
+        'searchSelect': search_select,
+        'searchText': search_text,
+    }
+
+    return render(request, 'management/allow.html', context)
 
 
 #승인
@@ -86,8 +112,34 @@ def approve_user(request, id):
 
 #활동중인 인원 구분 및 보류 위한 페이지
 def inactive(request):
-    data = CounselorProfile.objects.filter(~Q(active_status = 0)) #여기서 사용하는 Q는 장고에서 쓰는 or
-    return render(request, 'management/inactive.html', {'data':data})
+    search_select = request.GET.get("searchSelect", "")
+    search_text = request.GET.get("searchText", "")
+    query = Q()
+
+    if search_select:
+        valid_fields = {
+            'name': 'auth_user__first_name__icontains',
+            'id': 'auth_user__username__icontains',
+            'email': 'auth_user__email__icontains',
+        }
+
+        if search_select == 'all':
+            for val in valid_fields.values():
+                print(val)
+                query |= Q(**{val: search_text})
+        else:
+            search_field = valid_fields[search_select]
+            query = Q(**{search_field: search_text})
+
+    data = CounselorProfile.objects.select_related('auth_user').filter(query)
+
+    context = {
+        'data': data,
+        'searchSelect': search_select,
+        'searchText': search_text,
+    }
+
+    return render(request, 'management/inactive.html', context)
 
 
 #비활성화 기능
@@ -145,22 +197,20 @@ def search(request):
     else:
         results = []
     return render(request, 'management/dashboard.html', {'data': results, 'query': query})
-         
+       
 def allow_search(request):
     query = request.POST.get('seachText', '')
-   
     if query:
         results = CounselorProfile.objects.filter(name__icontains=query)
     else:
         results = []
-    return render(request, 'management/allow.html', {'data': results, 'query': query})
-       
+    return render(request, 'management/manager_dashboard.html', {'': results, 'query': query})
+         
 def inactive_search(request):
     query = request.POST.get('seachText', '')
-   
     if query:
         results = CounselorProfile.objects.filter(name__icontains=query)
     else:
         results = []
-    return render(request, 'management/inactive.html', {'data': results, 'query': query})
+    return render(request, 'management/manager_dashboard.html', {'data': results, 'query': query})
          

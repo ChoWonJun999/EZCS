@@ -19,11 +19,50 @@ def list(request):
 # 교육 이력
 def edu_history(request):
     logs = EducationChatbotLog.objects.all()
-    return render(request, 'education/edu_history.html', {'logs': logs})
+
+    # 검색 기능을 추가합니다.
+    search_text = request.GET.get('searchText', '')
+    category = request.GET.get('category', '')
+
+    if search_text:
+        logs = logs.filter(body__icontains=search_text)
+    if category:
+        logs = logs.filter(body__icontains=category)
+
+    # 페이지네이션
+    paginator = Paginator(logs, 10)  # 페이지당 10개씩 표시
+    page_number = request.GET.get('page')
+    logs_page = paginator.get_page(page_number)
+
+    return render(request, 'education/edu_history.html', {'logs': logs_page})
+
 
 # 교육 이력 상세
-def edu_details(request):
-    return render(request, 'education/edu_details.html')
+def edu_details(request, log_id):
+    log = get_object_or_404(EducationChatbotLog, id=log_id)
+    return render(request, 'education/edu_details.html', {'log': log})
+
+# 롤플레잉 저장 함수 - 미완성
+@csrf_exempt
+def save_chat_data(request):
+    if request.method == 'POST':
+        user = request.user
+        category = request.POST.get('category')
+        chat = request.POST.get('chat')
+
+        body = {
+            "category": category,
+            "chat": chat
+        }
+
+        EducationChatbotLog.objects.create(
+            user_id=user,
+            body=body
+        )
+
+        return JsonResponse({"message": "Data saved successfully"})
+
+    return JsonResponse({"error": "Invalid request"}, status=400)
 
 # 퀴즈페이지
 @csrf_exempt
@@ -66,6 +105,7 @@ def quiz(request):
                     'commentary': quiz.commentary,  # 해설 추가
                     'correct_answer': quiz.answer
                 }
+                print(results)
 
             is_passed = correct_answers >= 3  # 3개 이상의 정답이면 통과로 설정
             categories = [Quiz.objects.get(id=quiz_id).category for quiz_id in quiz_ids]  # 퀴즈 ID로 각 퀴즈의 카테고리 가져오기
@@ -81,6 +121,7 @@ def quiz(request):
 
             # 디버깅 정보 출력
             print(f'QuizHistroy saved: {history}')
+           
 
             # QuizHistroyItem 객체 생성 및 저장
             for idx, answer in enumerate(answers):
@@ -105,13 +146,45 @@ def quiz(request):
 
 # 웹에서 동작하는 Chatbot 초기화 메시지
 messages = (
-    "너는 통신회사의 고객센터 상담사를 육성하는 챗봇이다. "
-    "'시작'이라는 신호를 받으면 고객센터에 전화하는 고객 역할을 맡고, 나에게 민원을 제기한다. "
-    "나의 답변을 듣고, 그 답변에 대해 교육자의 입장에서 평가를 해준다. 그런 다음 다시 고객 역할로 돌아가서 다음 연관 질문을 던진다. "
-    "정확하고 친절하게 고객의 역할을 수행하고, 교육자의 평가에서는 구체적이고 도움이 되는 피드백을 제공하도록 한다. "
-    "질문이 명확하지 않으면 추가 정보를 요청할 수 있다. "
-    "고객의 역할을 수행할 때는 다양한 민원 사항을 제기하며, 명확하고 구체적인 질문을 던진다. "
-    "고객이 명세서를 확인할 수 있는 방법과 구체적인 확인 사항을 안내하고, 문제 해결을 위한 추가 조치를 제시한다."
+    """당신은 고객 서비스 평가 시스템입니다. 고객 질문에 대한 상담사의 답변을 다음 기준에 따라 평가하세요:
+
+            
+정확성 (Accuracy): 상담사의 답변이 고객 질문에 대해 정확하고 올바른 정보를 제공하는지 평가하세요.
+점수: 1 (부정확) ~ 5 (매우 정확)
+만약 상담사의 답변이 부정확하다면, 정확한 답변 내용을 제공하세요.
+
+            
+친절함 (Politeness): 상담사의 답변이 얼마나 친절하고 예의 바르게 작성되었는지 평가하세요.
+점수: 1 (불친절) ~ 5 (매우 친절)
+
+            
+문제 해결 능력 (Problem Solving): 상담사의 답변이 고객의 문제를 얼마나 효과적으로 해결하는지 평가하세요.
+점수: 1 (해결 불가) ~ 5 (완벽히 해결)
+
+            
+추가 정보 제공 (Additional Information): 상담사가 고객의 이해를 돕기 위해 추가적인 유용한 정보를 제공하는지 평가하세요.
+점수: 1 (추가 정보 없음) ~ 5 (매우 유용한 추가 정보)
+
+            
+응답 시간 (Response Time): 상담사의 답변이 얼마나 신속하게 제공되었는지 평가하세요.
+점수: 1 (매우 느림) ~ 5 (매우 빠름)
+
+            아래에 고객의 질문과 상담사의 답변이 있습니다. 각 항목에 대해 점수를 매기고, 그 이유를 간단히 설명하세요.
+
+            고객의 질문:
+            {고객의 질문}
+
+            상담사의 답변:
+            {상담사의 답변}
+
+            평가:
+            
+정확성: [점수] - [이유]정확한 답변: [정확한 답변 내용]
+친절함: [점수] - [이유]
+문제 해결 능력: [점수] - [이유]
+추가 정보 제공: [점수] - [이유]
+응답 시간: [점수] - [이유]
+"""
 )
 
 chatbot = Chatbot(os.getenv("OPENAI_API_KEY"), 'database/chroma.sqlite3')  # Chatbot 객체 생성
@@ -154,16 +227,12 @@ def quiz_history(request):
 # 퀴즈 이력 상세
 @login_required
 def quiz_details(request, log_id):
-
-    # 퀴즈 내역을 그대로 복원해서 html에 뿌려주세요 - ㅎㅅ
-    # quizhistory id == historyitems에 quiz_histo_id 에 quiz_id == quiz id 문제를 출력 해야 합니다. 
-    # 아래는 임시 
-    # log = get_object_or_404(QuizHistroy, id=log_id)
-    # items = QuizHistroyItem.objects.filter(quiz_history=log).select_related('quiz')
-    # return render(request, 'education/quiz_details.html', {'log': log, 'items': items})
-    
     log = get_object_or_404(QuizHistroy, id=log_id)
-    return render(request, 'education/quiz_details.html', {'log': log})
+    items = QuizHistroyItem.objects.filter(education_quiz_histroy_id=log_id).select_related('education_quiz_id')
+    print('='*20)
+    print(items)
+    print('='*20)
+    return render(request, 'education/quiz_details.html', {'log': log, 'items' : items})
 
 # Chatbot 뷰
 def chat_view(request):
@@ -198,3 +267,14 @@ def chat_view(request):
             return JsonResponse({'response': output})
 
     return render(request, 'education/index.html')
+
+#검색로직
+def search(request):
+    query = request.POST.get('searchText', '')
+   
+    if query:
+        results = User.objects.filter(name__icontains=query)
+    else:
+        results = []
+    return render(request, 'education/edu_history.html', {'data': results, 'query': query})
+
