@@ -7,6 +7,8 @@
     <title>{% block title %}Investor Dashboard{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="/static/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <script src="/static/js/bootstrap/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         function openContractPopup() {
@@ -36,10 +38,11 @@
                 <li><a href="{% url 'main:user_dashboard' %}">대시보드</a></li>
 
                 <li class="has-submenu {% if request.path == '/counseling/' %}active{% endif %}">
-                    <a href="{% url 'counseling:list' %}">상담</a></li>
-                    <ul class="submenu">
-                        <li><a href="{% url 'counseling:history' %}" class="{% if request.path == '/counseling/history' %}active{% endif %}">상담 이력</a></li>
-                    </ul>
+                    <a href="{% url 'counseling:list' %}">상담</a>
+                </li>
+                <ul class="submenu">
+                    <li><a href="{% url 'counseling:history' %}" class="{% if request.path == '/counseling/history' %}active{% endif %}">상담 이력</a></li>
+                </ul>
 
                 <li class="has-submenu {% if request.path == '/education/' %}active{% endif %}">
                     <a href="{% url 'education:chat_view' %}">교육</a>
@@ -63,17 +66,22 @@
         <div class="header">
             <button class="sidebar-toggle" id="sidebarToggle">☰</button>
             <div class="header-right">
-                {% if request.session.user %}
                 <div class="profile-info">{{ request.session.user }}님, 오늘 하루도 화이팅 하세요.</div>
+                {% if request.user.is_superuser %}
+                {% comment %}
+                최희승은 보아라!
+                충돌이 날까봐 수정 안하고 있었는데
+                줄 맞춤 때문에 들어와 수정을 해버렸다!!!!
+                class 이름을 너무 직접적으로 만들면 사용하기 좀 그렇잖아!!
+                알아서 class 이름 수정해서 반영 하도록!
+                {% endcomment %}
+                <div class="">
+                    <a href="{% url 'management:list' 'm' %}">관리자 페이지</a>
+                </div>
+                {% endif %}
                 <div class="logout">
                     <a href="{% url 'accounts:logout' %}">로그아웃</a>
                 </div>
-
-                {% else %}
-                <div class="logout">
-                    <a href="{% url 'accounts:login' %}">로그인</a>
-                </div>
-                {% endif %}
             </div>
         </div>
         <div class="main-content">

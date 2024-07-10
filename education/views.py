@@ -42,7 +42,7 @@ def save_chat_data(request):
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
-=======
+
 def edu_details(request):
     '''
     교육 이력 상세
