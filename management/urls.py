@@ -5,12 +5,13 @@ app_name = 'management'
 
 urlpatterns = [
     path('list/<str:flag>/', views.list, name='list'),
-    path('detail/<int:id>/', views.detail, name='detail'),
+    path('detail/<int:id>/<str:flag>/', views.detail, name='detail'),
     path('update_auth/<int:id>/<int:status>', views.update_auth, name='update_auth'),
+    path('edit/<int:id>/<str:flag>/', views.edit, name='edit'),
 
 
 
-    path('detail/<int:id>/edit', views.manager_edit, name='edit'),
+    path('detail/<int:id>/edit', views.manager_edit, name='manager_edit'),
 
     path('allow/', views.allow, name='allow'), #가입승인화면
     path('approve/<int:id>/', views.approve_user, name='approve_user'), #승인해주는 로직

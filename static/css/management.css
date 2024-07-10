@@ -9,7 +9,8 @@ body {
     height: 100vh;
 }
 
-.container {
+.container-fuild {
+    margin: 0 10em;
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -229,6 +230,7 @@ table {
 
 .styled-table tbody tr {
     border-bottom: 1px solid #dddddd;
+    height: 5em;
 }
 
 .styled-table tbody tr:last-of-type {
@@ -267,10 +269,6 @@ table {
 
 .styled-table-deail tbody tr {
     border-bottom: 1px solid #dddddd;
-}
-
-.styled-table-deail tbody tr:nth-of-type(even) {
-    background-color: #f3f3f3;
 }
 
 .styled-table-deail tbody tr:last-of-type {
@@ -318,4 +316,12 @@ table {
 .btn-primary {
     background-color: #2c3e50 !important;
     border-color: #2c3e50 !important;
+}
+
+.active {
+    font-weight: bold !important;
+}
+
+.form-control {
+    width: fit-content !important;
 }

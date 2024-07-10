@@ -88,6 +88,7 @@ def signup(request):
         address_code = request.POST.get('addressCode')
         address = request.POST.get('address')
         address_detail = request.POST.get('addressDetail')
+        department = request.POST.get('department')
         print("aaaaaaaaaaaaaaaaaaaaaaaa")
         
         if not username or not password or not name or not phone_number or not email or not birth_date or not address_code or not address or not address_detail:
@@ -107,7 +108,7 @@ def signup(request):
             , address_code=address_code
             , address=address
             , address_detail=address_detail
-            # , department=department
+            , department=department
             # , active_status=active_status
         )
 
