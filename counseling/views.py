@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 import os
 from stt import STTModel
@@ -17,11 +17,28 @@ from django.http import HttpResponse
 
 
 
-def list(request):
-    data = ''
-    print(data)
-    return render(request, "counseling/index.html",{'data':data})
+#def list(request):
+#    data = ''
+#    print(data)
+#    return render(request, "counseling/index.html",{'data':data})
 
+def list(request):
+    customer_info = CustomerInfo.objects.all()
+    counsel_logs = CounselLog.objects.all()
+
+    # counsel_logs의 memo 필드를 JSON 형식으로 파싱
+    for log in counsel_logs:
+        try:
+            memo_json = json.loads(log.memo)  # memo 필드를 JSON 형식으로 파싱
+            log.memo = memo_json.get('text', '')  # memo 필드의 text 값을 가져옴
+        except (TypeError, json.JSONDecodeError):
+            log.memo = log.memo  # JSON 형식이 아닐 경우 기존 문자열 그대로 사용
+
+    context = {
+        'customer_info': customer_info,
+        'counsel_logs': counsel_logs
+    }
+    return render(request, "counseling/index.html", context)
 
 # 상담이력 뷰
 def history(request):
@@ -200,3 +217,22 @@ def save_counseling_log(request):
             return JsonResponse({"success": False, "error": str(e)})
 
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+@csrf_exempt
+def save_consultation(request):
+    if request.method == 'POST':
+        try:
+            log_id = request.POST.get('log_id')
+            inquiry_text = request.POST.get('inquiry_text')
+
+            if log_id and inquiry_text:
+                counsel_log = CounselLog.objects.get(id=log_id)
+                counsel_log.memo = {"text": inquiry_text}  
+                counsel_log.save()
+
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'Missing log_id or inquiry_text'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
