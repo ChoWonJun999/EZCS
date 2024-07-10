@@ -11,7 +11,7 @@ def user_dashboard(request):
     return render(request, 'main/index.html')
 
 def start_ezcs(request):
-    return render(request, 'startezcs.html')
+    return render(request, 'main/startezcs.html')
 
 @login_required
 def edit_profile(request):

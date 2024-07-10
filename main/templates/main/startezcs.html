@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EZCS Safety</title>
+</head>
+{% load static %}
+<link rel="stylesheet" href="{% static 'main/css/start.css' %}">
+<body>
+    <div class="header">
+        <img src="{% static 'images/EZCS.png' %}" alt="EZCS Logo">
+        <div class="nav">
+            <a href="#">서비스 소개</a>
+            <a href="#">팀 소개</a>
+        </div>
+        <a href="{% url 'accounts:login' %}" class="contact">로그인</a>
+    </div>
+    <div class="main-content-wrapper">
+        <div class="main-content">
+            <h2><b>효율적인 작업 환경을 만드는</b></h2>
+            <p><b>인공지능 기반 CS 콜센터 솔루션</b></p>
+            <h1>EZCS</h1>
+            <br>
+            <a href="{% url 'accounts:signup' %}" class="button">시작하기</a>
+        </div>
+    </div>
+</body>
+</html>
