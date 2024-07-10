@@ -13,37 +13,18 @@ from django.core.paginator import Paginator  # Paginator 임포트
 from django.db.models import Q
 
 
-# 교육
 def list(request):
-    return render(request, "education/index.html")
+    '''
+    교육
+    '''
+    return render(request, 'education/index.html')
 
-
-# 교육 이력
 def edu_history(request):
+    '''
+    교육 이력
+    '''
     logs = EducationChatbotLog.objects.all()
-
-    # 검색 기능을 추가합니다.
-    search_text = request.GET.get("searchText", "")
-    category = request.GET.get("category", "")
-
-    if search_text:
-        logs = logs.filter(body__icontains=search_text)
-    if category:
-        logs = logs.filter(body__icontains=category)
-
-    # 페이지네이션
-    paginator = Paginator(logs, 10)  # 페이지당 10개씩 표시
-    page_number = request.GET.get("page")
-    logs_page = paginator.get_page(page_number)
-
-    return render(request, "education/edu_history.html", {"logs": logs_page})
-
-
-# 교육 이력 상세
-def edu_details(request, log_id):
-    log = get_object_or_404(EducationChatbotLog, id=log_id)
-    return render(request, "education/edu_details.html", {"log": log})
-
+    return render(request, 'education/edu_history.html', {'logs': logs})
 
 # 롤플레잉 저장 함수 - 미완성
 @csrf_exempt
@@ -61,12 +42,21 @@ def save_chat_data(request):
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
+=======
+def edu_details(request):
+    '''
+    교육 이력 상세
+    '''
+    return render(request, 'education/edu_details.html')
 
-# 퀴즈페이지
+ 
 @csrf_exempt
 @login_required
 def quiz(request):
-    quizzes = Quiz.objects.order_by("?")[:5]  # 퀴즈 5개를 랜덤으로 가져오기
+    '''
+    퀴즈페이지
+    '''
+    quizzes = Quiz.objects.order_by('?')[:5]  # 퀴즈 5개를 랜덤으로 가져오기
 
     if request.method == "POST":  # 폼 제출이 POST 요청으로 이루어질 때
         form = QuizForm(request.POST)
@@ -103,16 +93,13 @@ def quiz(request):
                 ):  # 객관식 퀴즈의 경우
                     is_correct = True  # 정답일 경우
                     correct_answers += 1  # 정답 개수 증가
-
-                results[quiz.id] = (
-                    {  # 결과 딕셔너리에 현재 퀴즈의 정답 여부와 사용자의 답변 저장
-                        "is_correct": is_correct,
-                        "user_answer": answer,
-                        "commentary": quiz.commentary,  # 해설 추가
-                        "correct_answer": quiz.answer,
-                    }
-                )
-                print(results)
+                
+                results[quiz.id] = {  # 결과 딕셔너리에 현재 퀴즈의 정답 여부와 사용자의 답변 저장
+                    'is_correct': is_correct,
+                    'user_answer': answer,
+                    'commentary': quiz.commentary,  # 해설 추가
+                    'correct_answer': quiz.answer
+                }
 
             is_passed = correct_answers >= 3  # 3개 이상의 정답이면 통과로 설정
             categories = [
@@ -133,6 +120,7 @@ def quiz(request):
             # 디버깅 정보 출력
             print(f"QuizHistroy saved: {history}")
 
+
             # QuizHistroyItem 객체 생성 및 저장
             for idx, answer in enumerate(answers):
                 quiz = Quiz.objects.get(id=quiz_ids[idx])
@@ -150,27 +138,30 @@ def quiz(request):
     else:
         form = QuizForm()
 
-    return render(
-        request, "education/quiz.html", {"quizzes": quizzes, "form": form}
-    )  # GET 요청일 경우 퀴즈 페이지 렌더링
-
-
-chatbot = Chatbot(
-    api_key=os.getenv("OPENAI_API_KEY"),
-    db_path="database/chroma.sqlite3",
-    model_id="ft:gpt-3.5-turbo-0125:personal::9gS63IJD",
-)  # Chatbot 객체 생성
+    return render(request, 'education/quiz.html', {'quizzes': quizzes, 'form': form})  # GET 요청일 경우 퀴즈 페이지 렌더링
 
 behavior_policy = "당신은 콜센터 상담사에게 질문을 하기 위해 전화한 고객입니다. 콜센터 상담사에게 궁금했던 내용을 질문하세요. 질문은 한 번에 한 개씩만 하세요. 질문에 대한 원하는 답변이 나왔다면 마무리 인사를 하세요."
 
+# 웹에서 동작하는 Chatbot 초기화 메시지
+messages = (
+    "너는 통신회사의 고객센터 상담사를 육성하는 챗봇이다. "
+    "'시작'이라는 신호를 받으면 고객센터에 전화하는 고객 역할을 맡고, 나에게 민원을 제기한다. "
+    "나의 답변을 듣고, 그 답변에 대해 교육자의 입장에서 평가를 해준다. 그런 다음 다시 고객 역할로 돌아가서 다음 연관 질문을 던진다. "
+    "정확하고 친절하게 고객의 역할을 수행하고, 교육자의 평가에서는 구체적이고 도움이 되는 피드백을 제공하도록 한다. "
+    "질문이 명확하지 않으면 추가 정보를 요청할 수 있다. "
+    "고객의 역할을 수행할 때는 다양한 민원 사항을 제기하며, 명확하고 구체적인 질문을 던진다. "
+    "고객이 명세서를 확인할 수 있는 방법과 구체적인 확인 사항을 안내하고, 문제 해결을 위한 추가 조치를 제시한다."
+)
 
-# 퀴즈 이력
+chatbot = Chatbot(os.getenv("OPENAI_API_KEY"), 'database/chroma.sqlite3')  # Chatbot 객체 생성
+
 @login_required
 def quiz_history(request):
-    logs = QuizHistroy.objects.all().select_related(
-        "user_id"
-    )  # user_id 필드에 대한 역참조를 포함
-
+    '''
+    퀴즈 이력
+    '''
+    logs = QuizHistroy.objects.all().select_related('user_id')  # user_id 필드에 대한 역참조를 포함
+    
     # 검색 필터링 처리
     search_text = request.GET.get("searchText", "")
     category = request.GET.get("category", "")
@@ -203,21 +194,24 @@ def quiz_history(request):
     )
 
 
-# 퀴즈 이력 상세
+ 
 @login_required
 def quiz_details(request, log_id):
+    '''
+    퀴즈 이력 상세
+    '''
     log = get_object_or_404(QuizHistroy, id=log_id)
-    items = QuizHistroyItem.objects.filter(
-        education_quiz_histroy_id=log_id
-    ).select_related("education_quiz_id")
-    print("=" * 20)
-    print(items)
-    print("=" * 20)
-    return render(request, "education/quiz_details.html", {"log": log, "items": items})
+
+    items = QuizHistroyItem.objects.filter(education_quiz_histroy_id=log_id).select_related('education_quiz_id')
+    
+    return render(request, 'education/quiz_details.html', {'log': log, 'items' : items})
 
 
-# Chatbot 뷰
+
 def chat_view(request):
+    '''
+    Chatbot 뷰
+    '''
     global chatbot
     if request.method == "POST":
         if "category" in request.POST:
@@ -256,11 +250,12 @@ def chat_view(request):
 
     return render(request, "education/index.html")
 
-
-# 검색로직
 def search(request):
-    query = request.POST.get("searchText", "")
-
+    '''
+    검색로직
+    '''
+    query = request.POST.get('searchText', '')
+   
     if query:
         results = User.objects.filter(name__icontains=query)
     else:

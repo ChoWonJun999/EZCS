@@ -1,0 +1,128 @@
+{% extends 'base_manager.html' %}
+
+{% block title %}직원관리{% endblock %}
+
+{% block content %}
+<script>
+    window.onkeydown = function () {
+        var kcode = event.keyCode;
+        if (kcode == 116) {
+            history.replaceState({}, null, location.pathname);
+        }
+    }
+</script>
+<form id="frm" name="frm" action="{% url 'management:list' flag %}" method="GET">
+    {% csrf_token %}
+    <div class="dashboard">
+        <div>
+            {% if flag == 'm' %}
+            <h2>직원 관리</h2>
+            {% else %}
+            <h2>직원 승인</h2>
+            {% endif %}
+        </div>
+        <div>
+            <ul>
+                <li>
+                    <select name="searchSelect" id="searchSelect" class="form-control" style="cursor: pointer;">
+                        <option value="all" {% if searchSelect == 'all' %}selected{% endif %}>전체</option>
+                        <option value="name" {% if searchSelect == 'name' %}selected{% endif %}>이름</option>
+                        <option value="id" {% if searchSelect == 'id' %}selected{% endif %}>아이디</option>
+                        <option value="email" {% if searchSelect == 'email' %}selected{% endif %}>E-mail</option>
+                    </select>
+                </li>
+                <li><input type="text" class="form-control" id="searchText" name="searchText" placeholder="검색창" value="{{ searchText }}"></li>
+                <li><span class="form-control my-span">가입 일자</span></li>
+                <li>
+                    <input type="date" id="startDate" name="startDate" class="form-control" value="{{ startDate }}" onkeydown="return false">
+                </li>
+                <li><span class="form-control my-span">~</span></li>
+                <li>
+                    <input type="date" id="endDate" name="endDate" class="form-control" value="{{ endDate }}" onkeydown="return false">
+                </li>
+                <li><input type="submit" class="btn btn-primary" value="검색"></li>
+            </ul>
+        </div>
+        <div>
+            <span style="float: right;">총 {{ data|length }}건</span>
+        </div>
+        <div>
+            <table class="styled-table">
+                <colgroup>
+                    <col width="5%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="10%">
+                    <col width="*">
+                    {% if flag == 'a' %}
+                    <col width="15%">
+                    {% endif %}
+                </colgroup>
+                <thead>
+                    <th>순번</th>
+                    <th>이름</th>
+                    <th>아이디</th>
+                    <th>E-mail</th>
+                    <th>소속</th>
+                    <th>역할</th>
+                    {% if flag == 'm' %}
+                    <th>가입 일자</th>
+                    {% else %}
+                    <th>가입 요청 일자</th>
+                    <th>회원 가입 승인</th>
+                    {% endif %}
+                </thead>
+                <tbody>
+                    {% if data %}
+                    {% for item in data %}
+                    <tr data-url="{% url 'management:detail' item.id %}" class="active-row">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.auth_user.first_name }}</td>
+                        <td>{{ item.auth_user.username }}</td>
+                        <td>{{ item.auth_user.email }}</td>
+                        <td>{{ item.department }}</td>
+                        <td>
+                            {% if item.auth_user.is_superuser %}관리자{% else %}사용자{% endif %}
+                        </td>
+                        <td>{{ item.auth_user.date_joined }}</td>
+                        {% if flag == 'a' %}
+                        <td onclick='event.cancelBubble=true;'>
+                            <input type="button" value="승인" class="btn btn-primary" data-url="{% url 'management:update_auth' item.id 1 %}" onclick="approval(this);">
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        {% if flag == 'm' %}
+                        <td colspan="7">직원 정보가 존재하지 않습니다.</td>
+                        {% else %}
+                        <td colspan="8">직원 요청 정보가 존재하지 않습니다.</td>
+                        {% endif %}
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="pagination">
+        <div class="step-links">
+            {% if data.has_previous %}
+            <a href="?page=1">&laquo; 처음</a>
+            <a href="?page={{ data.previous_page_number }}">이전</a>
+            {% endif %}
+
+            <span class="current">
+                페이지 {{ data.number }} / {{ data.paginator.num_pages }}
+            </span>
+
+            {% if data.has_next %}
+            <a href="?page={{ data.next_page_number }}">다음</a>
+            <a href="?page={{ data.paginator.num_pages }}">마지막 &raquo;</a>
+            {% endif %}
+        </div>
+    </div>
+</form>
+{% endblock %}

@@ -15,8 +15,6 @@ from django.http import HttpResponse
 #     return render(request, "counseling/index.html",{'data':data})
 
 
-
-
 def list(request):
     if request.user.is_authenticated:
         # 유저 세션 정보를 템플릿으로 전달
@@ -69,6 +67,7 @@ def stt(request):
 messages = "너는 친절하고 상냥하고 유능한 고객센터 상담원이야. \
       고객의 질문에 대해 고객센터 매뉴얼을 참고해서 완벽한 답변 대본을 작성해줘.\
       예시: 네, 고객님 해당 문의 내용은 월사용요금을 kt에서 신용카드사로 청구하면 고객이 신용카드사에 결제대금을 납부하는 제도입니다."
+
 
 chatbot = Chatbot(
     os.getenv("OPENAI_API_KEY"), "database/chroma.sqlite3", behavior_policy=messages
