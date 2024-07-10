@@ -1,3 +1,5 @@
+let lastChatbotMessage = "";
+
 // DOM 콘텐츠가 완전히 로드되면 이 함수를 실행
 document.addEventListener("DOMContentLoaded", function () {
     // 클래스가 "category-button"인 모든 요소를 선택
@@ -50,6 +52,7 @@ function selectCategory(category) {
             document.getElementById("selected-category").innerText = selectedCategory;
             document.getElementById("chat-content").innerHTML = ""; // 채팅 내용을 지움
             appendMessage("bot", data.initial_question); // 첫 질문 출력
+            lastChatbotMessage = data.initial_question;
         })
         .catch((error) => console.error("Error:", error));
 }
@@ -79,18 +82,17 @@ function sendMessage(event) {
         .then((data) => {
             // 봇의 응답을 채팅 상자에 추가
             appendMessage("bot", data.response);
+            lastChatbotMessage = data.response;
         })
         .catch((error) => console.error("Error:", error));
+    textEvaluationToChatbot(userInput);
 }
 
 // 메시지를 채팅 상자에 추가하는 함수
 function appendMessage(sender, message) {
     const messageElement = document.createElement("div");
-    messageElement.className = "message " + sender;
-    messageElement.innerHTML = message
-        .split("\n")
-        .map((line) => `<div>${line}</div>`)
-        .join("");
+    messageElement.className = "message-" + sender;
+    messageElement.innerHTML = message;
     document.getElementById("chat-content").appendChild(messageElement);
     document.getElementById("question").value = "";
     document.getElementById("chat-content").scrollTop = document.getElementById("chat-content").scrollHeight;
@@ -148,7 +150,7 @@ function startEducation() {
 
             // 새로운 interimDiv를 생성하여 추가
             const interimDiv = document.createElement('div');
-            interimDiv.className = 'interim-msg message';
+            interimDiv.className = 'interim-msg';
             chatContent.appendChild(interimDiv);
 
             // 음성 인식 시작 시 버튼 비활성화 및 로그 출력
@@ -193,6 +195,25 @@ function startEducation() {
                     const finalDiv = createFinalDiv(finalTranscript);
                     chatContent.appendChild(finalDiv);
                     appendMessageToReadonly("user", finalTranscript);
+                    const formData = new FormData();
+                    formData.append("message", finalTranscript);
+                    formData.append("csrfmiddlewaretoken", getCookie("csrftoken"));
+
+                    fetch("/education/", {
+                        method: "POST",
+                        body: formData,
+                        headers: {
+                            "X-CSRFToken": getCookie("csrftoken")
+                        }
+                    })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            // 봇의 응답을 채팅 상자에 추가
+                            appendMessage("bot", data.response);
+                            lastChatbotMessage = data.response;
+                        })
+                        .catch((error) => console.error("Error:", error));
+                    textEvaluationToChatbot(finalTranscript);
                 }
 
                 interimDiv.remove();
@@ -249,7 +270,7 @@ function removeExistingInterimDiv() {
 // output-msg 생성(종료 버튼 클릭시 동작)
 function createFinalDiv(text) {
     const finalDiv = document.createElement('div');
-    finalDiv.className = 'message user';
+    finalDiv.className = 'message-user';
     finalDiv.innerText = text;
     return finalDiv;
 }
@@ -262,11 +283,8 @@ function scrollToBottom() {
 // 읽기 전용 채팅 상자에 메시지를 추가
 function appendMessageToReadonly(sender, message) {
     const messageElement = document.createElement("div");
-    messageElement.className = "message " + sender;
+    messageElement.className = "message-" + sender;
     messageElement.innerHTML = message
-        .split("\n")
-        .map((line) => `<div>${line}</div>`)
-        .join("");
     document.getElementById("readonly-chat-content").appendChild(messageElement);
     document.getElementById("readonly-chat-content").scrollTop = document.getElementById("readonly-chat-content").scrollHeight;
 }
@@ -287,11 +305,49 @@ function saveChatData() {
         type: 'POST',
         url: '{% url "save_chat_data" %}',  // URL을 동적으로 생성
         data: data,
-        success: function(response) {
+        success: function (response) {
             alert('Data saved successfully');
         },
-        error: function(response) {
+        error: function (response) {
             alert('Failed to save data');
         }
     });
+}
+
+// 텍스트 데이터를 챗봇에 전송하는 함수(view.py에 전송)
+function textEvaluationToChatbot(userInput) {
+    const formData = new FormData();
+
+    console.log(lastChatbotMessage);
+
+    formData.append('customerQuestion', lastChatbotMessage);
+    formData.append('userInput', userInput);
+    formData.append('category', selectedCategory);
+
+    fetch('/education/evaluation_chat/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.output) {
+                const childDiv = document.createElement('div');
+                childDiv.className = 'evaluated-message-bot';
+                childDiv.innerText = data.output;
+                document.getElementById("readonly-chat-content").appendChild(childDiv);  // 챗봇 응답을 readonly-chat-content div에 추가
+            } else if (data.error) {
+                console.error('Error from server:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
 }

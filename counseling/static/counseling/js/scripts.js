@@ -151,15 +151,43 @@ function editConsultation() {
 
 function saveConsultation() {
     const form = document.getElementById('consultation-form');
-    const textareas = form.querySelectorAll('textarea');
-    textareas.forEach(textarea => textarea.disabled = true);
+    const inquiryTextarea = form.querySelector('textarea[name="inquiry-text"]');
+    const logId = inquiryTextarea.getAttribute('data-log-id');
+    const inquiryText = inquiryTextarea.value;
 
-    // 문의/조치 내용을 저장하는 로직 추가, 예: 서버로 데이터 전송
-    // alert('문의/조치 내용이 저장되었습니다.');
+    const formData = new FormData();
+    formData.append('log_id', logId);
+    formData.append('inquiry_text', inquiryText);
 
-    document.querySelector('#consultation-form .edit-button').style.display = 'inline-block';
-    document.querySelectorAll('#consultation-form .save-button, #consultation-form .cancel-button').forEach(button => {
-        button.style.display = 'none';
+    // 디버깅 메시지 추가
+    for (let pair of formData.entries()) {
+        console.log(pair[0] + ': ' + pair[1]);
+    }
+
+    fetch('/counseling/save_consultation/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('문의 내용이 저장되었습니다.');
+            inquiryTextarea.disabled = true;
+            document.querySelector('#consultation-form .edit-button').style.display = 'inline-block';
+            document.querySelectorAll('#consultation-form .save-button, #consultation-form .cancel-button').forEach(button => {
+                button.style.display = 'none';
+            });
+        } else {
+            alert('문의 내용 저장에 실패했습니다.');
+            console.error('Error:', data.error);  // 에러 메시지 출력
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('문의 내용 저장 중 오류가 발생했습니다.');
     });
 }
 
@@ -167,9 +195,6 @@ function cancelConsultationEdit() {
     const form = document.getElementById('consultation-form');
     const textareas = form.querySelectorAll('textarea');
     textareas.forEach(textarea => textarea.disabled = true);
-
-    // 문의/조치 내용 수정 취소를 처리하는 로직 추가, 예: 변경 사항 되돌리기
-    // alert('문의/조치 내용 수정이 취소되었습니다.');
 
     document.querySelector('#consultation-form .edit-button').style.display = 'inline-block';
     document.querySelectorAll('#consultation-form .save-button, #consultation-form .cancel-button').forEach(button => {
@@ -329,39 +354,6 @@ function createFinalDiv(text, type) {
     return finalDiv;
 }
 
-function sendTextToChatbot(text) {
-    const formData = new FormData();
-    formData.append('text', text);
-    formData.append('username', '홍길동');
-
-    fetch('/counseling/stt_chat/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': getCookie('csrftoken')
-        }
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.output) {
-                const childDiv = document.createElement('div');
-                childDiv.className = 'chatbot-response';
-                childDiv.innerText = data.output;
-                translationContent.appendChild(childDiv);
-            } else if (data.error) {
-                console.error('Error from server:', data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-}
-
 function addCustomerMessageToTranslationContent(text) {
     const translationDiv = document.createElement('div');
     translationDiv.className = 'output-msg customer';
@@ -507,10 +499,11 @@ function scrollToBottom() {
 }
 
 // 텍스트 데이터를 챗봇에 전송하는 함수(view.py에 전송)
-function sendTextToChatbot(text) {
+function evaluationTextToChatbot(text) {
     const formData = new FormData();
+    formData.append('text', text);
 
-    fetch('/counseling/stt_chat/', {
+    fetch('/counseling/evaluation_chat/', {
         method: 'POST',
         body: formData,
         headers: {

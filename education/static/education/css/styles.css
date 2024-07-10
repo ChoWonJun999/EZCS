@@ -162,7 +162,7 @@ textarea {
     flex-grow: 1;
 }
 
-.message {
+.message-bot {
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 15px;
@@ -171,19 +171,39 @@ textarea {
     font-family: 'Chosunilbo_myungjo', serif;
     font-size: 14px;
     line-height: 1.5;
-}
-
-.message.bot {
     background-color: #e0f7fa; 
     align-self: flex-start;
     text-align: left;
 }
 
-.message.user {
+.message-user {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    max-width: 80%;
+    word-wrap: break-word;
+    font-family: 'Chosunilbo_myungjo', serif;
+    font-size: 14px;
+    line-height: 1.5;
     background-color: #f8d7da;
     color: black;
     align-self: flex-end;
     text-align: right;
+}
+
+.evaluated-message-bot {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    max-width: 80%;
+    word-wrap: break-word;
+    font-family: 'Chosunilbo_myungjo', serif;
+    font-size: 14px;
+    line-height: 1.5;
+    background-color: #e0f7fa; 
+    color: black;
+    align-self: flex-start;
+    text-align: left;
 }
 
 .output-msg.customer {
@@ -217,6 +237,9 @@ textarea {
     background-color: #e9ecef; 
     max-width: 80%;
     word-break: break-word;
+    color: black;
+    font-family: 'Chosunilbo_myungjo', serif;
+    font-size: 14px;
 }
 
 .submit-container {

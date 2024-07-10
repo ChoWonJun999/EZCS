@@ -144,7 +144,7 @@ def searchPW(request):
             counselor_profile = CounselorProfile.objects.get(auth_user=user, birth_date=birthdate, phone_number=phone_number)
             # 인증 정보가 맞다면 비밀번호 재설정 페이지로 이동
             request.session['reset_user_id'] = user.id
-            return JsonResponse({'result': 'success', 'msg': '인증 성공. 비밀번호 재설정 페이지로 이동합니다.'})
+            return JsonResponse({'result': 'success', 'msg': '인증 성공. 비밀번호를 재설정해주세요.'})
         except (User.DoesNotExist, CounselorProfile.DoesNotExist):
             return JsonResponse({'result': 'error', 'msg': '해당 정보의 사용자를 찾을 수 없습니다.'})
     return render(request, 'accounts/searchPW.html')
