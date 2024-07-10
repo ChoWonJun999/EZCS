@@ -5,16 +5,16 @@ from stt import STTModel
 from chat import Chatbot
 from django.views.decorators.csrf import csrf_exempt
 import logging
-from .models import CounselLog, CustomerInfo, User
+from .models import *
 import json
-
+from django.http import HttpResponse
 
 # def list(request):
 #     data = CustomerInfo.objects.get(phone_number='01011112222')
 #     print(data)
 #     return render(request, "counseling/index.html",{'data':data})
 
-from django.http import HttpResponse
+
 
 
 def list(request):
@@ -23,9 +23,16 @@ def list(request):
     return render(request, "counseling/index.html",{'data':data})
 
 
+# 상담이력 뷰
+def history(request):
+    query = request.POST.get('searchText', '')
 
-def test(request):
-    return render(request, "counseling/test.html")
+    if query:
+        logs = CounselLog.objects.filter(body__icontains=query)
+    else:
+        logs = CounselLog.objects.all()
+
+    return render(request, 'counseling/history.html', {'logs': logs})
 
 
 stt_model = STTModel(
