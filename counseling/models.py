@@ -81,7 +81,7 @@ class CustomerInfo(models.Model):
         verbose_name_plural = "Customer Info"
 
     def __str__(self):
-        return self.name
+        return self.phone_number
 
 class CounselManual(models.Model):
     # 상담원이 사용할 응대 매뉴얼

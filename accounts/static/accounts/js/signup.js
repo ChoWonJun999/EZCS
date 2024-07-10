@@ -118,6 +118,7 @@ function chkPhoneNumber() {
         $("#phone").addClass("is-valid");
     }
 
+
     $.ajax({
         url: $("#phoneChkUrl").val(),
         type: "get",
@@ -130,6 +131,7 @@ function chkPhoneNumber() {
             $("#phoneError").hide();
             $("#phone").removeClass("is-invalid");
             $("#phone").addClass("is-valid");
+
         }
     });
 }
@@ -155,6 +157,7 @@ function chkEmail() {
         $("#emailLocal").addClass("is-valid");
     }
 
+
     $.ajax({
         url: $("#emailChkUrl").val(),
         type: "get",
@@ -176,7 +179,6 @@ function chkEmail() {
         }
     });
 }
-
 
 function emailDomainChange(obj) {
     $("#emailDomain").val(obj.value);
@@ -237,6 +239,19 @@ function chkBirthdate() {
     }
 }
 
+function chkAddressDetail() {
+    let addressDetail = $("#UserAdd2").val();
+    if (!addressDetail) {
+        $("#userAdd2Error").text("상세 주소를 입력해 주세요.");
+        $("#userAdd2Error").show();
+        $("#UserAdd2").addClass("is-invalid");
+    } else {
+        $("#userAdd2Error").hide();
+        $("#UserAdd2").removeClass("is-invalid");
+        $("#UserAdd2").addClass("is-valid");
+    }
+}
+
 function signup() {
     let username = $("#loginUsername");
     let name = $("#name").val();
@@ -270,6 +285,7 @@ function signup() {
         }
         username.focus();
         valid = false;
+
     }
 
     if (name.trim() == "") {
@@ -334,6 +350,7 @@ function signup() {
         $("#passwordError").show();
         $("#pwChk").focus();
         valid = false;
+
     } else {
         $("#passwordError").hide();
     }
@@ -367,8 +384,8 @@ function signup() {
         valid = false;
     }
 
-   
     let addressDetail = $("#UserAdd2").val();
+    /*
     if (!addressDetail) {
         $("#userAdd2Error").text("상세 주소를 입력해 주세요.");
         $("#userAdd2Error").show();
@@ -381,6 +398,7 @@ function signup() {
     if (!valid) {
         return;
     }
+
 
     let param = {
         username: username.val(),
@@ -496,3 +514,4 @@ function execDaumPostcode() {
         }
     }).open();
 }
+

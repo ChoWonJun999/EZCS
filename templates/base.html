@@ -39,7 +39,7 @@
                     <a href="{% url 'education:chat_view' %}">교육</a>
                     <ul class="submenu">
                         <li><a href="{% url 'education:edu_history' %}" class="{% if request.path == '/education/edu_history' %}active{% endif %}">롤플레잉 이력</a></li>
-                        <li><a href="{% url 'education:edu_details' %}" class="{% if request.path == '/education/edu_details/' %}active{% endif %}">롤플레잉 이력 상세(개발용)</a></li>
+                        {% comment %} <li><a href="{% url 'education:edu_details' %}" class="{% if request.path == '/education/edu_details/' %}active{% endif %}">롤플레잉 이력 상세(개발용)</a></li> {% endcomment %}
                         <li><a href="{% url 'education:quiz' %}" class="{% if request.path == '/education/quiz/' %}active{% endif %}">퀴즈</a></li>
                         <li><a href="{% url 'education:quiz_history' %}" class="{% if request.path == '/education/quiz_history/' %}active{% endif %}">퀴즈 이력</a></li>
                         {% comment %} <li><a href="{% url 'education:quiz_details' %}" class="{% if request.path == '/education/quiz_details/' %}active{% endif %}">퀴즈 이력 상세</a></li> {% endcomment %}

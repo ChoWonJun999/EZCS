@@ -18,6 +18,7 @@ function sendResetRequest() {
     let url = form.data("url");
     let csrf = $("input[name=csrfmiddlewaretoken]").val();
 
+
     $.ajax({
         url: url,
         type: "post",
@@ -35,4 +36,21 @@ function sendResetRequest() {
             }
         }
     });
+}
+
+function chkUserName() {
+    let username = $("#forgotPasswordUsername");
+    let name = $("#name").val();
+    let phone = $("#phone").val();
+
+    if (username.val().trim() == "") {
+        $("#usernameError").text("아이디를 입력하세요.");
+        $("#usernameError").show();
+        username.addClass("is-invalid");
+        if (username.hasClass("is-valid")) {
+            username.removeClass("is-valid");
+        }
+        username.focus();
+        return;
+    }
 }
