@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Investor Dashboard{% endblock %}</title>
+    <title>{% block title %}EZCS{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link href="/static/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-    <script src="/static/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <link href="{% static 'css/bootstrap/bootstrap.min.css' %}" rel="stylesheet" />
+    <script src="{% static 'js/bootstrap/bootstrap.bundle.min.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         function openContractPopup() {
@@ -26,13 +26,25 @@
             var top = (screen.height - height) / 2;
             window.open("{% url 'main:privacy' %}", "Privacy Policy", "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left);
         }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
+            }
+        });
     </script>
 </head>
 
 <body>
     <div class="sidebar" id="sidebar">
         <div>
-            <h1>EZCS</h1>
+            <a href="{% url 'main:user_dashboard' %}"><img src="{% static 'main/images/EZCS.png' %}" alt="EZCS Logo" class="ezcs-logo"></a>
             <p class="menu-title">MAIN MENU</p>
             <ul class="menu">
                 <li><a href="{% url 'main:user_dashboard' %}">대시보드</a></li>
@@ -68,14 +80,7 @@
             <div class="header-right">
                 <div class="profile-info">{{ request.session.user }}님, 오늘 하루도 화이팅 하세요.</div>
                 {% if request.user.is_superuser %}
-                {% comment %}
-                최희승은 보아라!
-                충돌이 날까봐 수정 안하고 있었는데
-                줄 맞춤 때문에 들어와 수정을 해버렸다!!!!
-                class 이름을 너무 직접적으로 만들면 사용하기 좀 그렇잖아!!
-                알아서 class 이름 수정해서 반영 하도록!
-                {% endcomment %}
-                <div class="">
+                <div class="admin-page">
                     <a href="{% url 'management:list' 'm' %}">관리자 페이지</a>
                 </div>
                 {% endif %}
@@ -92,7 +97,7 @@
         <footer class="footer">
             <div class="footer-content">
                 <p><a href="javascript:void(0);" onclick="openPrivacyPopup();">개인정보 처리방침</a> | <a href="javascript:void(0);" onclick="openContractPopup();">이용약관</a></p>
-                <p>㈜KT 에이블스쿨팀 충남/충북권역 대표자: team21 </p>
+                <p>㈜KT 에이블스쿨팀 충남/충북권역,  대표자: team21 </p>
                 <p>&copy; 2024 aivleschool team21. All rights reserved.</p>
             </div>
         </footer>
