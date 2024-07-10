@@ -27,9 +27,9 @@
 
     <div class="quiz-history">
         <h3>퀴즈 창 복원 영역</h3>
-
+        
         <h2>퀴즈 결과</h2>
-    
+
         {% for item in items %}
         <div class="question">
             <p>{{ forloop.counter }}. {{ item.education_quiz_id.question }}</p>
@@ -46,7 +46,7 @@
             </div>
             {% endif %}
             <div class="feedback">
-                {% if item.is_correct %}
+                {% if item.education_quiz_id.answer == item.answer %}
                 <span class="feedback-correct">정답입니다.</span>
                 {% else %}
                 <span class="feedback-incorrect">오답입니다!</span>

@@ -85,6 +85,11 @@
         <input class="w-100 btn btn-lg btn-primary" type="submit" value="수정정보 저장하기">
     </div>
 
+    <div class="mb-3 d-flex justify-content-between">
+        <a onclick="history.back()" class="btn btn-lg btn-primary flex-grow-1 me-2" style="max-width: fit-content;">뒤로가기</a>
+        <a href="{% url 'management:edit' user.id %}" class="btn btn-lg btn-primary flex-grow-1" style="max-width: fit-content;">수정하기</a>
+    </div>
+
     <div>
         <a onclick="history.back()" class="w-100 btn btn-lg btn-primary">취소</a>
         <!-- <a href="{% url 'management:detail' user.id %}">취소</a>ㅋㅋ -->

@@ -10,6 +10,9 @@ from django.contrib.auth.password_validation import validate_password
 def user_dashboard(request):
     return render(request, 'main/index.html')
 
+def start_ezcs(request):
+    return render(request, 'main/startezcs.html')
+
 @login_required
 def edit_profile(request):
     user = request.user
