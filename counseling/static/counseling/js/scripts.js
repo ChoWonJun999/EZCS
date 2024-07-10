@@ -373,7 +373,6 @@ function saveCounselingLog() {
     const raw_data = [];
     const chatbot_data = [];
 
-    const username = '상담원';
     const phoneInput = document.getElementById('phone');
     const phone_number = phoneInput.value;
 
@@ -424,10 +423,10 @@ function saveCounselingLog() {
             });
         }
     });
-
+    console.log(window.username)
     // 상담 로그 데이터 객체 생성
     const counselingLog = {
-        username: username,
+        username: window.username,
         phone_number: phone_number,
         chat_data: {
             raw_data: raw_data,
@@ -510,9 +509,6 @@ function scrollToBottom() {
 // 텍스트 데이터를 챗봇에 전송하는 함수(view.py에 전송)
 function sendTextToChatbot(text) {
     const formData = new FormData();
-    formData.append('text', text);
-    // DB 저장을 위한 데이터(미완성)
-    formData.append('username', '홍길동')
 
     fetch('/counseling/stt_chat/', {
         method: 'POST',
