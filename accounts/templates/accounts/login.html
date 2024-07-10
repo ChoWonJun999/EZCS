@@ -5,12 +5,21 @@
 {% load static %}
 <head>
     <style>
+        @font-face {
+            font-family: 'GmarketSansMedium';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
         body {
+            font-family: 'GmarketSansMedium', Arial, sans-serif !important;
             background: url("{% static 'main/images/home.png' %}") no-repeat center center fixed;
             background-size: cover;
         }
     </style>
 </head>
+<link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
 <div class="container">
     <div class="input-form-backgroud row">
         <div class="input-form col-md-12 mx-auto">
