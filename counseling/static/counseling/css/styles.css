@@ -8,37 +8,42 @@
 .dashboard {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1.5fr 3fr; /* 각 행의 높이를 동일하게 설정 */
+    grid-template-rows: 1.5fr 3fr; 
     gap: 20px;
-    height: calc(100vh - 40px); /* 전체 높이에서 패딩을 뺀 값으로 설정 */
+    height: calc(100vh - 40px); 
     box-sizing: border-box;
     padding: 20px;
+    position: relative; /* 위치 조정을 위한 설정 추가 */
 }
 
 .customer-info, .memo-section, .stt-content, .chat-section-readonly {
     border: 1px solid #ccc;
     padding: 20px;
     box-sizing: border-box;
-    background-color: #fff; /* 백그라운드 색상 추가 */
-    border-radius: 8px; /* 모서리 둥글게 */
+    background-color: #fff; 
+    border-radius: 8px; 
     display: flex;
     flex-direction: column;
-    overflow: auto; /* 내용이 넘칠 경우 스크롤 가능하도록 설정 */
+    overflow: auto; 
+}
+
+.customer-info, .memo-section {
+    max-height: 350px;
 }
 
 .stt-content {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    max-height: 300px; /* 최대 높이를 설정하여 전체 길이가 늘어나지 않도록 함 */
-    overflow: hidden; /* 내부 요소가 넘칠 경우 숨기기 */
+    max-height: 500px; 
+    overflow: hidden; 
 }
 
 .stt-content .stt, .translation {
     display: flex;
     flex-direction: column;
-    flex-grow: 1; /* 상위 요소가 늘어날 때 이 요소도 같이 늘어나도록 설정 */
-    overflow-y: auto; /* 세로 스크롤 설정 */
+    flex-grow: 1;
+    overflow-y: auto; 
 }
 
 .button-container {
@@ -58,8 +63,23 @@
     background-color: #007bff;
     color: #fff;
     transition: background-color 0.3s;
-    flex: 1; /* 버튼이 동일한 크기를 갖도록 설정 */
-    margin: 0 5px; /* 버튼 사이 간격 추가 */
+    flex: 1; 
+    margin: 0 5px; 
+}
+
+.customer-mic-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #ffb703;
+    color: #fff;
+    transition: background-color 0.3s;
+    flex: 1; 
+    margin: 0 5px; 
 }
 
 .mic-button:disabled {
@@ -84,51 +104,57 @@
     border-radius: 5px;
     border: 1px solid #ddd;
     flex-grow: 1;
-    overflow-y: auto; /* 스크롤을 transcription과 translation-content 안에서만 되도록 설정 */
-    font-family: 'Chosunilbo_myungjo', serif; /* 폰트 변경 */
+    overflow-y: auto;
+    font-family: 'Chosunilbo_myungjo', serif;
     font-size: 14px;
     line-height: 1.5;
 }
 
-.output-msg {
-    align-self: flex-end;
-    margin-bottom: 10px;
+.output-msg.customer {
+    background-color: #e0f7fa; 
     padding: 10px;
     border-radius: 15px;
-    background-color: #d1ecf1;
-    font-family: 'Chosunilbo_myungjo', serif; /* 폰트 변경 */
-    font-size: 14px;
-    line-height: 1.5;
+    margin-bottom: 10px;
+    align-self: flex-start;
     max-width: 80%;
     word-break: break-word;
     text-align: right;
 }
 
-.chatbot-response {
-    align-self: flex-start;
-    margin-bottom: 10px;
+.output-msg.counselor {
+    background-color: #e0f7e9; 
     padding: 10px;
     border-radius: 15px;
-    background-color: #f8d7da;
-    font-family: 'Chosunilbo_myungjo', serif; /* 폰트 변경 */
-    font-size: 14px;
-    line-height: 1.5;
+    margin-bottom: 10px;
+    align-self: flex-end;
     max-width: 80%;
     word-break: break-word;
     text-align: left;
 }
 
 .interim-msg {
+    font-style: italic;
     align-self: flex-end;
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 15px;
-    background-color: #e9ecef; /* 임시 메시지 배경 색상 */
-    font-family: 'Chosunilbo_myungjo', serif; /* 폰트 변경 */
+    background-color: #e9ecef; 
+    max-width: 80%;
+    word-break: break-word;
+}
+
+.chatbot-response {
+    align-self: flex-end;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: #f8d7da;
+    font-family: 'Chosunilbo_myungjo', serif;
     font-size: 14px;
     line-height: 1.5;
     max-width: 80%;
     word-break: break-word;
+    text-align: left;
 }
 
 .recommended-answer {
@@ -137,49 +163,15 @@
     border-radius: 5px;
     border: 1px solid #ddd;
     margin-top: 10px;
-    font-family: 'Chosunilbo_myungjo', serif; /* 폰트 변경 */
+    font-family: 'Chosunilbo_myungjo', serif;
     font-size: 14px;
     line-height: 1.5;
 }
 
-.chat-section .chat-container {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.chat-section .chat-box {
-    padding: 10px;
-    background-color: #f8f9fa;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    flex-grow: 1;
-    overflow-y: auto;
-}
-
-.chat-section .chat-box .message {
-    margin-bottom: 10px;
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #e9ecef;
-    font-family: 'Chosunilbo_myungjo', serif; /* 폰트 변경 */
-}
-
-.chat-section .chat-box .message.user {
-    background-color: #d1ecf1;
-    align-self: flex-end;
-}
-
-.chat-section .chat-box .message.bot {
-    background-color: #f8d7da;
-    align-self: flex-start;
-}
-
 .submit-container {
-    grid-column: 2 / 3;
-    justify-self: end;
-    align-self: start;
-    padding: 20px; /* 추가적인 패딩을 넣어 위치 조정 */
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
 }
 
 .submit-button {
@@ -196,13 +188,12 @@
     background-color: #0056b3;
 }
 
-/* 반응형 디자인을 위한 미디어 쿼리 */
 @media (max-width: 768px) {
     .dashboard {
         grid-template-columns: 1fr;
-        grid-template-rows: repeat(5, 1fr); /* 각 행의 높이를 동일하게 설정 */
+        grid-template-rows: repeat(5, 1fr); 
         gap: 20px;
-        height: auto; /* 화면 크기에 맞게 높이 조정 */
+        height: auto;
     }
 
     .customer-info,
@@ -215,8 +206,8 @@
 
     .submit-container {
         grid-column: 1 / 2;
-        justify-self: center; /* 중앙에 배치 */
-        align-self: start; /* 상단에 배치 */
+        justify-self: center; 
+        align-self: start; 
     }
 }
 

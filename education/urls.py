@@ -9,15 +9,18 @@ urlpatterns = [
 
     # 교육 이력 페이지
     path('edu_history/', views.edu_history, name='edu_history'),
+    # 교육이력 상세 페이지
+    path('edu_details/<int:log_id>/', views.edu_details, name='edu_details'),
 
-    # 교육 이력 상세 페이지
-    # 일단 어떻게 연결해야할지 모르겠어서 일단 연결해뇠는데, history에서 확인 누르면 해당 기록 열려야함
-    path('edu_details/', views.edu_details, name='edu_details'),
+    # 임시
+    # path('save_chat_data/', views.save_chat_data, name='save_chat_data'),
 
     # 퀴즈 페이지 
     path('quiz/', views.quiz, name='quiz'),
 
     # 퀴즈 이력 페이지
- path('quiz_history/', views.quiz_history, name='quiz_history'),
+    path('quiz_history/', views.quiz_history, name='quiz_history'),
+    # 퀴즈 이력 상세페이지
     path('quiz_details/<int:log_id>/', views.quiz_details, name='quiz_details'),  # URL 패턴 및 이름 확인
+    path('evaluation_chat/', views.evaluation_chat, name='evaluation_chat'),  # 상담사의 응답 평가
 ]

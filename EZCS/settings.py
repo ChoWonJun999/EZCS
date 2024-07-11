@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-# CSRF_TRUSTED_ORIGINS = ['url']
+CSRF_TRUSTED_ORIGINS = ['https://81bb-59-26-32-139.ngrok-free.app']
 
 # Application definition
 
@@ -58,6 +58,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "accounts.middleware.BlockedMiddleware",
     "accounts.middleware.LoginSessionMiddleware",
+    "accounts.middleware.SessionTimeoutMiddleware",
 ]
 
 LOGIN_URL = '/accounts'
@@ -163,6 +164,11 @@ SESSION_COOKIE_SECURE = True
 
 CSRF_COOKIE_SECURE = True
 
-SESSION_COOKIE_AGE = 60 * 60 * 3
+# SESSION_COOKIE_AGE = 24 * 60 * 60
+SESSION_COOKIE_AGE = 30 * 60
 
 SESSION_SAVE_EVERY_REQUEST = True
+
+OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
+
+DB_PATH = "../db"

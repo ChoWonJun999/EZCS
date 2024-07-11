@@ -6,29 +6,31 @@
 <!-- 직원용 대시보드 내용 -->
 <div class="dashboard">
     <div class="customer-info">
-        <h2>고객 정보</h2>
+        <h4>고객 정보</h4>
         <form id="customer-form">
             <ul>
+                {% for customer in customer_info %}
                 <li>
                     <label for="customer-name">고객명</label>
-                    <input type="text" id="customer-name" name="customer-name" disabled>
+                    <input type="text" id="customer-name" name="customer-name" value="{{ customer.name }}" disabled>
                 </li>
                 <li>
                     <label for="birthdate">생년월일</label>
-                    <input type="date" id="birthdate" name="birthdate" disabled>
+                    <input type="date" id="birthdate" name="birthdate"  value="{{ customer.birth_date|date:'Y-m-d'}}" disabled >
                 </li>
                 <li>
                     <label for="phone">전화번호</label>
-                    <input type="tel" id="phone" name="phone" maxlength="11" pattern="\d{3}\d{4}\d{4}" disabled>
+                    <input type="tel" id="phone" name="phone" value="{{ customer.phone_number }}" maxlength="11" pattern="\d{3}\d{4}\d{4}" disabled>
                 </li>
                 <li>
                     <label for="address">주소</label>
-                    <input type="text" id="address" name="address" disabled>
+                    <input type="text" id="address" name="address" value="{{ customer.address }}" disabled>
                 </li>
                 <li>
                     <label for="join-date">가입일</label>
-                    <input type="date" id="join-date" name="join-date" disabled>
+                    <input type="date" id="join-date" name="join-date" value="{{ customer.joined_date|date:'Y-m-d' }}" disabled>
                 </li>
+                {% endfor %}
             </ul>
             <div class="buttons">
                 <input type="button" class="edit-button" value="수정" onclick="editCustomerInfo()">
@@ -39,18 +41,20 @@
         </form>        
     </div>
     <div class="memo-section">
-        <h2>문의/조치 내용</h2>
+        <h4>문의/조치 내용</h4>
         <form id="consultation-form">
+            {% for log in counsel_logs %}
             <div class="memo-content">
                 <div class="memo-block">
                     <label for="inquiry-text">문의 내용</label>
-                    <textarea id="inquiry-text" name="inquiry-text" rows="5" cols="50" disabled></textarea>
+                    <textarea id="inquiry-text" name="inquiry-text" rows="5" cols="50" data-log-id="{{ log.id }}" disabled>{{ log.memo }}</textarea>
                 </div>
                 <div class="memo-block">
                     <label for="action-text">조치 내용</label>
                     <textarea id="action-text" name="action-text" rows="5" cols="50" disabled></textarea>
                 </div>
             </div>
+            {% endfor %}
             <div class="buttons">
                 <input type="button" class="edit-button" value="수정" onclick="editConsultation()">
                 <input type="button" class="save-button" value="저장" onclick="saveConsultation()" style="display: none;">
@@ -60,32 +64,38 @@
         </form>
     </div>
     <div class="stt-content">
-        <h2>고객-상담원</h2>
+        <h4>고객-상담원</h4>
         <div class="stt">
             <div id="transcription">여기에 음성 입력 내용이 표시됩니다...</div>
             <div class="button-container">
-                <button id="start-button" class="mic-button" onclick="startCounseling()">
-                    <i class="fas fa-microphone"></i> 마이크 연결
+                <button id="customer-start-button" class="customer-mic-button" onclick="startCustomerCounseling()">
+                    <i class="fas fa-microphone"></i> 고객 마이크 연결
+                </button>
+                <button id="counselor-start-button" class="mic-button" onclick="startCounselorCounseling()">
+                    <i class="fas fa-microphone"></i> 상담원 마이크 연결
                 </button>
                 <button id="stop-button" class="mic-button" onclick="stopCounseling()" disabled>
                     <i class="fas fa-microphone-slash"></i> 마이크 연결 끊기
                 </button>
             </div>
         </div>
-    </div>
+    </div>    
     <div class="stt-content">
-        <h2>고객음성번역-챗봇추천응대멘트</h2>
+        <h4>고객음성번역-챗봇추천응대멘트</h4>
         <div class="translation">
             <div id="translation-content">여기에 번역된 내용이 표시됩니다...</div>
         </div>
     </div>
     <div class="submit-container">
-        <button type="submit" class="submit-button">저장</button>
-    </div>
+        <button id="save-button" type="button" class="submit-button" onclick="saveCounselingLog()">
+            <i class="fas fa-save"></i> 저장
+        </button>
+    </div>    
 </div>
 
 <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 <script src="{% static 'counseling/js/scripts.js' %}"></script>
+<script>window.username = "{{ username|safe }}";</script>
 <link rel="stylesheet" href="{% static 'counseling/css/styles.css' %}">
 
 {% endblock %}

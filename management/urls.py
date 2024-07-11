@@ -4,10 +4,15 @@ from . import views
 app_name = 'management'
 
 urlpatterns = [
+    path('list/<str:flag>/', views.list, name='list'),
+    path('detail/<int:id>/<str:flag>/', views.detail, name='detail'),
+    path('update_auth/<int:id>/<int:status>', views.update_auth, name='update_auth'),
+    path('edit/<int:id>/<str:flag>/', views.edit, name='edit'),
 
-    path('', views.dashboard, name='dashboard'), #대쉬보드 화면
-    path('detail/<int:id>/', views.detail, name='detail'), # 직원상세정보화면
-    path('detail/<int:id>/edit', views.manager_edit, name='edit'), # 직원상세정보수정
+
+
+    path('detail/<int:id>/edit', views.manager_edit, name='manager_edit'),
+
     path('allow/', views.allow, name='allow'), #가입승인화면
     path('approve/<int:id>/', views.approve_user, name='approve_user'), #승인해주는 로직
     path('inactive/', views.inactive, name='inactive'), #퇴사 및 휴직 관리 화면

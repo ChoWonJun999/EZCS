@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse
 import logging
 
 
@@ -25,6 +26,7 @@ def user_login(request):
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
         remember_me = request.POST.get('remember_me', None)
+        flag = request.POST.get('flag', None)
 
         user = authenticate(request, username=username, password=password)
         logger.log(1, user)
@@ -34,27 +36,27 @@ def user_login(request):
             admin = AdministratorProfile.objects.filter(auth_user_id=user.id).first()
 
             if (counselor and counselor.active_status != 1) or (admin and admin.active_status != 1):
-                result = '로그인 권한이 없습니다.'
+                message = '로그인 권한이 없습니다.'
+            elif flag == '1' and user.is_superuser == False:
+                message = '관리자가 아닙니다.'
             else:
                 login(request, user)
-                request.session['user'] = user.first_name if user.first_name else user.username
 
-                if user.is_superuser == True:
-                    result = 'manager'
+                if flag == '0':
+                    url = reverse('main:user_dashboard')
                 else:
-                    result = 'user'
+                    url = reverse('management:list', kwargs={'flag': 'm'})
                 
-                response = JsonResponse({'result' : result})
+                response = JsonResponse({'result' : True, 'url': url})
                 if remember_me == 'on':
                     response.set_cookie('remember_me', username, max_age=2592000)
                 else:
                     response.delete_cookie('remember_me')
                 return response
         else:
-            result = 'ID 혹은 PW를 확인해 주세요.'
-    else:
-        result = '잘못된 접근입니다.'
-    return JsonResponse({'result': result})
+            message = 'ID 혹은 PW를 확인해 주세요.'
+        
+        return JsonResponse({'result': False, 'message': message})
 
 
 def user_logout(request):
@@ -62,16 +64,7 @@ def user_logout(request):
         로그아웃
     """
     logout(request)
-    request.session.pop('user', None)
     return redirect('/')
-
-
-def adminLogin(request):
-    return render(request, 'accounts/adminlogin.html')
-
-
-def searchPW(request):
-    return render(request, 'accounts/searchpw.html')
 
 
 
@@ -88,7 +81,8 @@ def signup(request):
         address_code = request.POST.get('addressCode')
         address = request.POST.get('address')
         address_detail = request.POST.get('addressDetail')
-
+        department = request.POST.get('department')
+        
         user = User.objects.create_user(
             username = username,
             password = password,
@@ -103,8 +97,7 @@ def signup(request):
             , address_code=address_code
             , address=address
             , address_detail=address_detail
-            # , department=department
-            # , active_status=active_status
+            , department=department
         )
 
         result = True
@@ -126,7 +119,7 @@ def check_email(request):
 
 def check_phone(request): 
     phone_number = request.GET.get('phone_number')
-    is_taken = User.objects.filter(phone_number=phone_number).exists()
+    is_taken = CounselorProfile.objects.filter(phone_number=phone_number).exists()
     return JsonResponse({'is_taken': is_taken})
 
 def searchPW(request):
@@ -136,13 +129,14 @@ def searchPW(request):
         phone_number = request.POST.get('phone_number')
 
         try:
-            user = User.objects.get(username=username, birth_date=birthdate, phone_number=phone_number)
+            user = User.objects.get(username=username)
+            counselor_profile = CounselorProfile.objects.get(auth_user=user, birth_date=birthdate, phone_number=phone_number)
             # 인증 정보가 맞다면 비밀번호 재설정 페이지로 이동
             request.session['reset_user_id'] = user.id
-            return JsonResponse({'result': 'success', 'msg': '인증 성공. 비밀번호 재설정 페이지로 이동합니다.'})
-        except User.DoesNotExist:
+            return JsonResponse({'result': 'success', 'msg': '인증 성공. 비밀번호를 재설정해주세요.'})
+        except (User.DoesNotExist, CounselorProfile.DoesNotExist):
             return JsonResponse({'result': 'error', 'msg': '해당 정보의 사용자를 찾을 수 없습니다.'})
-    return render(request, 'accounts/searchpw.html')
+    return render(request, 'accounts/searchPW.html')
 
 def reset_password(request):
     if request.method == 'POST':

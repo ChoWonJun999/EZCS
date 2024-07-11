@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Investor Dashboard{% endblock %}</title>
+    <title>{% block title %}EZCS{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link href="{% static 'css/bootstrap/bootstrap.min.css' %}" rel="stylesheet" />
+    <script src="{% static 'js/bootstrap/bootstrap.bundle.min.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         function openContractPopup() {
@@ -24,22 +26,41 @@
             var top = (screen.height - height) / 2;
             window.open("{% url 'main:privacy' %}", "Privacy Policy", "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left);
         }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('hidden');
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
+            }
+        });
     </script>
 </head>
 
 <body>
     <div class="sidebar" id="sidebar">
         <div>
-            <h1>EZCS</h1>
+            <a href="{% url 'main:user_dashboard' %}"><img src="{% static 'main/images/EZCS.png' %}" alt="EZCS Logo" class="ezcs-logo"></a>
             <p class="menu-title">MAIN MENU</p>
             <ul class="menu">
                 <li><a href="{% url 'main:user_dashboard' %}">대시보드</a></li>
-                <li><a href="{% url 'counseling:list' %}">상담</a></li>
+
+                <li class="has-submenu {% if request.path == '/counseling/' %}active{% endif %}">
+                    <a href="{% url 'counseling:list' %}">상담</a>
+                </li>
+                <ul class="submenu">
+                    <li><a href="{% url 'counseling:history' %}" class="{% if request.path == '/counseling/history' %}active{% endif %}">상담 이력</a></li>
+                </ul>
+
                 <li class="has-submenu {% if request.path == '/education/' %}active{% endif %}">
                     <a href="{% url 'education:chat_view' %}">교육</a>
                     <ul class="submenu">
                         <li><a href="{% url 'education:edu_history' %}" class="{% if request.path == '/education/edu_history' %}active{% endif %}">롤플레잉 이력</a></li>
-                        <li><a href="{% url 'education:edu_details' %}" class="{% if request.path == '/education/edu_details/' %}active{% endif %}">롤플레잉 이력 상세(개발용)</a></li>
+                        {% comment %} <li><a href="{% url 'education:edu_details' %}" class="{% if request.path == '/education/edu_details/' %}active{% endif %}">롤플레잉 이력 상세(개발용)</a></li> {% endcomment %}
                         <li><a href="{% url 'education:quiz' %}" class="{% if request.path == '/education/quiz/' %}active{% endif %}">퀴즈</a></li>
                         <li><a href="{% url 'education:quiz_history' %}" class="{% if request.path == '/education/quiz_history/' %}active{% endif %}">퀴즈 이력</a></li>
                         {% comment %} <li><a href="{% url 'education:quiz_details' %}" class="{% if request.path == '/education/quiz_details/' %}active{% endif %}">퀴즈 이력 상세</a></li> {% endcomment %}
@@ -49,7 +70,7 @@
         </div>
         <div>
             <ul class="menu">
-                <li><a href="#">내 정보</a></li>
+                <li><a href="{% url 'main:edit_profile' %}">내 정보</a></li>
             </ul>
         </div>
     </div>
@@ -57,19 +78,15 @@
         <div class="header">
             <button class="sidebar-toggle" id="sidebarToggle">☰</button>
             <div class="header-right">
-                {% if request.session.user %}
                 <div class="profile-info">{{ request.session.user }}님, 오늘 하루도 화이팅 하세요.</div>
+                {% if request.user.is_superuser %}
+                <div class="admin-page">
+                    <a href="{% url 'management:list' 'm' %}">관리자 페이지</a>
+                </div>
+                {% endif %}
                 <div class="logout">
                     <a href="{% url 'accounts:logout' %}">로그아웃</a>
                 </div>
-                {% comment %} <div class="profile-edit">
-                    <a href="{% url 'main:edit_profile' %}">회원정보 수정</a> <!-- 추가 -->
-                </div> {% endcomment %}
-                {% else %}
-                <div class="logout">
-                    <a href="{% url 'accounts:login' %}">로그인</a>
-                </div>
-                {% endif %}
             </div>
         </div>
         <div class="main-content">
@@ -80,11 +97,12 @@
         <footer class="footer">
             <div class="footer-content">
                 <p><a href="javascript:void(0);" onclick="openPrivacyPopup();">개인정보 처리방침</a> | <a href="javascript:void(0);" onclick="openContractPopup();">이용약관</a></p>
-                <p>㈜KT 에이블스쿨팀 충남/충북권역 대표자: team21 </p>
+                <p>㈜KT 에이블스쿨팀 충남/충북권역,  대표자: team21 </p>
                 <p>&copy; 2024 aivleschool team21. All rights reserved.</p>
             </div>
         </footer>
     </div>
+
     <script src="{% static 'js/scripts.js' %}"></script>
     <script src="{% static 'main/js/edit_profile.js' %}"></script> <!-- 수정 -->
 </body>
