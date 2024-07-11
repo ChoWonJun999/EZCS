@@ -53,7 +53,7 @@ class UserCounselChatbotLog(models.Model):
     )
     
     counsel_chatbot_log_id = models.ForeignKey(
-        "counseling.CounselChatbotLog",
+        "counseling.CounselLog",
         on_delete=models.CASCADE,
         verbose_name="User's Counsel Chatbot Log ID",
         db_comment="User's Counsel Chatbot Log ID",
@@ -84,7 +84,7 @@ class UserEducationChatbotLog(models.Model):
     )
     
     education_chatbot_log_id = models.ForeignKey(
-        "education.EducationChatbotLog",
+        "education.Log",
         on_delete=models.CASCADE,
         verbose_name="User's Education Chatbot Log ID",
         db_comment="User's Education Chatbot Log ID",

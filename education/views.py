@@ -1,6 +1,6 @@
 import json
 import os
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -8,7 +8,6 @@ from .models import *
 from .forms import QuizForm
 from chat import Chatbot
 from prompt import Prompt
-from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Q
 import logging
@@ -17,20 +16,52 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
-chatbot = Chatbot(api_key=os.getenv("OPENAI_API_KEY"), db_path='database/chroma.sqlite3', model_id='ft:gpt-3.5-turbo-0125:personal::9gS63IJD')  # Chatbot 객체 생성
-evaluation_chatbot = Chatbot(os.getenv("OPENAI_API_KEY"), 'database/chroma.sqlite3')
+
+chatbot = None
+evaluation_chatbot = None
 prompt = Prompt()
 prompt.set_initial_behavior_policy_for_education()
 
+
 def chat_view(request):
     '''
-    Chatbot 뷰
+    교육 페이지
     '''
-    global chatbot
     if request.method == "POST":
+        global chatbot
         category = request.POST.get("category", None)
         message = request.POST.get("message", None)
-        if category:
+        if message:
+            log_header_id = request.POST.get("log_header", None)
+            if chatbot is None:
+                return JsonResponse({"response": "Chatbot is not initialized. Please select a category first."})
+            # 사용자 메시지에 대한 응답 생성
+            output = chatbot.chat(message)
+
+            evaluation_chatbot = Chatbot(
+                api_key=settings.OPENAI_API_KEY,
+                db_path=settings.DB_PATH,
+                model_id="ft:gpt-3.5-turbo-0125:personal::9gS63IJD",
+                category=category,
+                THRESHOLD=2,
+                behavior_policy=prompt.get_messages_for_evaluation(output, message),
+            )
+
+            evaluation_output = evaluation_chatbot.chat(message)
+
+            LogItem.objects.create(
+                chatbot=output
+                , user=message
+                , evaluate=evaluation_output
+                , log_id=log_header_id
+            )
+
+            return JsonResponse({
+                "response": output
+                , "userInput": message
+                , "output": evaluation_output
+            })
+        elif category:
             # Chatbot 객체 초기화
             chatbot = Chatbot(
                 api_key=settings.OPENAI_API_KEY,
@@ -44,28 +75,42 @@ def chat_view(request):
             # 첫 질문 생성
             initial_question = chatbot.chat("고객의 역할에서 민원을 말해줘")
             logger.log(1, initial_question)
-            return JsonResponse(
-                {"status": "success", "initial_question": initial_question}
+            if category == '모바일 > 부가서비스':
+                category = 0
+            elif category == '모바일 > 서비스정책':
+                category = 1
+            else:
+                category = 2
+            log_header = Log.objects.create(
+                category=category
+                , auth_user_id=request.user.id
             )
-        elif message:
-            if chatbot is None:
-                return JsonResponse(
-                    {
-                        "response": "Chatbot is not initialized. Please select a category first."
-                    }
-                )
-            # 사용자 메시지에 대한 응답 생성
-            output = chatbot.chat(message)
-            return JsonResponse({"response": output})
 
+            LogItem.objects.create(
+                chatbot=initial_question
+                , log_id=log_header.id
+            )
+            
+            return JsonResponse({
+                "status": "success"
+                , "initial_question": initial_question
+                , "log_header": log_header.id
+            })
+        
     return render(request, "education/index.html")
+    
 
 
-def list(request):
-    '''
-    교육 페이지
-    '''
-    return render(request, 'education/index.html')
+
+
+
+
+
+
+
+
+
+
 
 def edu_history(request):
     '''
@@ -104,19 +149,37 @@ def edu_history(request):
         {"logs": logs, "is_paginated": logs.has_other_pages()},
     )
 
-# 롤플레잉 저장 함수 - 미완성
 @csrf_exempt
-def save_chat_data(request):
+def evaluation_chat(request):
+    """답변을 평가하는 메소드
+
+    Args:
+        request (_type_): _description_
+    """
+    global evaluation_chatbot
     if request.method == "POST":
-        user = request.user
-        category = request.POST.get("category")
-        chat = request.POST.get("chat")
+        customerQuestion = request.POST.get("customerQuestion")
+        userInput = request.POST.get("userInput")
+        print(f"###############\n{customerQuestion}\n{userInput}\n###############")
+        if customerQuestion and userInput:
+            category = request.POST.get("category")
+            api_key = os.environ["OPENAI_API_KEY"]
+            db_path = "../db"
 
-        body = {"category": category, "chat": chat}
+            messages = prompt.get_messages_for_evaluation(customerQuestion, userInput)
 
-        EducationChatbotLog.objects.create(user_id=user, body=body)
+            # Chatbot 객체 초기화
+            chatbot = Chatbot(
+                api_key=api_key,
+                db_path=db_path,
+                category=category,
+                THRESHOLD=2,
+                behavior_policy=messages,
+            )
 
-        return JsonResponse({"message": "Data saved successfully"})
+            output = chatbot.chat(userInput)
+
+            return JsonResponse({"userInput": userInput, "output": output})
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
@@ -271,9 +334,6 @@ def quiz_details(request, log_id):
     return render(request, 'education/quiz_details.html', {'log': log, 'items' : items})
 
 
-
-
-
 def search(request):
     '''
     검색로직
@@ -287,38 +347,3 @@ def search(request):
     return render(
         request, "education/edu_history.html", {"data": results, "query": query}
     )
-
-
-@csrf_exempt
-def evaluation_chat(request):
-    """답변을 평가하는 메소드
-
-    Args:
-        request (_type_): _description_
-    """
-    global evaluation_chatbot
-    if request.method == "POST":
-        customerQuestion = request.POST.get("customerQuestion")
-        userInput = request.POST.get("userInput")
-        print(f"###############\n{customerQuestion}\n{userInput}\n###############")
-        if customerQuestion and userInput:
-            category = request.POST.get("category")
-            api_key = os.environ["OPENAI_API_KEY"]
-            db_path = "../db"
-
-            messages = prompt.get_messages_for_evaluation(customerQuestion, userInput)
-
-            # Chatbot 객체 초기화
-            chatbot = Chatbot(
-                api_key=api_key,
-                db_path=db_path,
-                category=category,
-                THRESHOLD=2,
-                behavior_policy=messages,
-            )
-
-            output = chatbot.chat(userInput)
-
-            return JsonResponse({"userInput": userInput, "output": output})
-
-    return JsonResponse({"error": "Invalid request"}, status=400)
