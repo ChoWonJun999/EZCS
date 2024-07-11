@@ -1,10 +1,12 @@
-.dashboard-container {
-    max-width: 1200px;
-    margin: 0 auto;
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: 1.5fr 3fr; 
+    gap: 20px;
+    height: calc(100vh - 40px); 
+    box-sizing: border-box;
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative; 
 }
 
 .dashboard-header {
@@ -21,6 +23,7 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    /* height: 100%; */
 }
 
 .status-section, .announcement-section, .community-section, .self-study-section {

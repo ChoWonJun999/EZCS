@@ -1,7 +1,6 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render
 from django.http import JsonResponse
 import os
-from stt import STTModel
 from chat import Chatbot
 from django.views.decorators.csrf import csrf_exempt
 import logging
