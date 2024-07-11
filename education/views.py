@@ -1,5 +1,4 @@
 import json
-import random
 import os
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -9,19 +8,78 @@ from .models import *
 from .forms import QuizForm
 from chat import Chatbot
 from django.shortcuts import get_object_or_404
-from django.core.paginator import Paginator  # Paginator 임포트
+from django.core.paginator import Paginator
 from django.db.models import Q
+import logging
+from django.conf import settings
+
+
+logger = logging.getLogger(__name__)
+
+
+behavior_policy = "당신은 콜센터 상담사에게 질문을 하기 위해 전화한 고객입니다. 콜센터 상담사에게 궁금했던 내용을 질문하세요. 질문은 한 번에 한 개씩만 하세요. 질문에 대한 원하는 답변이 나왔다면 마무리 인사를 하세요."
+
+# 웹에서 동작하는 Chatbot 초기화 메시지
+messages = (
+    "너는 통신회사의 고객센터 상담사를 육성하는 챗봇이다. "
+    "'시작'이라는 신호를 받으면 고객센터에 전화하는 고객 역할을 맡고, 나에게 민원을 제기한다. "
+    "나의 답변을 듣고, 그 답변에 대해 교육자의 입장에서 평가를 해준다. 그런 다음 다시 고객 역할로 돌아가서 다음 연관 질문을 던진다. "
+    "정확하고 친절하게 고객의 역할을 수행하고, 교육자의 평가에서는 구체적이고 도움이 되는 피드백을 제공하도록 한다. "
+    "질문이 명확하지 않으면 추가 정보를 요청할 수 있다. "
+    "고객의 역할을 수행할 때는 다양한 민원 사항을 제기하며, 명확하고 구체적인 질문을 던진다. "
+    "고객이 명세서를 확인할 수 있는 방법과 구체적인 확인 사항을 안내하고, 문제 해결을 위한 추가 조치를 제시한다."
+)
+
+chatbot = Chatbot(os.getenv("OPENAI_API_KEY"), 'database/chroma.sqlite3')  # Chatbot 객체 생성
+
+
+def chat_view(request):
+    '''
+    Chatbot 뷰
+    '''
+    global chatbot
+    if request.method == "POST":
+        category = request.POST.get("category", None)
+        message = request.POST.get("message", None)
+        if category:
+            # Chatbot 객체 초기화
+            chatbot = Chatbot(
+                api_key=settings.OPENAI_API_KEY,
+                db_path=settings.DB_PATH,
+                category=category,
+                THRESHOLD=2,
+                behavior_policy=behavior_policy,
+            )
+
+            # 첫 질문 생성
+            initial_question = chatbot.chat("고객의 역할에서 민원을 말해줘")
+            logger.log(1, initial_question)
+            return JsonResponse(
+                {"status": "success", "initial_question": initial_question}
+            )
+        elif message:
+            if chatbot is None:
+                return JsonResponse(
+                    {
+                        "response": "Chatbot is not initialized. Please select a category first."
+                    }
+                )
+            # 사용자 메시지에 대한 응답 생성
+            output = chatbot.chat(message)
+            return JsonResponse({"response": output})
+
+    return render(request, "education/index.html")
 
 
 def list(request):
     '''
-    교육
+    교육 페이지
     '''
     return render(request, 'education/index.html')
 
 def edu_history(request):
     '''
-    교육 이력
+    교육 이력 페이지
     '''
     logs = EducationChatbotLog.objects.all()
     return render(request, 'education/edu_history.html', {'logs': logs})
@@ -45,7 +103,7 @@ def save_chat_data(request):
 
 def edu_details(request):
     '''
-    교육 이력 상세
+    교육 이력 상세 페이지
     '''
     return render(request, 'education/edu_details.html')
 
@@ -140,20 +198,6 @@ def quiz(request):
 
     return render(request, 'education/quiz.html', {'quizzes': quizzes, 'form': form})  # GET 요청일 경우 퀴즈 페이지 렌더링
 
-behavior_policy = "당신은 콜센터 상담사에게 질문을 하기 위해 전화한 고객입니다. 콜센터 상담사에게 궁금했던 내용을 질문하세요. 질문은 한 번에 한 개씩만 하세요. 질문에 대한 원하는 답변이 나왔다면 마무리 인사를 하세요."
-
-# 웹에서 동작하는 Chatbot 초기화 메시지
-messages = (
-    "너는 통신회사의 고객센터 상담사를 육성하는 챗봇이다. "
-    "'시작'이라는 신호를 받으면 고객센터에 전화하는 고객 역할을 맡고, 나에게 민원을 제기한다. "
-    "나의 답변을 듣고, 그 답변에 대해 교육자의 입장에서 평가를 해준다. 그런 다음 다시 고객 역할로 돌아가서 다음 연관 질문을 던진다. "
-    "정확하고 친절하게 고객의 역할을 수행하고, 교육자의 평가에서는 구체적이고 도움이 되는 피드백을 제공하도록 한다. "
-    "질문이 명확하지 않으면 추가 정보를 요청할 수 있다. "
-    "고객의 역할을 수행할 때는 다양한 민원 사항을 제기하며, 명확하고 구체적인 질문을 던진다. "
-    "고객이 명세서를 확인할 수 있는 방법과 구체적인 확인 사항을 안내하고, 문제 해결을 위한 추가 조치를 제시한다."
-)
-
-chatbot = Chatbot(os.getenv("OPENAI_API_KEY"), 'database/chroma.sqlite3')  # Chatbot 객체 생성
 
 @login_required
 def quiz_history(request):
@@ -208,47 +252,7 @@ def quiz_details(request, log_id):
 
 
 
-def chat_view(request):
-    '''
-    Chatbot 뷰
-    '''
-    global chatbot
-    if request.method == "POST":
-        if "category" in request.POST:
-            category = request.POST.get("category")
-            api_key = os.environ["OPENAI_API_KEY"]
-            db_path = "../db"
 
-            # Chatbot 객체 초기화
-            chatbot = Chatbot(
-                api_key=api_key,
-                db_path=db_path,
-                category=category,
-                THRESHOLD=2,
-                behavior_policy=behavior_policy,
-            )
-
-            # 첫 질문 생성
-            initial_question = chatbot.chat("고객의 역할에서 민원을 말해줘")
-            return JsonResponse(
-                {"status": "success", "initial_question": initial_question}
-            )
-
-        elif "message" in request.POST:
-            message = request.POST.get("message")
-
-            if chatbot is None:
-                return JsonResponse(
-                    {
-                        "response": "Chatbot is not initialized. Please select a category first."
-                    }
-                )
-
-            # 사용자 메시지에 대한 응답 생성
-            output = chatbot.chat(message)
-            return JsonResponse({"response": output})
-
-    return render(request, "education/index.html")
 
 def search(request):
     '''

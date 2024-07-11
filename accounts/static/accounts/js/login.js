@@ -35,16 +35,10 @@ function check_login(obj) {
             "X-CSRFToken": csrf
         },
         success: function (data) {
-            if (data.result != "user" && data.result != "manager") {
-                alert(data.result);
+            if (data.result) {
+                location.href = data.url;
             } else {
-                if ((obj == 0 && data.result == "user") || (obj == 0 && data.result == "manager")) {
-                    location.href = "/";
-                } else if (obj == 1 && data.result == "manager") {
-                    location.href = "/management/list/m";
-                } else {
-                    alert("관리자 권한이 없습니다.");
-                }
+                alert(data.message);
             }
         }
     });
