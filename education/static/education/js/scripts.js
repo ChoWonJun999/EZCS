@@ -32,7 +32,7 @@ function selectCategory(category) {
     fetch("/education/", {
         method: "POST",
         headers: {
-            "X-CSRFToken": $("#csrf").val()
+            "X-CSRFToken": document.getElementById("csrf").value
         },
         body: formData
     })
@@ -47,19 +47,26 @@ function selectCategory(category) {
         document.getElementById("selected-category").innerText = selectedCategory;
         document.getElementById("chat-content").innerHTML = ""; // 채팅 내용을 지움
         appendMessage("bot", data.initial_question); // 첫 질문 출력
-        lastChatbotMessage = data.initial_question;
+        // $("#log_header").val(data.log_header);
         console.timeEnd();
+
+        // 카테고리 창과 안내서 창 숨기기
+        document.getElementById("category-selection").classList.add('hidden');
+        document.getElementById("guide-section").classList.add('hidden');
+        // 채팅창 보이기
+        document.getElementById("chat-section").classList.remove('hidden');
+        document.getElementById("chat-section-readonly").classList.remove('hidden');
+        document.getElementById("submit-container").classList.remove('hidden');
     })
     .catch((error) => console.error("Error:", error));
 }
-
 
 // 카테고리 버튼을 비활성화하는 함수
 function disableCategoryButtons() {
     const buttons = document.querySelectorAll('.category-button');
     buttons.forEach(button => {
         button.disabled = true;
-        button.style.backgroundColor = '#cccccc';
+        // button.style.backgroundColor = '#cccccc';
         button.style.cursor = 'not-allowed';
     });
 }
@@ -69,7 +76,6 @@ function enableCategoryButtons() {
     const buttons = document.querySelectorAll('.category-button');
     buttons.forEach(button => {
         button.disabled = false;
-        button.style.backgroundColor = '#007bff';
         button.style.cursor = 'pointer';
     });
 }
@@ -95,13 +101,13 @@ function sendMessage(event) {
             "X-CSRFToken": getCookie("csrftoken")
         }
     })
-        .then((response) => response.json())
-        .then((data) => {
-            // 봇의 응답을 채팅 상자에 추가
-            appendMessage("bot", data.response);
-            lastChatbotMessage = data.response;
-        })
-        .catch((error) => console.error("Error:", error));
+    .then((response) => response.json())
+    .then((data) => {
+        // 봇의 응답을 채팅 상자에 추가
+        appendMessage("bot", data.response);
+        lastChatbotMessage = data.response;
+    })
+    .catch((error) => console.error("Error:", error));
     textEvaluationToChatbot(userInput);
 }
 
@@ -224,13 +230,13 @@ function startEducation() {
                             "X-CSRFToken": getCookie("csrftoken")
                         }
                     })
-                        .then((response) => response.json())
-                        .then((data) => {
-                            // 봇의 응답을 채팅 상자에 추가
-                            appendMessage("bot", data.response);
-                            lastChatbotMessage = data.response;
-                        })
-                        .catch((error) => console.error("Error:", error));
+                    .then((response) => response.json())
+                    .then((data) => {
+                        // 봇의 응답을 채팅 상자에 추가
+                        appendMessage("bot", data.response);
+                        lastChatbotMessage = data.response;
+                    })
+                    .catch((error) => console.error("Error:", error));
                     textEvaluationToChatbot(finalTranscript);
                 }
 
@@ -315,13 +321,13 @@ function saveChatData() {
     const data = {
         category: selectedCategory,
         chat: chatContent,
-        csrfmiddlewaretoken: "{{ csrf_token }}"
+        csrfmiddlewaretoken: getCookie("csrftoken")
     };
 
     // 서버로 AJAX 요청을 보내 채팅 데이터를 저장
     $.ajax({
         type: "POST",
-        url: '{% url "save_chat_data" %}', // URL을 동적으로 생성
+        url: '/save_chat_data/', // URL을 동적으로 생성
         data: data,
         success: function (response) {
             alert("Data saved successfully");
@@ -345,27 +351,48 @@ function textEvaluationToChatbot(userInput) {
     fetch("/education/evaluation_chat/", {
         method: "POST",
         headers: {
-            "X-CSRFToken": $("#csrf").val()
+            "X-CSRFToken": document.getElementById("csrf").value
         },
         body: formData
     })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            if (data.output) {
-                const childDiv = document.createElement("div");
-                childDiv.className = "evaluated-message-bot";
-                childDiv.innerText = data.output;
-                document.getElementById("readonly-chat-content").appendChild(childDiv); // 챗봇 응답을 readonly-chat-content div에 추가
-            } else if (data.error) {
-                console.error("Error from server:", data.error);
-            }
-        })
-        .catch((error) => {
-            console.error("Error:", error);
-        });
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return response.json();
+    })
+    .then((data) => {
+        if (data.output) {
+            const childDiv = document.createElement("div");
+            childDiv.className = "evaluated-message-bot";
+            childDiv.innerText = data.output;
+            document.getElementById("readonly-chat-content").appendChild(childDiv); // 챗봇 응답을 readonly-chat-content div에 추가
+        } else if (data.error) {
+            console.error("Error from server:", data.error);
+        }
+    })
+    .catch((error) => {
+        console.error("Error:", error);
+    });
 }
+
+// 종료 버튼 클릭 시 초기화 함수
+window.resetToCategorySelection = function() {
+    // 카테고리 선택 페이지로 돌아가기
+    document.getElementById("category-selection").classList.remove("hidden");
+    document.getElementById("guide-section").classList.remove("hidden");
+    document.getElementById("chat-section").classList.add("hidden");
+    document.getElementById("chat-section-readonly").classList.add("hidden");
+    document.getElementById("submit-container").classList.add("hidden");
+
+    // 채팅 내용 초기화
+    document.getElementById("chat-content").innerHTML = "";
+    document.getElementById("readonly-chat-content").innerHTML = "";
+
+    // 선택된 카테고리 초기화
+    document.getElementById("selected-category").innerText = "";
+    selectedCategory = null;
+
+    // 카테고리 버튼 활성화
+    enableCategoryButtons();
+};
