@@ -140,8 +140,11 @@ function cancelMemoEdit() {
 
 function editConsultation() {
     const form = document.getElementById('consultation-form');
-    const textareas = form.querySelectorAll('textarea');
-    textareas.forEach(textarea => textarea.disabled = false);
+    const inquiryTextareas = form.querySelectorAll('textarea[name="inquiry-text"]');
+    const actionTextareas = form.querySelectorAll('textarea[name="action-text"]');
+
+    inquiryTextareas.forEach(textarea => textarea.disabled = false);
+    actionTextareas.forEach(textarea => textarea.disabled = false);
 
     document.querySelector('#consultation-form .edit-button').style.display = 'none';
     document.querySelectorAll('#consultation-form .save-button, #consultation-form .cancel-button').forEach(button => {
@@ -151,50 +154,57 @@ function editConsultation() {
 
 function saveConsultation() {
     const form = document.getElementById('consultation-form');
-    const inquiryTextarea = form.querySelector('textarea[name="inquiry-text"]');
-    const logId = inquiryTextarea.getAttribute('data-log-id');
-    const inquiryText = inquiryTextarea.value;
+    const inquiryTextareas = form.querySelectorAll('textarea[name="inquiry-text"]');
+    const actionTextareas = form.querySelectorAll('textarea[name="action-text"]');
 
-    const formData = new FormData();
-    formData.append('log_id', logId);
-    formData.append('inquiry_text', inquiryText);
+    inquiryTextareas.forEach(textarea => {
+        const logId = textarea.getAttribute('data-log-id');
+        const inquiryText = textarea.value;
 
-    // 디버깅 메시지 추가
-    for (let pair of formData.entries()) {
-        console.log(pair[0] + ': ' + pair[1]);
-    }
+        const actionTextarea = form.querySelector(`textarea[name="action-text"][data-log-id="${logId}"]`);
+        const actionText = actionTextarea ? actionTextarea.value : '';
 
-    fetch('/counseling/save_consultation/', {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-CSRFToken': getCookie('csrftoken')
-        }
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('문의 내용이 저장되었습니다.');
-            inquiryTextarea.disabled = true;
-            document.querySelector('#consultation-form .edit-button').style.display = 'inline-block';
-            document.querySelectorAll('#consultation-form .save-button, #consultation-form .cancel-button').forEach(button => {
-                button.style.display = 'none';
-            });
-        } else {
-            alert('문의 내용 저장에 실패했습니다.');
-            console.error('Error:', data.error);  // 에러 메시지 출력
-        }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('문의 내용 저장 중 오류가 발생했습니다.');
+        const formData = new FormData();
+        formData.append('log_id', logId);
+        formData.append('inquiry_text', inquiryText);
+        formData.append('action_text', actionText);
+
+        fetch('/counseling/save_consultation/', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('문의 내용이 저장되었습니다.');
+                textarea.disabled = true;
+                if (actionTextarea) actionTextarea.disabled = true;
+                document.querySelector('#consultation-form .edit-button').style.display = 'inline-block';
+                document.querySelectorAll('#consultation-form .save-button, #consultation-form .cancel-button').forEach(button => {
+                    button.style.display = 'none';
+                });
+            } else {
+                alert('문의 내용 저장에 실패했습니다.');
+                console.error('Error:', data.error);  // 에러 메시지 출력
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('문의 내용 저장 중 오류가 발생했습니다.');
+        });
     });
 }
 
 function cancelConsultationEdit() {
     const form = document.getElementById('consultation-form');
-    const textareas = form.querySelectorAll('textarea');
-    textareas.forEach(textarea => textarea.disabled = true);
+    const inquiryTextareas = form.querySelectorAll('textarea[name="inquiry-text"]');
+    const actionTextareas = form.querySelectorAll('textarea[name="action-text"]');
+
+    inquiryTextareas.forEach(textarea => textarea.disabled = true);
+    actionTextareas.forEach(textarea => textarea.disabled = true);
 
     document.querySelector('#consultation-form .edit-button').style.display = 'inline-block';
     document.querySelectorAll('#consultation-form .save-button, #consultation-form .cancel-button').forEach(button => {
@@ -292,7 +302,7 @@ function startCounseling(type) {
                     const finalDiv = createFinalDiv(finalTranscript, type);
                     transcription.appendChild(finalDiv);
                     if (type === 'customer') {
-                        sendTextToChatbot(finalTranscript);
+                        evaluationTextToChatbot(finalTranscript);
                         addCustomerMessageToTranslationContent(finalTranscript);
                     }
                 }
@@ -318,6 +328,7 @@ function startCounseling(type) {
             console.error('Error accessing media devices.', error);
         });
 }
+
 
 function stopCounseling() {
     if (recognition) {
@@ -500,6 +511,8 @@ function scrollToBottom() {
 
 // 텍스트 데이터를 챗봇에 전송하는 함수(view.py에 전송)
 function evaluationTextToChatbot(text) {
+    console.log('Sending text to chatbot:', text);  // 로그 추가
+
     const formData = new FormData();
     formData.append('text', text);
 
@@ -510,26 +523,28 @@ function evaluationTextToChatbot(text) {
             'X-CSRFToken': getCookie('csrftoken')
         }
     })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            if (data.output) {
-                const childDiv = document.createElement('div');
-                childDiv.className = 'chatbot-response';
-                childDiv.innerText = data.output;
-                translationContent.appendChild(childDiv);  // 챗봇 응답을 translation-content div에 추가
-            } else if (data.error) {
-                console.error('Error from server:', data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
+    .then(response => {
+        console.log(response);  // 응답 로그 추가
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.output) {
+            const childDiv = document.createElement('div');
+            childDiv.className = 'chatbot-response';
+            childDiv.innerText = data.output;
+            translationContent.appendChild(childDiv);  // 챗봇 응답을 translation-content div에 추가
+        } else if (data.error) {
+            console.error('Error from server:', data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);  // 오류 로그 추가
+    });
 }
+
 
 // 오디오 데이터를 서버로 전송하는 함수(임시로 로컬로 저장하게 구현)
 function sendAudioToServer(audioBlob) {

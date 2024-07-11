@@ -8,30 +8,57 @@ import logging
 from .models import *
 import json
 from django.http import HttpResponse
-
+import random
 # def list(request):
 #     data = CustomerInfo.objects.get(phone_number='01011112222')
 #     print(data)
 #     return render(request, "counseling/index.html",{'data':data})
 
 def list(request):
-    customer_info = CustomerInfo.objects.all()
-    counsel_logs = CounselLog.objects.all()
+    customer_info_queryset = CustomerInfo.objects.all()
 
-    # counsel_logs의 memo 필드를 JSON 형식으로 파싱
-    for log in counsel_logs:
-        try:
-            memo_json = json.loads(log.memo)  # memo 필드를 JSON 형식으로 파싱
-            log.memo = memo_json.get('text', '')  # memo 필드의 text 값을 가져옴
-        except (TypeError, json.JSONDecodeError):
-            log.memo = log.memo  # JSON 형식이 아닐 경우 기존 문자열 그대로 사용
+    if customer_info_queryset.exists():
+        # 랜덤으로 고객 정보 중 하나를 선택
+        random_customer = random.choice(customer_info_queryset)
+        # 선택된 고객의 상담 기록을 모두 가져오기
+        counsel_logs_queryset = CounselLog.objects.filter(phone_number=random_customer.phone_number)
 
-    context = {
-        'customer_info': customer_info,
-        'counsel_logs': counsel_logs
-    }
+        if counsel_logs_queryset.exists():
+            # 랜덤으로 상담 기록 중 하나를 선택
+            random_counsel_log = random.choice(counsel_logs_queryset)
+
+            try:
+                if isinstance(random_counsel_log.memo, str):
+                    memo_json = json.loads(random_counsel_log.memo)  # memo 필드를 JSON 형식으로 파싱
+                elif isinstance(random_counsel_log.memo, dict):
+                    memo_json = random_counsel_log.memo
+                else:
+                    memo_json = {}
+                random_counsel_log.inquiry_text = memo_json.get('inquiry_text', '')
+                random_counsel_log.action_text = memo_json.get('action_text', '')
+            except (TypeError, json.JSONDecodeError) as e:
+                print(f"Error parsing memo for log {random_counsel_log.id}: {e}")
+                random_counsel_log.inquiry_text = ''
+                random_counsel_log.action_text = ''
+
+            context = {
+                'customer_info': [random_customer],  # 리스트로 전달
+                'counsel_logs': [random_counsel_log]  # 리스트로 전달
+            }
+        else:
+            # 상담 기록이 없는 경우 빈 리스트 전달
+            context = {
+                'customer_info': [random_customer],  # 리스트로 전달
+                'counsel_logs': []
+            }
+    else:
+        # 고객 정보가 없는 경우 빈 리스트 전달
+        context = {
+            'customer_info': [],
+            'counsel_logs': []
+        }
+
     return render(request, "counseling/index.html", context)
-
 # 상담이력 뷰
 def history(request):
     query = request.POST.get('searchText', '')
@@ -108,20 +135,11 @@ chatbot = Chatbot(
 
 @csrf_exempt
 def stt_chat(request):
-    print("#########################")
-    print("request", request)
-    print("#########################")
-
     if request.method == "POST":
         text = request.POST.get("text")
 
         if text:
-            print("#########################")
-            print("text", text)
-            print("#########################")
-
             output = chatbot.chat(text)
-
             return JsonResponse({"text": text, "output": output})
 
     return JsonResponse({"error": "Invalid request"}, status=400)
@@ -202,15 +220,28 @@ def save_consultation(request):
         try:
             log_id = request.POST.get('log_id')
             inquiry_text = request.POST.get('inquiry_text')
+            action_text = request.POST.get('action_text')
 
-            if log_id and inquiry_text:
+            if log_id and (inquiry_text or action_text):
                 counsel_log = CounselLog.objects.get(id=log_id)
-                counsel_log.memo = {"text": inquiry_text}  
+                memo = json.loads(counsel_log.memo) if isinstance(counsel_log.memo, str) else counsel_log.memo or {}
+                memo['inquiry_text'] = inquiry_text
+                memo['action_text'] = action_text
+                counsel_log.memo = json.dumps(memo, ensure_ascii=False)
                 counsel_log.save()
 
                 return JsonResponse({'success': True})
             else:
-                return JsonResponse({'success': False, 'error': 'Missing log_id or inquiry_text'})
+                return JsonResponse({'success': False, 'error': 'Missing log_id, inquiry_text, or action_text'})
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+@csrf_exempt
+def evaluation_chat(request):
+    if request.method == "POST":
+        text = request.POST.get("text")
+        if text:
+            output = chatbot.chat(text)
+            return JsonResponse({"text": text, "output": output})
+    return JsonResponse({"error": "Invalid request"}, status=400)

@@ -46,12 +46,12 @@
             {% for log in counsel_logs %}
             <div class="memo-content">
                 <div class="memo-block">
-                    <label for="inquiry-text">문의 내용</label>
-                    <textarea id="inquiry-text" name="inquiry-text" rows="5" cols="50" data-log-id="{{ log.id }}" disabled>{{ log.memo }}</textarea>
+                    <label for="inquiry-text-{{ log.id }}">문의 내용</label>
+                    <textarea id="inquiry-text-{{ log.id }}" name="inquiry-text" rows="5" cols="50" data-log-id="{{ log.id }}" disabled>{{ log.inquiry_text }}</textarea>
                 </div>
                 <div class="memo-block">
-                    <label for="action-text">조치 내용</label>
-                    <textarea id="action-text" name="action-text" rows="5" cols="50" disabled></textarea>
+                    <label for="action-text-{{ log.id }}">조치 내용</label>
+                    <textarea id="action-text-{{ log.id }}" name="action-text" rows="5" cols="50" data-log-id="{{ log.id }}" disabled>{{ log.action_text }}</textarea>
                 </div>
             </div>
             {% endfor %}
