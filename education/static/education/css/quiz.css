@@ -1,3 +1,50 @@
+.dashboard {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.log-detail, .quiz-history {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+.detail-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    border-bottom: 1px solid #eeeeee;
+}
+
+.detail-item p {
+    margin: 0;
+    font-size: 16px;
+}
+
+.detail-item strong {
+    font-weight: bold;
+}
+
+.pass {
+    color: green;
+    font-weight: bold;
+}
+
+.fail {
+    color: red;
+    font-weight: bold;
+}
+
 .quiz-container {
     background-color: #f9f9f9;
     padding: 20px;
@@ -34,7 +81,7 @@
 }
 
 .feedback {
-    margin-bottom: 20px;
+    margin: 10px 0 10px 5px;
 }
 
 .feedback-correct {
@@ -57,10 +104,15 @@
     margin-bottom: 20px; /* 추가된 여백 */
 }
 
-.explanation-title {
+.explanation-title, .correct-answer-title {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
+}
+
+.explanation-content, .correct-answer-content {
+    font-size: 16px;
+    line-height: 1.5;
 }
 
 .explanation-content {
@@ -73,21 +125,21 @@
     padding: 20px;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
-    margin-bottom: 20px; /* 추가된 여백 */
+    margin-bottom: 40px; /* 추가된 여백 */
 }
 
-.correct-answer-title {
+/* .correct-answer-title {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #007bff; /* 새로운 색상 추가 */
-}
+    color: #007bff; 
+} */
 
-.correct-answer-content {
+/* .correct-answer-content {
     font-size: 16px;
     line-height: 1.5;
-    color: #333; /* 새로운 색상 추가 */
-}
+    color: #333;
+} */
 
 .submit-container {
     padding: 20px;
