@@ -279,7 +279,7 @@ def evaluation_chat(request):
             messages = prompt.get_messages_for_evaluation(customerQuestion, userInput)
 
             # Chatbot 객체 초기화
-            chatbot = Chatbot(
+            evaluation_chatbot = Chatbot(
                 api_key=api_key,
                 db_path=db_path,
                 category=category,
@@ -287,7 +287,7 @@ def evaluation_chat(request):
                 behavior_policy=messages,
             )
 
-            output = chatbot.chat(userInput)
+            output = evaluation_chatbot.chat(userInput)
 
             return JsonResponse({"userInput": userInput, "output": output})
 

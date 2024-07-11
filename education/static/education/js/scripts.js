@@ -1,4 +1,4 @@
-let lastChatbotMessage = "";
+//let lastChatbotMessage = "";
 
 // DOM 콘텐츠가 완전히 로드되면 이 함수를 실행
 document.addEventListener("DOMContentLoaded", function () {
@@ -105,10 +105,10 @@ function sendMessage(event) {
     .then((data) => {
         // 봇의 응답을 채팅 상자에 추가
         appendMessage("bot", data.response);
-        lastChatbotMessage = data.response;
+        textEvaluationToChatbot(data.response ,userInput);
     })
     .catch((error) => console.error("Error:", error));
-    textEvaluationToChatbot(userInput);
+    
 }
 
 // 메시지를 채팅 상자에 추가하는 함수
@@ -234,10 +234,9 @@ function startEducation() {
                     .then((data) => {
                         // 봇의 응답을 채팅 상자에 추가
                         appendMessage("bot", data.response);
-                        lastChatbotMessage = data.response;
+                        textEvaluationToChatbot(data.response, finalTranscript);
                     })
                     .catch((error) => console.error("Error:", error));
-                    textEvaluationToChatbot(finalTranscript);
                 }
 
                 interimDiv.remove();
@@ -355,10 +354,8 @@ function saveChatData() {
 }
 
 // 텍스트 데이터를 챗봇에 전송하는 함수(view.py에 전송)
-function textEvaluationToChatbot(userInput) {
+function textEvaluationToChatbot(lastChatbotMessage, userInput) {
     const formData = new FormData();
-
-    console.log(lastChatbotMessage);
 
     formData.append("customerQuestion", lastChatbotMessage);
     formData.append("userInput", userInput);
