@@ -16,24 +16,36 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="company-name">관리자 페이지</div>
-            <div class="header-right">
-                <div class="profile-info">안녕하세요, {{ request.user.username }} 관리자님.</div>
-                <div class="logout">
-                    <a href="{% url 'accounts:logout' %}">로그아웃</a>
-                </div>
+    <div class="header">
+        <div class="company-name">관리자 페이지</div>
+        <div class="header-right">
+            <div class="profile-info">안녕하세요, {{ request.user.username }} 관리자님.</div>
+            <div class="logout">
+                <a href="{% url 'accounts:logout' %}">로그아웃</a>
             </div>
         </div>
-        <div>
+    </div>
+    <div class="container-fuild">
+        <div style="margin-bottom: 0;padding-bottom: 0;">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    {% url 'management:list' 'm' as management_list_m_url %}
+                    <a class="nav-link {% if request.path == management_list_m_url %}active{% endif %}" aria-current="page" href="{{ management_list_m_url }}">직원 관리</a>
+                </li>
+                <li class="nav-item">
+                    {% url 'management:list' 'a' as management_list_a_url %}
+                    <a class="nav-link {% if request.path == management_list_a_url %}active{% endif %}" href="{{ management_list_a_url }}">가입 승인</a>
+                </li>
+            </ul>
+            {% comment %}
             <nav class="nev-form">
                 <a class="btn btn-outline-primary" type="button" href="{% url 'management:list' 'm' %}">직원 관리</a>
                 <a class="btn btn-outline-primary" type="button" href="{% url 'management:list' 'a' %}">가입 승인</a>
                 <!-- <a class="btn btn-outline-primary" type="button" href="{% url 'management:list' 'c' %}">퇴사 및 휴직 관리</a> -->
             </nav>
+            {% endcomment %}
         </div>
-        <div class="main-content-wrapper">
+        <div class="main-content-wrapper" style="margin-top: -20px;padding-top: 0px;">
             <div class="main-content">
                 {% block content %}
                 <!-- 관리자 대시보드 내용 -->

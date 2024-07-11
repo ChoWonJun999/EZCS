@@ -54,7 +54,6 @@
                     <col width="10%">
                     <col width="10%">
                     <col width="10%">
-                    <col width="10%">
                     <col width="*">
                     {% if flag == 'a' %}
                     <col width="15%">
@@ -62,11 +61,10 @@
                 </colgroup>
                 <thead>
                     <th>순번</th>
+                    <th>ID</th>
                     <th>이름</th>
-                    <th>아이디</th>
                     <th>E-mail</th>
                     <th>소속</th>
-                    <th>역할</th>
                     {% if flag == 'm' %}
                     <th>가입 일자</th>
                     {% else %}
@@ -77,19 +75,16 @@
                 <tbody>
                     {% if data %}
                     {% for item in data %}
-                    <tr data-url="{% url 'management:detail' item.id %}" class="active-row">
+                    <tr data-url="{% url 'management:detail' item.id flag %}" class="active-row">
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ item.auth_user.first_name }}</td>
                         <td>{{ item.auth_user.username }}</td>
+                        <td>{{ item.auth_user.first_name }}</td>
                         <td>{{ item.auth_user.email }}</td>
                         <td>{{ item.department }}</td>
-                        <td>
-                            {% if item.auth_user.is_superuser %}관리자{% else %}사용자{% endif %}
-                        </td>
                         <td>{{ item.auth_user.date_joined }}</td>
                         {% if flag == 'a' %}
                         <td onclick='event.cancelBubble=true;'>
-                            <input type="button" value="승인" class="btn btn-primary" data-url="{% url 'management:update_auth' item.id 1 %}" onclick="approval(this);">
+                            <input type="button" value="승인" class="btn btn-primary" data-url="{% url 'management:update_auth' item.id 1 %}" data-username="{{ item.auth_user.username }}" onclick="approval(this);">
                         </td>
                         {% endif %}
                     </tr>
@@ -97,9 +92,9 @@
                     {% else %}
                     <tr>
                         {% if flag == 'm' %}
-                        <td colspan="7">직원 정보가 존재하지 않습니다.</td>
+                        <td colspan="6">직원 정보가 존재하지 않습니다.</td>
                         {% else %}
-                        <td colspan="8">직원 요청 정보가 존재하지 않습니다.</td>
+                        <td colspan="7">직원 요청 정보가 존재하지 않습니다.</td>
                         {% endif %}
                     </tr>
                     {% endif %}

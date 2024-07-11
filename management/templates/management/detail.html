@@ -3,28 +3,36 @@
 
 {% block content %}
 <h2>직원 상세정보</h2>
-<form action="" method="POST">
+<form id="frm" action="{% url 'management:detail' user.id flag %}" method="POST">
     <table class="styled-table-deail">
+        <colgroup>
+            <col width="15%">
+            <col width="*">
+        </colgroup>
         <tbody>
-            <tr>
-                <th>이름</th>
-                <td>{{ data.auth_user.first_name }}</td>
-            </tr>
-            <tr>
-                <th>생년월일</th>
-                <td>{{ data.birth_date }}</td>
-            </tr>
-            <tr>
-                <th>전화번호</th>
-                <td>{{ data.phone_number }}</td>
-            </tr>
             <tr>
                 <th>ID</th>
                 <td>{{ data.auth_user.username }}</td>
             </tr>
             <tr>
-                <th>이메일</th>
+                <th>이름</th>
+                <td>{{ data.auth_user.first_name }}</td>
+            </tr>
+            <tr>
+                <th>E-Mail</th>
                 <td>{{ data.auth_user.email }}</td>
+            </tr>
+            <tr>
+                <th>전화 번호</th>
+                <td>{{ data.phone_number }}</td>
+            </tr>
+            <tr>
+                <th>소속</th>
+                <td>{{ data.department }}</td>
+            </tr>
+            <tr>
+                <th>생년 월일</th>
+                <td>{{ data.birth_date }}</td>
             </tr>
             <tr>
                 <th>주소</th>
@@ -32,20 +40,6 @@
                     ({{ data.address_code }})
                     {{ data.address }}
                     {{ data.address_detail }}
-                </td>
-            </tr>
-            <tr>
-                <th>소속</th>
-                <td>{{ data.department }}</td>
-            </tr>
-            <tr>
-                <th>역할</th>
-                <td>
-                    {% if data.auth_user.is_superuser %}
-                    관리자
-                    {% else %}
-                    사용자
-                    {% endif %}
                 </td>
             </tr>
             <tr>
@@ -64,12 +58,20 @@
                     {% endif %}
                 </td>
             </tr>
+            <tr>
+                <th>가입 일자</th>
+                <td>{{ data.auth_user.date_joined }}</td>
+            </tr>
         </tbody>
     </table>
 
     <div class="mb-3 d-flex justify-content-between">
         <a onclick="history.back()" class="btn btn-lg btn-primary flex-grow-1 me-2" style="max-width: fit-content;">뒤로가기</a>
-        <a href="{% url 'management:edit' data.id %}" class="btn btn-lg btn-primary flex-grow-1" style="max-width: fit-content;">수정하기</a>
+        {% if flag == 'm'%}
+        <a href="{% url 'management:edit' data.id flag %}" class="btn btn-lg btn-primary flex-grow-1" style="max-width: fit-content;">수정하기</a>
+        {% else %}
+        <input type="button" value="승인" class="btn btn-primary" data-url="{% url 'management:update_auth' data.id 1 %}" data-username="{{ data.auth_user.username }}" onclick="approval(this);">
+        {% endif %}
     </div>
 </form>
 <script>

@@ -6,6 +6,10 @@ $(document).ready(function () {
 });
 
 function approval(obj) {
-    let url = $(obj).data("url");
-    location.href = url;
+    if (confirm($(obj).data("username") + "님의 요청 승인하시겠습니까??") == true) {
+        let url = $(obj).data("url");
+        location.href = url;
+    } else {
+        return false;
+    }
 }

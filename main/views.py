@@ -6,6 +6,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
+from django.urls import reverse
 
 def user_dashboard(request):
     return render(request, 'main/index.html')

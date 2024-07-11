@@ -33,9 +33,6 @@ class EducationChatbotLog(models.Model):
         verbose_name = "Education Chatbot Log"
         verbose_name_plural = "Education Chatbot Log"
 
-    def __str__(self):
-        return self.create_time
-
 
 class Quiz(models.Model):
     """

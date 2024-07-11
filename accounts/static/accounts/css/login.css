@@ -1,35 +1,89 @@
-form {
+/* body가 적용이 안되서 어쩔 수 없이 html에서 load */
+/* body {
+    font-family: 'GmarketSansMedium', Arial, sans-serif !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+} */
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     height: 100%;
-    cursor: default;
 }
-div {
-    padding: 5px;
+
+.input-form-backgroud {
+    border-radius: 10px;
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.input-form {
+    width: 100%;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin: 20px;
+}
+
+.form-floating {
+    margin-bottom: 15px;
+}
+
+.btn {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.btn-outline-primary {
+    color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-outline-primary:hover {
+    background-color: #007bff;
+    color: #fff;
+}
+
+p {
+    text-align: center;
+    margin-top: 20px;
+}
+
+p a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+p a:hover {
+    text-decoration: underline;
+}
+
+.form-check-input {
+    margin-right: 10px;
+}
+
+.form-check-label {
+    margin: 0;
 }
 
 .my_container {
     max-width: 400px;
-    text-align: -webkit-center;
-    position: relative;
-    /* top: 150px; */
-}
-
-.my-form {
-    width: 70%;
+    text-align: center;
 }
 
 .form-check {
-    width: fit-content;
-}
-
-.form-check > .form-check-input,
-.form-check-label {
-    cursor: pointer;
-}
-
-.my-form > label {
-    font-size: 12px;
-}
-
-.form-date {
-    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
 }

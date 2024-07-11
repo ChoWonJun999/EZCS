@@ -76,7 +76,7 @@ function checkKoreanName(obj) {
         if (obj.classList.contains("is-valid")) {
             obj.classList.remove("is-valid");
         }
-    } else if (!isKorean(obj.value)) { 
+    } else if (!isKorean(obj.value)) {
         $("#nameError").text("이름은 한글만 포함해야 합니다.");
         $("#nameError").show();
         obj.classList.add("is-invalid");
@@ -92,23 +92,23 @@ function checkKoreanName(obj) {
 
 function chkPhoneNumber() {
     let phone = $("#phone").val();
-    if (phone.trim() == "") { 
-        $("#phoneError").text("핸드폰 번호를 입력하세요.");
+    if (phone.trim() == "") {
+        $("#phoneError").text("전화 번호를 입력하세요.");
         $("#phoneError").show();
         $("#phone").addClass("is-invalid");
         return false;
-    } else if (!/^\d+$/.test(phone)) { 
+    } else if (!/^\d+$/.test(phone)) {
         $("#phoneError").text("입력 형식은 숫자만 입력해주세요.");
         $("#phoneError").show();
         $("#phone").addClass("is-invalid");
         return false;
     } else if (!phone.startsWith("010")) {
-        $("#phoneError").text("핸드폰 번호는 010으로 시작해야 합니다.");
+        $("#phoneError").text("전화 번호는 010으로 시작해야 합니다.");
         $("#phoneError").show();
         $("#phone").addClass("is-invalid");
         return false;
     } else if (phone.length !== 11) {
-        $("#phoneError").text("핸드폰 번호는 11자리여야 합니다.");
+        $("#phoneError").text("전화 번호는 11자리여야 합니다.");
         $("#phoneError").show();
         $("#phone").addClass("is-invalid");
         return false;
@@ -117,7 +117,6 @@ function chkPhoneNumber() {
         $("#phone").removeClass("is-invalid");
         $("#phone").addClass("is-valid");
     }
-
 
     $.ajax({
         url: $("#phoneChkUrl").val(),
@@ -131,7 +130,6 @@ function chkPhoneNumber() {
             $("#phoneError").hide();
             $("#phone").removeClass("is-invalid");
             $("#phone").addClass("is-valid");
-
         }
     });
 }
@@ -156,7 +154,6 @@ function chkEmail() {
         $("#emailLocal").removeClass("is-invalid");
         $("#emailLocal").addClass("is-valid");
     }
-
 
     $.ajax({
         url: $("#emailChkUrl").val(),
@@ -272,7 +269,6 @@ function signup() {
         }
         username.focus();
         valid = false;
-
     }
 
     if (name.trim() == "") {
@@ -293,8 +289,8 @@ function signup() {
         $("#name").addClass("is-valid");
     }
 
-    if (phone.trim() == "") { 
-        $("#phoneError").text("핸드폰 번호를 입력하세요.");
+    if (phone.trim() == "") {
+        $("#phoneError").text("전화 번호를 입력하세요.");
         $("#phoneError").show();
         $("#phone").addClass("is-invalid");
         $("#phone").focus();
@@ -305,14 +301,14 @@ function signup() {
         $("#phone").addClass("is-invalid");
         $("#phone").focus();
         valid = false;
-    } else if (!phone.startsWith("010")) { 
-        $("#phoneError").text("핸드폰 번호는 010으로 시작해야 합니다.");
+    } else if (!phone.startsWith("010")) {
+        $("#phoneError").text("전화 번호는 010으로 시작해야 합니다.");
         $("#phoneError").show();
         $("#phone").addClass("is-invalid");
         $("#phone").focus();
         valid = false;
-    } else if (phone.length !== 11) { 
-        $("#phoneError").text("핸드폰 번호는 11자리여야 합니다.");
+    } else if (phone.length !== 11) {
+        $("#phoneError").text("전화 번호는 11자리여야 합니다.");
         $("#phoneError").show();
         $("#phone").addClass("is-invalid");
         $("#phone").focus();
@@ -326,8 +322,7 @@ function signup() {
     let password = $("#password").val().toLowerCase();
     let password_confirm = $("#pwChk").val().toLowerCase();
 
-    if (password.length < 8 || !/\W/.test(password)) { 
-
+    if (password.length < 8 || !/\W/.test(password)) {
         $("#passwordError").text("비밀번호는 8자리 이상이어야 하며, 특수문자를 포함해야 합니다.");
         $("#passwordError").show();
         $("#password").addClass("is-invalid");
@@ -338,7 +333,6 @@ function signup() {
         $("#passwordError").show();
         $("#pwChk").focus();
         valid = false;
-
     } else {
         $("#passwordError").hide();
     }
@@ -385,7 +379,6 @@ function signup() {
     if (!valid) {
         return;
     }
-
 
     let param = {
         username: username.val(),
@@ -470,35 +463,13 @@ function enableDirectInput() {
     toggleDropdown();
 }
 
-function execDaumPostcode() {
-    new daum.Postcode({
-        oncomplete: function (data) {
-            var addr = "";
-            var extraAddr = "";
-
-            if (data.userSelectedType === "R") {
-                addr = data.roadAddress;
-            } else {
-                addr = data.jibunAddress;
-            }
-
-            if (data.userSelectedType === "R") {
-                if (data.bname !== "" && /[동|로|가]$/g.test(data.bname)) {
-                    extraAddr += data.bname;
-                }
-                if (data.buildingName !== "" && data.apartment === "Y") {
-                    extraAddr += extraAddr !== "" ? ", " + data.buildingName : data.buildingName;
-                }
-                if (extraAddr !== "") {
-                    extraAddr = " (" + extraAddr + ")";
-                }
-            }
-
-            document.getElementById("addressCode").value = data.zonecode;
-            document.getElementById("UserAdd1").value = addr;
-            document.getElementById("UserAdd1").value += extraAddr;
-            document.getElementById("UserAdd2").focus();
-        }
-    }).open();
+function infoEdit() {
+    if (confirm($("#loginUsername").val() + "님의 정보를 수정하시겠습니까??") == true) {
+        $("#emailDomain").attr("disabled", false);
+        $("#addressCode").attr("disabled", false);
+        $("#address").attr("disabled", false);
+        $("#frm").submit();
+    } else {
+        return false;
+    }
 }
-

@@ -3,7 +3,6 @@ from accounts.models import CounselorProfile
 from django.db.models import Q
 from django.core.paginator import Paginator
 from datetime import datetime, timedelta
-from django.urls import resolve
 
 
 def list(request, flag):
@@ -51,7 +50,7 @@ def list(request, flag):
         start_date = one_month_ago.strftime('%Y-%m-%d')
         end_date = datetime.now().strftime('%Y-%m-%d')
 
-    data = CounselorProfile.objects.select_related('auth_user').filter(query & query1 & query2)
+    data = CounselorProfile.objects.filter(query & query1 & query2)
     paginator = Paginator(data, 10)
     page = request.GET.get('page')
     data = paginator.get_page(page)
@@ -69,15 +68,18 @@ def list(request, flag):
     return render(request, 'management/list.html', context)
 
 
-def detail(request, id):
+def detail(request, id, flag):
     """
     유저 상세 페이지
     """
-    data = get_object_or_404(CounselorProfile.objects.select_related('auth_user'), id=id)
-    return render(request, 'management/detail.html', {'data':data}) 
+    context = {
+        'flag': flag,
+        'data': get_object_or_404(CounselorProfile, id=id)
+    }
+    return render(request, 'management/detail.html', context) 
 
 
-def update_auth(id, status):
+def update_auth(request, id, status):
     """
     UPDATE counselor_profile SET active_status = ?
     """
@@ -92,6 +94,30 @@ def update_auth(id, status):
     return redirect('management:list', flag)
 
 
+def edit(request, id, flag):
+    """
+    개인정보 수정
+    """
+    user = get_object_or_404(CounselorProfile, id=id)
+    if request.method == 'GET':
+        context = {
+            'flag': flag,
+            'user': user
+        }
+        return render(request, 'management/edit.html', context)
+    else:
+        user.auth_user.username = request.POST.get('loginUsername')
+        user.auth_user.name = request.POST.get('name')
+        user.auth_user.email = request.POST.get('emailLocal') + '@' + request.POST.get('emailDomain')
+        user.phone_number = request.POST.get('phone')
+        user.department = request.POST.get('department')
+        user.birth_date = request.POST.get('birthdate')
+        user.address_code = request.POST.get('addressCode')
+        user.address = request.POST.get('address')
+        user.address_detail = request.POST.get('addressDetail')
+        user.active_status = request.POST.get('active_status')
+        user.save()
+        return redirect("management:detail", id, flag)
 
 
 

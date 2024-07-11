@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .models import *
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from django.urls import reverse
 import logging
 
 
@@ -25,6 +26,7 @@ def user_login(request):
         username = request.POST.get('username', None)
         password = request.POST.get('password', None)
         remember_me = request.POST.get('remember_me', None)
+        flag = request.POST.get('flag', None)
 
         user = authenticate(request, username=username, password=password)
         logger.log(1, user)
@@ -34,27 +36,27 @@ def user_login(request):
             admin = AdministratorProfile.objects.filter(auth_user_id=user.id).first()
 
             if (counselor and counselor.active_status != 1) or (admin and admin.active_status != 1):
-                result = '로그인 권한이 없습니다.'
+                message = '로그인 권한이 없습니다.'
+            elif flag == '1' and user.is_superuser == False:
+                message = '관리자가 아닙니다.'
             else:
                 login(request, user)
-                request.session['user'] = user.first_name if user.first_name else user.username
 
-                if user.is_superuser == True:
-                    result = 'manager'
+                if flag == '0':
+                    url = reverse('main:user_dashboard')
                 else:
-                    result = 'user'
+                    url = reverse('management:list', kwargs={'flag': 'm'})
                 
-                response = JsonResponse({'result' : result})
+                response = JsonResponse({'result' : True, 'url': url})
                 if remember_me == 'on':
                     response.set_cookie('remember_me', username, max_age=2592000)
                 else:
                     response.delete_cookie('remember_me')
                 return response
         else:
-            result = 'ID 혹은 PW를 확인해 주세요.'
-    else:
-        result = '잘못된 접근입니다.'
-    return JsonResponse({'result': result})
+            message = 'ID 혹은 PW를 확인해 주세요.'
+        
+        return JsonResponse({'result': False, 'message': message})
 
 
 def user_logout(request):
@@ -62,16 +64,7 @@ def user_logout(request):
         로그아웃
     """
     logout(request)
-    request.session.pop('user', None)
     return redirect('/')
-
-
-def adminLogin(request):
-    return render(request, 'accounts/adminlogin.html')
-
-
-def searchPW(request):
-    return render(request, 'accounts/searchpw.html')
 
 
 
@@ -88,11 +81,8 @@ def signup(request):
         address_code = request.POST.get('addressCode')
         address = request.POST.get('address')
         address_detail = request.POST.get('addressDetail')
-        print("aaaaaaaaaaaaaaaaaaaaaaaa")
+        department = request.POST.get('department')
         
-        if not username or not password or not name or not phone_number or not email or not birth_date or not address_code or not address or not address_detail:
-            return JsonResponse({'result': False, 'msg': '모든 필드를 입력해 주세요.'})
-    
         user = User.objects.create_user(
             username = username,
             password = password,
@@ -107,8 +97,7 @@ def signup(request):
             , address_code=address_code
             , address=address
             , address_detail=address_detail
-            # , department=department
-            # , active_status=active_status
+            , department=department
         )
 
         result = True
