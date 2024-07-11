@@ -68,7 +68,7 @@
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #4c9cf1;
+    background-color: #3d3d3d;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
@@ -76,7 +76,7 @@
 }
 
 .category-button:hover {
-    background-color: #0056b3;
+    background-color: #011627;
     transform: translateY(-2px);
 }
 
@@ -131,14 +131,14 @@ textarea {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #4c9cf1;
+    background-color: #3d3d3d;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
 }
 
 #text-button:hover {
-    background-color: #0056b3;
+    background-color: #011627;
     transform: translateY(-2px);
 }
 
@@ -160,7 +160,7 @@ textarea {
 }
 
 .mic-button:hover:not(:disabled) {
-    background-color: #0056b3;
+    background-color: #3d3d3d;
 }
 
 .button-container {
@@ -177,7 +177,7 @@ textarea {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #4c9cf1;
+    background-color: #3d3d3d;
     color: #fff;
     transition: background-color 0.3s;
     flex: 1;
@@ -313,28 +313,6 @@ textarea {
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
     font-family: "Chosunilbo_myungjo", serif;
-    margin-top: 20px; /* 원하는 위치 조정을 위해 여백 추가 */
-}
-
-.reset-button:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
-
-.category-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-.reset-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-    font-family: 'Chosunilbo_myungjo', serif;
     margin-top: 20px; /* 원하는 위치 조정을 위해 여백 추가 */
 }
 

@@ -78,7 +78,8 @@
         <div class="header">
             <button class="sidebar-toggle" id="sidebarToggle">☰</button>
             <div class="header-right">
-                <div class="profile-info">{{ request.session.user }}님, 오늘 하루도 화이팅 하세요.</div>
+                {% comment %} <div class="profile-info">{{ request.session.user }}님, 오늘 하루도 화이팅 하세요.</div> {% endcomment %}
+                <div class="profile-info">{{ request.user }}님, 오늘 하루도 화이팅 하세요.</div>
                 {% if request.user.is_superuser %}
                 <div class="admin-page">
                     <a href="{% url 'management:list' 'm' %}">관리자 페이지</a>
