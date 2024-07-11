@@ -7,11 +7,12 @@
 
 .dashboard {
     display: flex;
-    height: 100vh;
+    min-height: 70vh;
     padding: 20px;
     gap: 20px;
     box-sizing: border-box;
     position: relative; 
+    align-items: stretch;
 }
 
 .section {

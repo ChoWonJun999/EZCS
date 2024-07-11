@@ -13,7 +13,7 @@
     height: calc(100vh - 40px); 
     box-sizing: border-box;
     padding: 20px;
-    position: relative; /* 위치 조정을 위한 설정 추가 */
+    position: relative; 
 }
 
 .customer-info, .memo-section, .stt-content, .chat-section-readonly {
@@ -22,20 +22,20 @@
     box-sizing: border-box;
     background-color: #fff; 
     border-radius: 8px; 
-    display: flex;
+    /* display: flex; */
     flex-direction: column;
     overflow: auto; 
 }
 
 .customer-info, .memo-section {
-    max-height: 350px;
+    max-height: 50vh;
 }
 
 .stt-content {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    max-height: 500px; 
+    max-height: 50vh; 
     overflow: hidden; 
 }
 
