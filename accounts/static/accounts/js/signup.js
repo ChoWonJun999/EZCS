@@ -208,16 +208,16 @@ function pwBlur() {
 }
 
 function chkAddressDetail() {
-    let addressDetail = $("#UserAdd2").val();
+    let addressDetail = $("#addressDetail").val();
     if (!addressDetail) {
         $("#userAdd2Error").text("상세 주소를 입력해 주세요.");
         $("#userAdd2Error").show();
-        $("#UserAdd2").addClass("is-invalid");
+        $("#addressDetail").addClass("is-invalid");
         return false;
     } else {
         $("#userAdd2Error").hide();
-        $("#UserAdd2").removeClass("is-invalid");
-        $("#UserAdd2").addClass("is-valid");
+        $("#addressDetail").removeClass("is-invalid");
+        $("#addressDetail").addClass("is-valid");
     }
 }
 
@@ -366,11 +366,11 @@ function signup() {
         valid = false;
     }
 
-    let addressDetail = $("#UserAdd2").val();
+    let addressDetail = $("#addressDetail").val();
     if (!addressDetail) {
         $("#userAdd2Error").text("상세 주소를 입력해 주세요.");
         $("#userAdd2Error").show();
-        $("#UserAdd2").focus();
+        $("#addressDetail").focus();
         valid = false;
     } else {
         $("#userAdd2Error").hide();
@@ -388,7 +388,7 @@ function signup() {
         email: fullEmail,
         birthdate: $("#birthdate").val(),
         addressCode: $("#addressCode").val(),
-        address: $("#UserAdd1").val(),
+        address: $("#address").val(),
         addressDetail: addressDetail
     };
 

@@ -101,9 +101,9 @@
                     <div class="col-sm-10 address">
                         <input type="text" class="form-control form-control-sm mb-2" id="addressCode" name="addressCode" maxlength="10" placeholder="우편번호" style="width: 50%; display: inline;" disabled>
                         <input type="button" id="zipp_btn" class="btn btn-sm btn-primary" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
-                        <input type="text" class="form-control form-control-sm mb-2" name="user_add1" id="UserAdd1" maxlength="40" placeholder="기본 주소를 입력하세요" required disabled>
+                        <input type="text" class="form-control form-control-sm mb-2" name="user_add1" id="address" maxlength="40" placeholder="기본 주소를 입력하세요" required disabled>
                         <div class="invalid-feedback">주소를 입력해주시기 바랍니다!</div>
-                        <input type="text" class="form-control form-control-sm" name="user_add2" id="UserAdd2" maxlength="40" placeholder="상세 주소를 입력하세요" onblur="chkAddressDetail();">
+                        <input type="text" class="form-control form-control-sm" name="user_add2" id="addressDetail" maxlength="40" placeholder="상세 주소를 입력하세요" onblur="chkAddressDetail();">
                         <div id="userAdd2Error" class="invalid-feedback"></div>
                     </div>
                 </div>
