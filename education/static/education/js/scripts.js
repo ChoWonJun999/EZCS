@@ -16,10 +16,48 @@ document.addEventListener("DOMContentLoaded", function () {
 let selectedCategory = null;
 
 // 카테고리를 선택하는 함수
+// function selectCategory(category) {
+//     console.time();
+//     selectedCategory = category;
+//     console.log("Selected category:", selectedCategory);
+
+//     // 폼 데이터를 생성하고 카테고리와 CSRF 토큰 추가
+//     const formData = new FormData();
+//     formData.append("category", selectedCategory);
+
+//     // 서버로 POST 요청을 보내 카테고리를 설정
+//     fetch("/education/", {
+//         method: "POST",
+//         headers: {
+//             "X-CSRFToken": $("#csrf").val()
+//         },
+//         body: formData
+//     })
+//         .then((response) => {
+//             if (!response.ok) {
+//                 throw new Error("Network response was not ok");
+//             }
+//             return response.json();
+//         })
+//         .then((data) => {
+//             console.log("Chatbot initialized:", data);
+//             document.getElementById("selected-category").innerText = selectedCategory;
+//             document.getElementById("chat-content").innerHTML = ""; // 채팅 내용을 지움
+//             appendMessage("bot", data.initial_question); // 첫 질문 출력
+//             lastChatbotMessage = data.initial_question;
+//             console.timeEnd();
+//         })
+//         .catch((error) => console.error("Error:", error));
+// }
+
+// 카테고리를 선택하는 함수
 function selectCategory(category) {
     console.time();
     selectedCategory = category;
     console.log("Selected category:", selectedCategory);
+
+    // 선택한 순간 버튼 비활성화
+    disableCategoryButtons();
 
     // 폼 데이터를 생성하고 카테고리와 CSRF 토큰 추가
     const formData = new FormData();
@@ -33,21 +71,42 @@ function selectCategory(category) {
         },
         body: formData
     })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            console.log("Chatbot initialized:", data);
-            document.getElementById("selected-category").innerText = selectedCategory;
-            document.getElementById("chat-content").innerHTML = ""; // 채팅 내용을 지움
-            appendMessage("bot", data.initial_question); // 첫 질문 출력
-            lastChatbotMessage = data.initial_question;
-            console.timeEnd();
-        })
-        .catch((error) => console.error("Error:", error));
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error("Network response was not ok");
+        }
+        return response.json();
+    })
+    .then((data) => {
+        console.log("Chatbot initialized:", data);
+        document.getElementById("selected-category").innerText = selectedCategory;
+        document.getElementById("chat-content").innerHTML = ""; // 채팅 내용을 지움
+        appendMessage("bot", data.initial_question); // 첫 질문 출력
+        lastChatbotMessage = data.initial_question;
+        console.timeEnd();
+    })
+    .catch((error) => console.error("Error:", error));
+}
+
+
+// 카테고리 버튼을 비활성화하는 함수
+function disableCategoryButtons() {
+    const buttons = document.querySelectorAll('.category-button');
+    buttons.forEach(button => {
+        button.disabled = true;
+        button.style.backgroundColor = '#cccccc';
+        button.style.cursor = 'not-allowed';
+    });
+}
+
+// 카테고리 버튼을 활성화하는 함수
+function enableCategoryButtons() {
+    const buttons = document.querySelectorAll('.category-button');
+    buttons.forEach(button => {
+        button.disabled = false;
+        button.style.backgroundColor = '#007bff';
+        button.style.cursor = 'pointer';
+    });
 }
 
 // 메시지를 전송하는 함수

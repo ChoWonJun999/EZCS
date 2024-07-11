@@ -279,6 +279,28 @@ textarea {
     font-family: 'Chosunilbo_myungjo', serif;
 }
 
+.reset-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    font-family: 'Chosunilbo_myungjo', serif;
+    margin-top: 20px; /* 원하는 위치 조정을 위해 여백 추가 */
+}
+
+.reset-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.category-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
     .dashboard {
         flex-direction: column;
