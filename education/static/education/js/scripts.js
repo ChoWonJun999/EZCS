@@ -283,6 +283,22 @@ function stopEducation() {
     }
 }
 
+// // 채팅 입력 및 버튼 비활성화 함수
+// function disableChatInputs() {
+//     questionInput.disabled = true;
+//     textButton.disabled = true;
+//     questionInput.classList.add("disabled-input");
+//     textButton.classList.add("disabled-input");
+// }
+
+// // 채팅 입력 및 버튼 활성화 함수
+// function enableChatInputs() {
+//     questionInput.disabled = false;
+//     textButton.disabled = false;
+//     questionInput.classList.remove("disabled-input");
+//     textButton.classList.remove("disabled-input");
+// }
+
 // interimDiv 제거 함수
 function removeExistingInterimDiv() {
     const existingInterimDiv = document.querySelector(".interim-msg");
