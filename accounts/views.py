@@ -43,9 +43,9 @@ def user_login(request):
                 login(request, user)
 
                 if flag == '0':
-                    url = reverse('management:list', kwargs={'flag': 'm'})
-                else:
                     url = reverse('main:user_dashboard')
+                else:
+                    url = reverse('management:list', kwargs={'flag': 'm'})
                 
                 response = JsonResponse({'result' : True, 'url': url})
                 if remember_me == 'on':
