@@ -6,7 +6,9 @@ from chat import Chatbot
 from django.views.decorators.csrf import csrf_exempt
 import logging
 from .models import *
+from django.db.models import Q
 import json
+from django.core.paginator import Paginator
 from django.http import HttpResponse
 
 # def list(request):
@@ -41,7 +43,36 @@ def history(request):
     else:
         logs = CounselLog.objects.all()
 
-    return render(request, 'counseling/history.html', {'logs': logs})
+    # 검색 필터링 처리
+    search_text = request.GET.get("searchText", "")
+    category = request.GET.get("category", "")
+    result = request.GET.get("result", "")
+
+    if search_text:
+        logs = logs.filter(
+            Q(user_id__username__icontains=search_text)
+            | Q(user_id__name__icontains=search_text)
+        )
+
+    if category:
+        logs = logs.filter(category=category)
+
+    if result:
+        if result == "pass":
+            logs = logs.filter(is_passed=True)
+        elif result == "fail":
+            logs = logs.filter(is_passed=False)
+
+    # 페이지네이션 처리
+    paginator = Paginator(logs, 10)  # 페이지당 10개씩 표시
+    page = request.GET.get("page")
+    logs = paginator.get_page(page)
+
+    return render(
+        request,
+        "counseling/history.html",
+        {"logs": logs, "is_paginated": logs.has_other_pages()},
+    )
 
 
 stt_model = STTModel(
