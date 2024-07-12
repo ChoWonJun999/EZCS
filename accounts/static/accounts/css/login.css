@@ -7,6 +7,30 @@
     height: 100vh;
     margin: 0;
 } */
+img.ezcs-logo {
+    /* position: fixed; */
+    position: relative;
+    width: 200px;
+    height: auto;
+    top: 6%;
+    left: 50%;
+    padding: 20px;
+    transform: translate(-50%, -50%);
+
+}
+.my-form {
+    width: 100% !important;
+}
+.username-input {
+    display: flex;
+    align-items: center;
+}
+
+.container-fluid {
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
 
 .container {
     display: flex;
@@ -22,9 +46,6 @@
     width: 100%;
 }
 
-.input-form {
-    width: 100%;
-}
 
 h2 {
     text-align: center;
@@ -36,17 +57,11 @@ h2 {
     margin-bottom: 15px;
 }
 
-.btn {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 5px;
-}
 
 .btn-outline-primary {
     color: #007bff;
     border-color: #007bff;
+    width: 5cm;
 }
 
 .btn-outline-primary:hover {
@@ -70,10 +85,6 @@ p a:hover {
 
 .form-check-input {
     margin-right: 10px;
-}
-
-.form-check-label {
-    margin: 0;
 }
 
 .my_container {

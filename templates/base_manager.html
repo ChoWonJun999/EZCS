@@ -3,16 +3,26 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Admin Dashboard{% endblock %}</title>
-    {% load static %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% block title %}Admin Dashboard{% endblock %}</title>
 
-    <link rel="stylesheet" href="{% static 'css/management.css' %}">
-    <link href="/static/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-    <script src="/static/js/bootstrap/bootstrap.bundle.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="/static/js/management.js"></script>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/management.css' %}">
+        <link href="/static/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+        <script src="/static/js/bootstrap/bootstrap.bundle.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="/static/js/management.js"></script>
+    </head>
+    <style>
+        @font-face {
+            font-family: 'GmarketSansMedium';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
 </head>
 
 <body>

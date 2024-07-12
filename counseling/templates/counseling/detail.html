@@ -1,0 +1,150 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<style>
+    .main-content {
+        display: block;
+    }
+
+    .all-div {
+        display: flex !important;
+        width: 100%;
+    }
+</style>
+<!-- 직원용 대시보드 내용 -->
+<div class="dashboard all-div">
+    <div style="height: 100%; width: 30%;">
+        <div class="customer-info">
+            <h4>고객 정보</h4>
+            <form id="customer-form">
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label for="customer-name">고객명</label>
+                            </td>
+                            <td>
+                                {{ head.customer.name }}
+                            </td>
+                            <td>
+                                <label for="birthdate">생년월일</label>
+                            </td>
+                            <td>
+                                {{ head.customer.birth_date }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="phone">전화번호</label>
+                            </td>
+                            <td>
+                                {{ head.customer.phone_number }}
+                            </td>
+                            <td>
+                                <label for="join-date">가입일</label>
+                            </td>
+                            <td>
+                                {{ head.customer.joined_date }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="address">주소</label>
+                            </td>
+                            <td colspan="3">
+                                {{ head.customer.address }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </form>
+        </div>
+
+        <div class="memo-section">
+            <h4>문의/조치 내용</h4>
+            <form id="consultation-form" style="height: 80%;">
+                <div class="memo-content" style="height: 100%;">
+                    <table style="width: 100%; height: 100%;">
+                        <colgroup>
+                            <col width="10%">
+                            <col width="*">
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <label for="inquiry-text">문의 내용</label>
+                                </td>
+                                <td>
+                                    {{ head.inquiries }}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label for="action-text">조치 내용</label>
+                                </td>
+                                <td>
+                                    {{ head.action }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div style="height: 100%; width: 70%;">
+        <div style="display: inline-flex; height: 52.5%; width: 100%;">
+            <div class="stt-content">
+                <h4>고객-상담원</h4>
+                <div class="stt">
+                    <div id="transcription">
+                        {% for item in data%}
+                        {% if item.classify %}
+                        <div class="output-msg counselor">
+                            <strong>상담원:</strong> {{ item.message }}
+                        </div>
+                        {% else %}
+                        <div class="output-msg customer">
+                            <strong>고객:</strong> {{ item.message }}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="stt-content">
+                <h4>고객음성번역-챗봇추천응대멘트</h4>
+                <div class="translation">
+                    <div id="translation-content">
+                        {% for item in data%}
+                        {% if not item.classify %}
+                        <div class="output-msg customer">
+                            <strong>번역:</strong> {{ item.message }}
+                        </div>
+                        <div class="chatbot-response">
+                            {{ item.recommend }}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <form action="{% url 'counseling:counsel' %}" method="get">
+        <button id="save-button" type="button" class="submit-button" onclick="history.back();">
+            <i class="fas fa-save"></i> 뒤로가기
+        </button>
+    </form>
+</div>
+
+<script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+<script src="{% static 'counseling/js/scripts.js' %}"></script>
+<script>window.username = "{{ username|safe }}";</script>
+<link rel="stylesheet" href="{% static 'counseling/css/styles.css' %}">
+
+{% endblock %}

@@ -4,28 +4,28 @@
 {% block content %}
 <div class="container">
     <div class="input-form-backgroud row">
-        <div class="input-form col-md-12 mx-auto">
-            <h4 class="mb-3">비밀번호 재설정</h4>
+        <div class="input-form" style="margin-top: -350px;">
+            <div>
+                <h2>비밀번호 재설정</h2>
+            </div>
             <form id="searchPWForm" class="validation-form" novalidate data-url="{% url 'accounts:searchPW' %}" data-csrf="{{ csrf_token }}">
                 <input type="hidden" name="csrf" id="csrf" value="{{ csrf_token }}">
-                <div class="row">
-                    <div class="col-md-6 mb-3 my-form">
-                        <label for="name">ID</label>
-                        <input type="text" class="form-control" id="forgotPasswordUsername" name="loginUsername" required>
-                     
-                    </div>
-                    <div class="col-md-6 mb-3 my-form">
-                        <label for="birthdate">생년월일</label>
-                        <input type="date" class="form-control" id="birthdate" name="birthdate" required>
-                    </div>
-                    <div class="col-md-6 mb-3 my-form">
-                        <label for="phone_number">전화번호</label>
-                        <input type="text" class="form-control" id="phone_number" name="phone_number" required>
-                    </div>
+
+                <div class="col-md-6 mb-3 my-form">
+                    <label for="name">ID</label>
+                    <input type="text" class="form-control" id="forgotPasswordUsername" name="loginUsername" required>
                 </div>
-                <div>
+                <div class="col-md-6 mb-3 my-form">
+                    <label for="birthdate">생년월일</label>
+                    <input type="date" class="form-control" id="birthdate" name="birthdate" required>
+                </div>
+                <div class="col-md-6 mb-3 my-form">
+                    <label for="phone_number">전화번호</label>
+                    <input type="text" class="form-control" id="phone_number" name="phone_number" required>
+                </div>
+                <div class="container-sm my_container">
                     <!-- <input type="button" value="비밀번호 재설정" class="btn btn-outline-primary" onclick="sendResetRequest()"> -->
-                    <p><a href="javascript:void(0);" onclick="ResetPW();">비밀번호 재설정</a>
+                    <input href="javascript:void(0);" type="button" value="비밀번호 재설정" class="btn btn-outline-primary" onclick="ResetPW()">
                 </div>
                 <div>
                     <p><a href="{% url 'accounts:login' %}"> 로그인으로 돌아가기</a></p>

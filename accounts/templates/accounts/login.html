@@ -3,26 +3,11 @@
 
 {% block content %}
 {% load static %}
-<head>
-    <style>
-        @font-face {
-            font-family: 'GmarketSansMedium';
-            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
-        }
 
-        body {
-            font-family: 'GmarketSansMedium', Arial, sans-serif !important;
-            background: url("{% static 'main/images/home.png' %}") no-repeat center center fixed;
-            background-size: cover;
-        }
-    </style>
-</head>
-<link rel="stylesheet" href="{% static 'accounts/css/login.css' %}">
+{% comment %} <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}"> {% endcomment %}
 <div class="container">
     <div class="input-form-backgroud row">
-        <div class="input-form col-md-12 mx-auto">
+        <div class="input-form" style="margin-top: -280px;">
             <form id="loginForm" data-url="{% url 'accounts:login' %}" data-csrf="{{ csrf_token }}">
                 <div class="container-sm my_container">
                     <div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
@@ -44,10 +29,10 @@
                         <label class="form-check-label" for="rememberMe">로그인 정보 저장</label>
                     </div>
                     <div>
-                        <input type="button" value="로그인" class="btn btn-outline-primary" style="width: 5cm;" onclick="check_login(0)">
+                        <input type="button" value="로그인" class="btn btn-outline-primary" onclick="check_login(0)">
                     </div>
                     <div>
-                        <input type="button" value="관리자 로그인" class="btn btn-outline-primary" style="width: 5cm;" onclick="check_login(1)">
+                        <input type="button" value="관리자 로그인" class="btn btn-outline-primary" onclick="check_login(1)">
                     </div>
                     <div>
                         <p>
