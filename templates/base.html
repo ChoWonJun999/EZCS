@@ -32,7 +32,7 @@
             sidebar.classList.toggle('hidden');
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const sidebarToggle = document.getElementById('sidebarToggle');
             if (sidebarToggle) {
                 sidebarToggle.addEventListener('click', toggleSidebar);
@@ -50,7 +50,7 @@
                 <li><a href="{% url 'main:user_dashboard' %}">대시보드</a></li>
 
                 <li class="has-submenu {% if request.path == '/counseling/' %}active{% endif %}">
-                    <a href="{% url 'counseling:list' %}">상담</a>
+                    <a href="{% url 'counseling:counsel' %}">상담</a>
                 </li>
                 <ul class="submenu">
                     <li><a href="{% url 'counseling:history' %}" class="{% if request.path == '/counseling/history' %}active{% endif %}">상담 이력</a></li>
@@ -78,7 +78,8 @@
         <div class="header">
             <button class="sidebar-toggle" id="sidebarToggle">☰</button>
             <div class="header-right">
-                <div class="profile-info">{{ request.session.user }}님, 오늘 하루도 화이팅 하세요.</div>
+                {% comment %} <div class="profile-info">{{ request.session.user }}님, 오늘 하루도 화이팅 하세요.</div> {% endcomment %}
+                <div class="profile-info">{{ request.user }}님, 오늘 하루도 화이팅 하세요.</div>
                 {% if request.user.is_superuser %}
                 <div class="admin-page">
                     <a href="{% url 'management:list' 'm' %}">관리자 페이지</a>
@@ -97,7 +98,7 @@
         <footer class="footer">
             <div class="footer-content">
                 <p><a href="javascript:void(0);" onclick="openPrivacyPopup();">개인정보 처리방침</a> | <a href="javascript:void(0);" onclick="openContractPopup();">이용약관</a></p>
-                <p>㈜KT 에이블스쿨팀 충남/충북권역,  대표자: team21 </p>
+                <p>㈜KT 에이블스쿨팀 충남/충북권역, 대표자: team21 </p>
                 <p>&copy; 2024 aivleschool team21. All rights reserved.</p>
             </div>
         </footer>

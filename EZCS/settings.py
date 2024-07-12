@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     "education",
     'education.templatetags',
     "counseling",
-    "linker",
 ]
 
 MIDDLEWARE = [

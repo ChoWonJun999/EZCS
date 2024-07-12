@@ -4,7 +4,7 @@
 
 {% block content %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'education/css/history.css' %}">
+<link rel="stylesheet" href="{% static 'counseling/css/history.css' %}">
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -13,9 +13,14 @@
             window.location.href = url;
         });
     });
+    window.onkeydown = function () {
+        var kcode = event.keyCode;
+        if (kcode == 116) {
+            history.replaceState({}, null, location.pathname);
+        }
+    }
 </script>
-
-<form action="{% url 'counseling:history' %}" method="POST">
+<form action="{% url 'counseling:history' %}" method="GET">
     {% csrf_token %}
     <div class="dashboard">
         <div>
@@ -23,40 +28,67 @@
         </div>
         <div>
             <div class="search-container">
-                    <input type="text" class="form-control search-input" id="searchText" name="searchText" placeholder="검색창">
-                    <button type="submit" class="btn btn-primary search-button">검색</button>
+                <input type="text" class="form-control search-input" id="searchText" name="searchText" value="{{ searchText }}" placeholder="검색창">
+                <button type="submit" class="btn btn-primary search-button">검색</button>
             </div>
         </div>
+
         <div>
-            <p>총 {{ logs|length }}건</p>
+            <p>총 {{ data|length }}건</p>
         </div>
+
         <div>
             <table class="styled-table">
+                <colgroup>
+                    <col width="7%">
+                    <col width="20%">
+                    <col width="20%">
+                    <col width="*">
+                    <col width="10%">
+                </colgroup>
                 <thead>
                     <tr>
-                        <th>id</th>
-                        <th>상담 내용</th>
-                        <th>생성 시간</th>
-                        <th>사용자 ID</th>
+                        <th>번호</th>
+                        <th>문의 사항</th>
+                        <th>조치 사항</th>
+                        <th>상담 일자</th>
+                        <th>고객 명</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% if logs %}
-                    {% for log in logs %}
-                    <tr>
-                        <td>{{ log.id }}</td>
-                        <td>{{ log.body }}</td>
-                        <td>{{ log.create_time }}</td>
-                        <td>{{ log.username }}</td>
+                    {% if data %}
+                    {% for item in data %}
+                    <tr data-url="{% url 'counseling:detail' item.id %}" class="active-row">
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.inquiries }}</td>
+                        <td>{{ item.action }}</td>
+                        <td>{{ item.create_time }}</td>
+                        <td>{{ item.customer.name }}</td>
                     </tr>
                     {% endfor %}
                     {% else %}
                     <tr>
-                        <td colspan="4">상담 이력이 없습니다.</td>
+                        <td colspan="5">상담 이력이 없습니다.</td>
                     </tr>
                     {% endif %}
                 </tbody>
             </table>
+        </div>
+
+        <div class="pagination">
+            <div class="step-links">
+                {% if data.has_previous %}
+                <a href="?page=1">&laquo; 처음</a>
+                <a href="?page={{ data.previous_page_number }}">이전</a>
+                {% endif %}
+                <span class="current">
+                    페이지 {{ data.number }} / {{ data.paginator.num_pages }}
+                </span>
+                {% if data.has_next %}
+                <a href="?page={{ data.next_page_number }}">다음</a>
+                <a href="?page={{ data.paginator.num_pages }}">마지막 &raquo;</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </form>

@@ -5,31 +5,30 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="/static/js/execDaumPost.js"></script>
 <style>
-    .my-form {
-        width: 80% !important;
-    }
-
     .mb-3 {
-        margin-bottom: 0 !important;
+        margin-bottom: 0.5rem !important;
     }
 </style>
 <div class="container">
     <div class="input-form-backgroud row">
-        <div class="input-form col-md-12 mx-auto">
-            <h1 class="mb-3" style="text-align: center;">회원가입</h1>
+        <div class="input-form">
+            <div>
+                <h2>회원가입</h2>
+            </div>
             <form id="signupForm" class="validation-form" novalidate data-url="{% url 'accounts:signup' %}" data-csrf="{{ csrf_token }}">
                 <input type="hidden" name="csrf" id="csrf" value="{{ csrf_token }}">
-                <div class="mb-3 my-form">
+
+                <div class="mb-3 my-form ">
                     <label for="name">ID</label>
-                    <div style="display: flex;">
-                        <div style="padding: 0; margin-right: 5px !important; width: 80% !important;">
+                    <div class="username-input">
+                        <div style="margin-right: 5px !important; width: 150% !important;">
                             <input type="text" class="form-control form-control-sm" id="loginUsername" name="loginUsername" maxlength="10" required onchange="nameChange(this);">
                             <div id="usernameVaild" class="valid-feedback"></div>
                             <div id="usernameError" class="invalid-feedback"></div>
                             <input type="hidden" name="usernameChk" id="usernameChk" value="">
                             <input type="hidden" name="usernameChkUrl" id="usernameChkUrl" value="{% url 'accounts:check_username' %}">
                         </div>
-                        <div style="padding: 0;">
+                        <div>
                             <input type="button" value="중복 확인" class="btn btn-sm btn-primary" onclick="chkUserName();">
                         </div>
                     </div>
@@ -40,7 +39,9 @@
                     <input type="text" class="form-control form-control-sm" id="name" name="name" maxlength="10" onblur="checkKoreanName(this);">
                     <div id="nameError" class="invalid-feedback"></div>
                 </div>
+                <div>
 
+                </div>
                 <div class="mb-3 my-form">
                     <label for="email">E-Mail</label>
                     <div id="email" style="display: flex;">
@@ -86,24 +87,24 @@
                     <div id="departmentError" class="invalid-feedback"></div>
                 </div>
 
-                <div class="mb-3 my-form">
+                <div>
                     <div>
                         <label for="birthdate">생년월일</label>
                     </div>
                     <div>
-                        <input type="date" id="birthdate" name="birthdate">
+                        <input type="date" id="birthdate" name="birthdate" style="width: 395px; height: 33px;">
                         <div id="birthdateError" class="invalid-feedback"></div>
                     </div>
                 </div>
 
-                <div class="mb-3 my-form">
-                    <label for="address" class="form-label">주소</label><br />
-                    <div class="col-sm-10 address">
-                        <input type="text" class="form-control form-control-sm mb-2" id="addressCode" name="addressCode" maxlength="10" placeholder="우편번호" style="width: 50%; display: inline;" disabled>
-                        <input type="button" id="zipp_btn" class="btn btn-sm btn-primary" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
-                        <input type="text" class="form-control form-control-sm mb-2" name="user_add1" id="address" maxlength="40" placeholder="기본 주소를 입력하세요" required disabled>
+                <div class="mb-3 my-form" style="margin-top: 0.5rem;">
+                    <label for="address" class="form-label">주소</label>
+                    <div class="col-sm-10 address" style="width: 98%;">
+                        <input type="text" class="form-control form-control-sm mb-2" id="addressCode" name="addressCode" maxlength="10" placeholder="우편번호" style="width: 65%; display: inline-flex;" disabled>
+                        <input type="button" id="zipp_btn" class="btn btn-sm btn-primary" onclick="execDaumPostcode()" value="우편번호 찾기">
+                        <input type="text" class="form-control form-control-sm mb-2" name="address" id="address" placeholder="기본 주소를 입력하세요" required disabled>
                         <div class="invalid-feedback">주소를 입력해주시기 바랍니다!</div>
-                        <input type="text" class="form-control form-control-sm" name="user_add2" id="addressDetail" maxlength="40" placeholder="상세 주소를 입력하세요" onblur="chkAddressDetail();">
+                        <input type="text" class="form-control form-control-sm" name="addressDetail" id="addressDetail" placeholder="상세 주소를 입력하세요" onblur="chkAddressDetail();">
                         <div id="userAdd2Error" class="invalid-feedback"></div>
                     </div>
                 </div>
@@ -115,10 +116,10 @@
                     <label class="custom-control-label" for="aggrement">개인정보 수집 및 이용에 동의합니다.</label>
                 </div>
                 <div style="text-align: center;">
-                    <input type="button" value="회원 요청" class="btn btn-lg btn-outline-primary" style="width: 5cm;" onclick="signup()">
+                    <input type="button" value="회원 요청" class="btn btn-outline-primary" onclick="signup()">
                     <!-- </div> -->
                 </div>
-                <div style="text-align: left; margin-bottom: -30px; padding-top: 30px;">
+                <div>
                     <p>
                         <a href="{% url 'accounts:login' %}"> 로그인으로 돌아가기</a>
                     </p>

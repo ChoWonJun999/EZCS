@@ -11,6 +11,7 @@ class Log(models.Model):
         , on_delete=models.CASCADE
         , verbose_name="User's ID"
         , db_comment="User's ID"
+        , related_name='education_logs'
     )
 
     CATEGORY_CHOICES = [
@@ -33,6 +34,7 @@ class Log(models.Model):
     )
 
     class Meta:
+        db_table = "edu_log"
         verbose_name = "Education Chatbot Log"
         verbose_name_plural = "Education Chatbot Log"
 
@@ -46,6 +48,7 @@ class LogItem(models.Model):
         , on_delete=models.CASCADE
         , verbose_name="Log PK"
         , db_comment="Log PK"
+        , related_name='education_log_items'
     )
 
     chatbot = models.TextField(
@@ -74,7 +77,7 @@ class LogItem(models.Model):
     )
 
     class Meta:
-        db_table = "education_log_item"
+        db_table = "edu_log_item"
         verbose_name = "Education Chatbot Log Item"
         verbose_name_plural = "Education Chatbot Log Item"
 
@@ -152,6 +155,7 @@ class Quiz(models.Model):
     )
 
     class Meta:
+        db_table = "edu_quiz"
         verbose_name = "Education Quiz"
         verbose_name_plural = "Education Quiz"
 
@@ -159,11 +163,11 @@ class Quiz(models.Model):
         return self.question
 
 
-class QuizHistroy(models.Model):
+class QuizHistory(models.Model):
     """
     상담원의 챗봇 이용 기록
     """
-    user_id = models.ForeignKey(
+    auth_user = models.ForeignKey(
         User
         , on_delete=models.CASCADE
         , verbose_name="User's ID"
@@ -197,31 +201,27 @@ class QuizHistroy(models.Model):
     )
     
     class Meta:
-        db_table = "education_quiz_histroy"
+        db_table = "edu_quiz_hist"
         verbose_name = "Education Quiz History"
         verbose_name_plural = "Education Quiz History"
 
 
-class QuizHistroyItem(models.Model):
+class QuizHistoryItem(models.Model):
     """
     상담원의 챗봇 이용 기록 상세 내역
     """
-    education_quiz_histroy_id = models.ForeignKey(
-        "QuizHistroy"
+    quiz_history = models.ForeignKey(
+        "QuizHistory"
         , on_delete=models.CASCADE
-        , db_column='quiz_histroy_id'
-        , verbose_name="Quiz Histroy Id"
-        , db_comment="Quiz Histroy Id"
-        , related_name="item_header"
+        , verbose_name="Quiz History Id"
+        , db_comment="Quiz History Id"
     )
 
-    education_quiz_id = models.ForeignKey(
+    quiz = models.ForeignKey(
         "Quiz"
         , on_delete=models.CASCADE
-        , db_column='quiz_id'
         , verbose_name="Quiz Id"
         , db_comment="Quiz Id"
-        , related_name="item_quiz"
     )
 
     answer = models.TextField(
@@ -230,9 +230,9 @@ class QuizHistroyItem(models.Model):
     )
 
     class Meta:
-        db_table = "education_quiz_histroy_item"
-        verbose_name = 'Quiz Histroy Detail'
-        verbose_name_plural = 'Quiz Histroy Detail'
+        db_table = "edu_quiz_hist_item"
+        verbose_name = 'Quiz History Detail'
+        verbose_name_plural = 'Quiz History Detail'
     
     def __str__(self):
         return self.answer

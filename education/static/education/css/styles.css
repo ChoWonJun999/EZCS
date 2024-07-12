@@ -68,15 +68,14 @@
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #4c9cf1;
-    color: white;
+    background-color: #58b0e3;
+    color: black;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
-    font-family: "Chosunilbo_myungjo"
 }
 
 .category-button:hover {
-    background-color: #0056b3;
+    background-color: #007a63;
     transform: translateY(-2px);
 }
 
@@ -131,14 +130,14 @@ textarea {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #4c9cf1;
-    color: white;
+    background-color: #58b0e3;
+    color: black;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
 }
 
 #text-button:hover {
-    background-color: #0056b3;
+    background-color: #007a63;
     transform: translateY(-2px);
 }
 
@@ -160,7 +159,7 @@ textarea {
 }
 
 .mic-button:hover:not(:disabled) {
-    background-color: #0056b3;
+    background-color: #3d3d3d;
 }
 
 .button-container {
@@ -177,8 +176,8 @@ textarea {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #4c9cf1;
-    color: #fff;
+    background-color: #58b0e3;
+    color: black;
     transition: background-color 0.3s;
     flex: 1;
     margin: 0 5px;
@@ -278,7 +277,7 @@ textarea {
 .submit-button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #4c9cf1;
+    background-color: #2ec4b6;
     color: white;
     border: none;
     border-radius: 4px;
@@ -287,7 +286,7 @@ textarea {
 }
 
 .submit-button:hover {
-    background-color: #0056b3;
+    background-color: #007a63;
 }
 
 .no-underline {
@@ -313,28 +312,6 @@ textarea {
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
     font-family: "Chosunilbo_myungjo", serif;
-    margin-top: 20px; /* 원하는 위치 조정을 위해 여백 추가 */
-}
-
-.reset-button:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
-
-.category-button:disabled {
-    background-color: #cccccc;
-    cursor: not-allowed;
-}
-
-.reset-button {
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.3s;
-    font-family: 'Chosunilbo_myungjo', serif;
     margin-top: 20px; /* 원하는 위치 조정을 위해 여백 추가 */
 }
 

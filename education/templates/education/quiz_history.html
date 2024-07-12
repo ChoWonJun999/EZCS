@@ -11,31 +11,37 @@
             window.location.href = url;
         });
     });
+    window.onkeydown = function () {
+        var kcode = event.keyCode;
+        if (kcode == 116) {
+            history.replaceState({}, null, location.pathname);
+        }
+    }
 </script>
 <link rel="stylesheet" href="{% static 'education/css/history.css' %}">
 
 <form method="GET" action="{% url 'education:quiz_history' %}">
     <div class="dashboard">
         <div>
-            <h1>퀴즈 이력(색 조합 고민중)</h1>
+            <h3>퀴즈 이력</h3>
         </div>
         <div class="search-container">
-            <input type="text" class="form-control search-input" id="searchText" name="searchText" placeholder="검색창">
-            <select class="form-control search-select" name="category">
-                <option value="">카테고리 선택</option>
-                <option value="0">부가서비스</option>
-                <option value="1">서비스정책</option>
-                <option value="2">요금관련</option>
+            <input type="text" class="form-control search-input" id="searchText" name="searchText" value="{{ searchText }}" placeholder="검색창">
+            <select class="form-control search-select" name="searchSelect" id="searchSelect">
+                <option value="" {% if searchSelect == '' %}selected{% endif %}>카테고리 선택</option>
+                <option value="0" {% if searchSelect == '0' %}selected{% endif %}>부가서비스</option>
+                <option value="1" {% if searchSelect == '1' %}selected{% endif %}>서비스정책</option>
+                <option value="2" {% if searchSelect == '2' %}selected{% endif %}>요금관련</option>
             </select>
-            <select class="form-control search-select" name="result">
-                <option value="">결과 선택</option>
-                <option value="pass">통과</option>
-                <option value="fail">실패</option>
+            <select class="form-control search-select" name="result" id="result">
+                <option value="" {% if result == '' %}selected{% endif %}>결과선택</option>
+                <option value="pass" {% if result == 'pass' %}selected{% endif %}>통과</option>
+                <option value="fail" {% if result == 'fail' %}selected{% endif %}>실패</option>
             </select>
             <button type="submit" class="btn btn-primary search-button">검색</button>
         </div>
         <div>
-            <p>총 {{ logs.paginator.count }}건</p>
+            <p>총 {{ data.paginator.count }}건</p>
         </div>
         <div>
             <table class="styled-table">
@@ -49,14 +55,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if logs %}
-                    {% for log in logs %}
-                    <tr data-url="{% url 'education:quiz_details' log.id %}">
-                        <td>{{ forloop.counter0|add:logs.start_index }}</td>
-                        <td>{{ log.get_category_display }}</td>
-                        <td>{{ log.is_passed|yesno:"통과,실패" }}</td>
-                        <td>{{ log.create_time|date:"Y-m-d H:i" }}</td>
-                        <td>{{ log.user_id.username }}</td>
+                    {% if data %}
+                    {% for item in data %}
+                    <tr data-url="{% url 'education:quiz_details' item.id %}">
+                        <td>{{ forloop.counter0|add:data.start_index }}</td>
+                        <td>{{ item.get_category_display }}</td>
+                        <td>{{ item.is_passed|yesno:"통과,실패" }}</td>
+                        <td>{{ item.create_time|date:"Y-m-d H:i" }}</td>
+                        <td>{{ item.auth_user.username }}</td>
                     </tr>
                     {% endfor %}
                     {% else %}
@@ -69,18 +75,18 @@
         </div>
         <div class="pagination">
             <div class="step-links">
-                {% if logs.has_previous %}
-                    <a href="?page=1">&laquo; 처음</a>
-                    <a href="?page={{ logs.previous_page_number }}">이전</a>
+                {% if data.has_previous %}
+                <a href="?page=1">&laquo; 처음</a>
+                <a href="?page={{ data.previous_page_number }}">이전</a>
                 {% endif %}
 
                 <span class="current">
-                    페이지 {{ logs.number }} / {{ logs.paginator.num_pages }}
+                    페이지 {{ data.number }} / {{ data.paginator.num_pages }}
                 </span>
 
-                {% if logs.has_next %}
-                    <a href="?page={{ logs.next_page_number }}">다음</a>
-                    <a href="?page={{ logs.paginator.num_pages }}">마지막 &raquo;</a>
+                {% if data.has_next %}
+                <a href="?page={{ data.next_page_number }}">다음</a>
+                <a href="?page={{ data.paginator.num_pages }}">마지막 &raquo;</a>
                 {% endif %}
             </div>
         </div>
