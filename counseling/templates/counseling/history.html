@@ -4,7 +4,7 @@
 
 {% block content %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'education/css/history.css' %}">
+<link rel="stylesheet" href="{% static 'counseling/css/history.css' %}">
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -57,6 +57,23 @@
                     {% endif %}
                 </tbody>
             </table>
+        </div>
+        <div class="pagination">
+            <div class="step-links">
+                {% if logs.has_previous %}
+                <a href="?page=1">&laquo; 처음</a>
+                <a href="?page={{ logs.previous_page_number }}">이전</a>
+                {% endif %}
+
+                <span class="current">
+                    페이지 {{ logs.number }} / {{ logs.paginator.num_pages }}
+                </span>
+
+                {% if logs.has_next %}
+                <a href="?page={{ logs.next_page_number }}">다음</a>
+                <a href="?page={{ logs.paginator.num_pages }}">마지막 &raquo;</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 </form>

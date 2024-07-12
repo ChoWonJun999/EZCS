@@ -1,17 +1,31 @@
 @font-face {
-    font-family: 'Chosunilbo_myungjo';
-    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff') format('woff');
+    font-family: "Chosunilbo_myungjo";
+    src: url("https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/Chosunilbo_myungjo.woff") format("woff");
     font-weight: normal;
     font-style: normal;
 }
 
 .dashboard {
     display: flex;
-    height: 100vh;
+    min-height: 70vh;
+    height: 100%;
     padding: 20px;
     gap: 20px;
     box-sizing: border-box;
-    position: relative; 
+    position: relative;
+    align-items: stretch;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#category-selection {
+    flex: 1;
+}
+
+#guide-section {
+    flex: 4;
 }
 
 .section {
@@ -28,37 +42,40 @@
 }
 
 .category-section {
-    flex: 1; 
+    flex: 1;
     display: flex;
     flex-direction: column;
 }
 
 .menu-header {
-    font-size: 18px;
+    font-size: 16px;
+    font-weight: bold;
     margin-bottom: 15px;
     color: #333;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
 }
 
 .category-buttons {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    flex-grow: 1; 
+    flex-grow: 1;
 }
 
 .category-button {
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
-    color: white;
+    background-color: #58b0e3;
+    color: black;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
-    font-family: 'Chosunilbo_myungjo', serif;
 }
 
 .category-button:hover {
-    background-color: #0056b3;
+    background-color: #007a63;
     transform: translateY(-2px);
 }
 
@@ -66,7 +83,7 @@
     font-size: 16px;
     font-weight: bold;
     margin-bottom: 15px;
-    color: #007bff;
+    color: black;
     border-bottom: 2px solid #e0e0e0;
     padding-bottom: 10px;
 }
@@ -113,15 +130,23 @@ textarea {
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
-    background-color: #007bff;
-    color: white;
+    background-color: #58b0e3;
+    color: black;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.3s;
 }
 
 #text-button:hover {
-    background-color: #0056b3;
+    background-color: #007a63;
     transform: translateY(-2px);
+}
+
+/* 추가된 CSS */
+.disabled-input {
+    opacity: 0.5;
+    pointer-events: none;
+    background-color: #e0e0e0;
+    cursor: not-allowed;
 }
 
 .mic-button:disabled {
@@ -134,7 +159,7 @@ textarea {
 }
 
 .mic-button:hover:not(:disabled) {
-    background-color: #0056b3;
+    background-color: #3d3d3d;
 }
 
 .button-container {
@@ -151,11 +176,11 @@ textarea {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #007bff;
-    color: #fff;
+    background-color: #58b0e3;
+    color: black;
     transition: background-color 0.3s;
-    flex: 1; 
-    margin: 0 5px; 
+    flex: 1;
+    margin: 0 5px;
 }
 
 .button-container .mic-button {
@@ -168,10 +193,10 @@ textarea {
     border-radius: 15px;
     max-width: 80%;
     word-wrap: break-word;
-    font-family: 'Chosunilbo_myungjo', serif;
+    font-family: "Chosunilbo_myungjo", serif;
     font-size: 14px;
     line-height: 1.5;
-    background-color: #e0f7fa; 
+    background-color: #e0f7fa;
     align-self: flex-start;
     text-align: left;
 }
@@ -182,7 +207,7 @@ textarea {
     border-radius: 15px;
     max-width: 80%;
     word-wrap: break-word;
-    font-family: 'Chosunilbo_myungjo', serif;
+    font-family: "Chosunilbo_myungjo", serif;
     font-size: 14px;
     line-height: 1.5;
     background-color: #f8d7da;
@@ -197,17 +222,17 @@ textarea {
     border-radius: 15px;
     max-width: 80%;
     word-wrap: break-word;
-    font-family: 'Chosunilbo_myungjo', serif;
+    font-family: "Chosunilbo_myungjo", serif;
     font-size: 14px;
     line-height: 1.5;
-    background-color: #e0f7fa; 
+    background-color: #e0f7fa;
     color: black;
     align-self: flex-start;
     text-align: left;
 }
 
 .output-msg.customer {
-    background-color: #e0f7fa; 
+    background-color: #e0f7fa;
     padding: 10px;
     border-radius: 15px;
     margin-bottom: 10px;
@@ -218,7 +243,7 @@ textarea {
 }
 
 .output-msg.counselor {
-    background-color: #e0f7e9; 
+    background-color: #e0f7e9;
     padding: 10px;
     border-radius: 15px;
     margin-bottom: 10px;
@@ -234,11 +259,11 @@ textarea {
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 15px;
-    background-color: #e9ecef; 
+    background-color: #e9ecef;
     max-width: 80%;
     word-break: break-word;
     color: black;
-    font-family: 'Chosunilbo_myungjo', serif;
+    font-family: "Chosunilbo_myungjo", serif;
     font-size: 14px;
 }
 
@@ -252,7 +277,7 @@ textarea {
 .submit-button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007bff;
+    background-color: #2ec4b6;
     color: white;
     border: none;
     border-radius: 4px;
@@ -261,7 +286,7 @@ textarea {
 }
 
 .submit-button:hover {
-    background-color: #0056b3;
+    background-color: #007a63;
 }
 
 .no-underline {
@@ -275,7 +300,29 @@ textarea {
     display: flex;
     gap: 10px;
     align-items: center;
-    font-family: 'Chosunilbo_myungjo', serif;
+    font-family: "Chosunilbo_myungjo", serif;
+}
+
+.reset-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    font-family: "Chosunilbo_myungjo", serif;
+    margin-top: 20px; /* 원하는 위치 조정을 위해 여백 추가 */
+}
+
+.reset-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+.category-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
 }
 
 @media (max-width: 768px) {
@@ -292,7 +339,7 @@ textarea {
     }
 
     .submit-container {
-        justify-self: center; 
-        align-self: start; 
+        justify-self: center;
+        align-self: start;
     }
 }

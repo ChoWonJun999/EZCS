@@ -3,10 +3,10 @@
 {% block title %}Quiz Detail{% endblock %}
 {% block content %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'education/css/detail.css' %}">
+<link rel="stylesheet" href="{% static 'education/css/quiz.css' %}">
 
 <div class="dashboard">
-    <h1>퀴즈 상세보기</h1>
+    <h3>퀴즈 상세보기</h3>
     <div class="log-detail">
         <div class="detail-item">
             <p><strong>번호:</strong> {{ log.id }}</p>
@@ -26,9 +26,7 @@
     </div>
 
     <div class="quiz-history">
-        <h3>퀴즈 창 복원 영역</h3>
-        
-        <h2>퀴즈 결과</h2>
+        <h1>퀴즈 결과</h1>
 
         {% for item in items %}
         <div class="question">
@@ -66,109 +64,4 @@
         {% endfor %}
     </div>
 </div>
-
-<style>
-    .dashboard {
-        background-color: #f9f9f9;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin-top: 20px;
-    }
-    
-    h1 {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 20px;
-    }
-    
-    .log-detail, .quiz-history {
-        background-color: #ffffff;
-        padding: 20px;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-    }
-    
-    .detail-item {
-        margin-bottom: 15px;
-        padding: 10px;
-        border-bottom: 1px solid #eeeeee;
-    }
-    
-    .detail-item p {
-        margin: 0;
-        font-size: 16px;
-    }
-    
-    .detail-item strong {
-        font-weight: bold;
-    }
-    
-    .pass {
-        color: green;
-        font-weight: bold;
-    }
-    
-    .fail {
-        color: red;
-        font-weight: bold;
-    }
-    
-    .question {
-        margin-bottom: 20px;
-    }
-    
-    .question p {
-        font-size: 18px;
-        font-weight: bold;
-    }
-    
-    .answer-input {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-    
-    .feedback {
-        margin-bottom: 20px;
-    }
-    
-    .feedback-correct {
-        color: green;
-        font-size: 18px;
-        font-weight: bold;
-    }
-    
-    .feedback-incorrect {
-        color: red;
-        font-size: 18px;
-        font-weight: bold;
-    }
-    
-    .explanation {
-        background-color: #fff;
-        padding: 20px;
-        border: 1px solid #e0e0e0;
-        border-radius: 8px;
-        margin-bottom: 20px;
-    }
-    
-    .explanation-title, .correct-answer-title {
-        font-size: 18px;
-        font-weight: bold;
-        margin-bottom: 10px;
-    }
-    
-    .explanation-content, .correct-answer-content {
-        font-size: 16px;
-        line-height: 1.5;
-    }
-    
-</style>
-
 {% endblock %}

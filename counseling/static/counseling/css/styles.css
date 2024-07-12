@@ -13,7 +13,7 @@
     height: calc(100vh - 40px); 
     box-sizing: border-box;
     padding: 20px;
-    position: relative; /* 위치 조정을 위한 설정 추가 */
+    position: relative; 
 }
 
 .customer-info, .memo-section, .stt-content, .chat-section-readonly {
@@ -22,20 +22,20 @@
     box-sizing: border-box;
     background-color: #fff; 
     border-radius: 8px; 
-    display: flex;
+    /* display: flex; */
     flex-direction: column;
     overflow: auto; 
 }
 
 .customer-info, .memo-section {
-    max-height: 350px;
+    max-height: 50vh;
 }
 
 .stt-content {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    max-height: 500px; 
+    max-height: 50vh; 
     overflow: hidden; 
 }
 
@@ -60,8 +60,8 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #007bff;
-    color: #fff;
+    background-color: #58b0e3;
+    color: black;
     transition: background-color 0.3s;
     flex: 1; 
     margin: 0 5px; 
@@ -75,8 +75,8 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    background-color: #ffb703;
-    color: #fff;
+    background-color: #df6977;
+    color: black;
     transition: background-color 0.3s;
     flex: 1; 
     margin: 0 5px; 
@@ -177,7 +177,7 @@
 .submit-button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007bff;
+    background-color: #2ec4b6;
     color: white;
     border: none;
     border-radius: 4px;
@@ -185,7 +185,7 @@
 }
 
 .submit-button:hover {
-    background-color: #0056b3;
+    background-color: #007a63;
 }
 
 @media (max-width: 768px) {
@@ -244,7 +244,7 @@ form ul li input[type="tel"] {
     padding: 10px 15px;
     margin-right: 5px;
     cursor: pointer;
-    background-color: #007bff;
+    background-color: #2ec4b6;
     color: white;
     border: none;
     border-radius: 5px;
@@ -253,5 +253,5 @@ form ul li input[type="tel"] {
 
 .buttons input[type="button"]:hover,
 .buttons input[type="reset"]:hover {
-    background-color: #0056b3;
+    background-color: #007a63;
 }

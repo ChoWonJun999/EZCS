@@ -11,29 +11,33 @@
             window.location.href = url;
         });
     });
+
+    window.onkeydown = function () {
+        var kcode = event.keyCode;
+        if (kcode == 116) {
+            history.replaceState({}, null, location.pathname);
+        }
+    }
 </script>
 <link rel="stylesheet" href="{% static 'education/css/history.css' %}">
 
-
-<form action="" method="POST">
-    {% csrf_token %}
-    <div class="">
-
+<form action="{% url 'education:edu_history' %}" method="GET">
+    <div class="dashboard">
         <div>
-            <h1>롤플레잉 이력</h1>
+            <h3>롤플레잉 이력</h3>
         </div>
         <div class="search-container">
-            <input type="text" class="form-control search-input" id="searchText" name="searchText" placeholder="검색창">
-            <select class="form-control search-select" name="category">
-                <option value="">카테고리 선택</option>
-                <option value="부가서비스">부가서비스</option>
-                <option value="서비스정책">서비스정책</option>
-                <option value="요금관련">요금관련</option>
+            <input type="text" class="form-control search-input" id="searchText" name="searchText" value="{{ searchText }}" placeholder="검색창">
+            <select class="form-control search-select" name="searchSelect" id="searchSelect">
+                <option value="" {% if searchSelect == '' %}selected{% endif %}>카테고리 선택</option>
+                <option value="0" {% if searchSelect == '0' %}selected{% endif %}>부가서비스</option>
+                <option value="1" {% if searchSelect == '1' %}selected{% endif %}>서비스정책</option>
+                <option value="2" {% if searchSelect == '2' %}selected{% endif %}>요금관련</option>
             </select>
             <input type="submit" class="btn btn-primary search-button" value="검색">
         </div>
         <div>
-            <p>총 {{ logs.paginator.count }}건</p>
+            <p>총 {{ data.paginator.count }}건</p>
         </div>
         <div>
             <table class="styled-table">
@@ -46,13 +50,21 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {% if logs %}
-                    {% for log in logs %}
-                    <tr data-url="{% url 'education:edu_details' log.id %}">
+                    {% if data %}
+                    {% for item in data %}
+                    <tr data-url="{% url 'education:edu_details' item.id %}">
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ log.body.category }}</td>
-                        <td>{{ log.create_time|date:"Y-m-d H:i" }}</td>
-                        <td>{{ log.user_id.username }}</td>
+                        <td>
+                            {% if item.category == 0 %}
+                            부가서비스
+                            {% elif item.category == 1 %}
+                            서비스정책
+                            {% else %}
+                            요금관련
+                            {% endif %}
+                        </td>
+                        <td>{{ item.create_time|date:"Y-m-d H:i" }}</td>
+                        <td>{{ item.auth_user.username }}</td>
                     </tr>
                     {% endfor %}
                     {% else %}
@@ -63,20 +75,21 @@
                 </tbody>
             </table>
         </div>
+
         <div class="pagination">
             <div class="step-links">
-                {% if logs.has_previous %}
+                {% if data.has_previous %}
                 <a href="?page=1">&laquo; 처음</a>
-                <a href="?page={{ logs.previous_page_number }}">이전</a>
+                <a href="?page={{ data.previous_page_number }}">이전</a>
                 {% endif %}
 
                 <span class="current">
-                    페이지 {{ logs.number }} / {{ logs.paginator.num_pages }}
+                    페이지 {{ data.number }} / {{ data.paginator.num_pages }}
                 </span>
 
-                {% if logs.has_next %}
-                <a href="?page={{ logs.next_page_number }}">다음</a>
-                <a href="?page={{ logs.paginator.num_pages }}">마지막 &raquo;</a>
+                {% if data.has_next %}
+                <a href="?page={{ data.next_page_number }}">다음</a>
+                <a href="?page={{ data.paginator.num_pages }}">마지막 &raquo;</a>
                 {% endif %}
             </div>
         </div>

@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-CSRF_TRUSTED_ORIGINS = ['https://81bb-59-26-32-139.ngrok-free.app']
+# CSRF_TRUSTED_ORIGINS = ['*']
 
 # Application definition
 
@@ -45,7 +45,6 @@ INSTALLED_APPS = [
     "education",
     'education.templatetags',
     "counseling",
-    "linker",
 ]
 
 MIDDLEWARE = [

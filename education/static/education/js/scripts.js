@@ -12,18 +12,16 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-// 선택된 카테고리를 저장하는 변수
-let selectedCategory = null;
-
 // 카테고리를 선택하는 함수
 function selectCategory(category) {
-    console.time();
-    selectedCategory = category;
-    console.log("Selected category:", selectedCategory);
+    console.log("Selected category:", category);
+
+    // 선택한 순간 버튼 비활성화
+    ableCategoryButtons(true);
 
     // 폼 데이터를 생성하고 카테고리와 CSRF 토큰 추가
     const formData = new FormData();
-    formData.append("category", selectedCategory);
+    formData.append("category", category);
 
     // 서버로 POST 요청을 보내 카테고리를 설정
     fetch("/education/", {
@@ -41,44 +39,59 @@ function selectCategory(category) {
         })
         .then((data) => {
             console.log("Chatbot initialized:", data);
-            document.getElementById("selected-category").innerText = selectedCategory;
+            $("#category-selected").val(category);
+            $("#log-header").val(data.log_header);
+
+            document.getElementById("selected-category").innerText = category;
             document.getElementById("chat-content").innerHTML = ""; // 채팅 내용을 지움
             appendMessage("bot", data.initial_question); // 첫 질문 출력
-            lastChatbotMessage = data.initial_question;
-            console.timeEnd();
+
+            windowChange(true);
         })
-        .catch((error) => console.error("Error:", error));
+        .catch((error) => {
+            console.error("Error:", error);
+            ableCategoryButtons(false);
+            alert("ERROR");
+        });
 }
 
 // 메시지를 전송하는 함수
 function sendMessage(event) {
     event.preventDefault();
-    const userInput = document.getElementById("question").value;
-    if (!userInput.trim()) return;
+    const message = document.getElementById("question").value;
+    if (!message.trim()) return;
 
     // 사용자 메시지를 채팅 상자에 추가
-    appendMessage("user", userInput);
+    appendMessage("user", message);
 
     // 사용자 메시지를 서버로 전송
     const formData = new FormData();
-    formData.append("message", userInput);
-    formData.append("csrfmiddlewaretoken", getCookie("csrftoken"));
+    formData.append("message", message);
+    formData.append("category", $("#category-selected").val());
+    formData.append("log_header", $("#log-header").val());
 
     fetch("/education/", {
         method: "POST",
-        body: formData,
         headers: {
-            "X-CSRFToken": getCookie("csrftoken")
-        }
+            "X-CSRFToken": $("#csrf").val()
+        },
+        body: formData
     })
         .then((response) => response.json())
         .then((data) => {
             // 봇의 응답을 채팅 상자에 추가
             appendMessage("bot", data.response);
-            lastChatbotMessage = data.response;
+            // lastChatbotMessage = data.response;
+            if (data.output) {
+                const childDiv = document.createElement("div");
+                childDiv.className = "evaluated-message-bot";
+                childDiv.innerText = data.output;
+                document.getElementById("readonly-chat-content").appendChild(childDiv);
+            } else if (data.error) {
+                console.error("Error from server:", data.error);
+            }
         })
         .catch((error) => console.error("Error:", error));
-    textEvaluationToChatbot(userInput);
 }
 
 // 메시지를 채팅 상자에 추가하는 함수
@@ -96,22 +109,6 @@ function appendMessage(sender, message) {
     }
 }
 
-// 쿠키 값을 가져오는 함수
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === name + "=") {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
 // 시작 및 중지 버튼, 채팅 내용을 가져오는 변수
 const startButton = document.getElementById("start-button");
 const stopButton = document.getElementById("stop-button");
@@ -121,6 +118,9 @@ let audioChunks = [];
 
 // 롤플레잉 시작 함수
 function startEducation() {
+    $("#question").attr("readonly", true);
+    $("#text-button").attr("disabled", true);
+
     navigator.mediaDevices
         .getUserMedia({ audio: true })
         .then((stream) => {
@@ -189,25 +189,33 @@ function startEducation() {
                     const finalDiv = createFinalDiv(finalTranscript);
                     chatContent.appendChild(finalDiv);
                     appendMessageToReadonly("user", finalTranscript);
+
                     const formData = new FormData();
                     formData.append("message", finalTranscript);
-                    formData.append("csrfmiddlewaretoken", getCookie("csrftoken"));
+                    formData.append("category", $("#category-selected").val());
+                    formData.append("log_header", $("#log-header").val());
 
                     fetch("/education/", {
                         method: "POST",
-                        body: formData,
                         headers: {
-                            "X-CSRFToken": getCookie("csrftoken")
-                        }
+                            "X-CSRFToken": $("#csrf").val()
+                        },
+                        body: formData
                     })
                         .then((response) => response.json())
                         .then((data) => {
                             // 봇의 응답을 채팅 상자에 추가
                             appendMessage("bot", data.response);
-                            lastChatbotMessage = data.response;
+                            if (data.output) {
+                                const childDiv = document.createElement("div");
+                                childDiv.className = "evaluated-message-bot";
+                                childDiv.innerText = data.output;
+                                document.getElementById("readonly-chat-content").appendChild(childDiv);
+                            } else if (data.error) {
+                                console.error("Error from server:", data.error);
+                            }
                         })
                         .catch((error) => console.error("Error:", error));
-                    textEvaluationToChatbot(finalTranscript);
                 }
 
                 interimDiv.remove();
@@ -228,6 +236,8 @@ function startEducation() {
 
 // 롤플레잉 종료 함수
 function stopEducation() {
+    $("#question").attr("readonly", false);
+    $("#text-button").attr("disabled", false);
     if (window.recognition) {
         window.recognition.stop();
     }
@@ -251,6 +261,18 @@ function stopEducation() {
             }
         };
     }
+}
+
+function ableCategoryButtons(bool) {
+    const buttons = document.querySelectorAll(".category-button");
+    buttons.forEach((button) => {
+        button.disabled = bool;
+        if (bool) {
+            button.style.cursor = "not-allowed";
+        } else {
+            button.style.cursor = "pointer";
+        }
+    });
 }
 
 // interimDiv 제거 함수
@@ -283,65 +305,14 @@ function appendMessageToReadonly(sender, message) {
     document.getElementById("readonly-chat-content").scrollTop = document.getElementById("readonly-chat-content").scrollHeight;
 }
 
-// 채팅 데이터를 저장하는 함수
-function saveChatData() {
-    const selectedCategory = document.getElementById("selected-category").innerText;
-    const chatContent = document.getElementById("chat-content").innerText;
-
-    const data = {
-        category: selectedCategory,
-        chat: chatContent,
-        csrfmiddlewaretoken: "{{ csrf_token }}"
-    };
-
-    // 서버로 AJAX 요청을 보내 채팅 데이터를 저장
-    $.ajax({
-        type: "POST",
-        url: '{% url "save_chat_data" %}', // URL을 동적으로 생성
-        data: data,
-        success: function (response) {
-            alert("Data saved successfully");
-        },
-        error: function (response) {
-            alert("Failed to save data");
-        }
-    });
+function resetToCategorySelection(obj) {
+    location.href = $(obj).data("url");
 }
 
-// 텍스트 데이터를 챗봇에 전송하는 함수(view.py에 전송)
-function textEvaluationToChatbot(userInput) {
-    const formData = new FormData();
-
-    console.log(lastChatbotMessage);
-
-    formData.append("customerQuestion", lastChatbotMessage);
-    formData.append("userInput", userInput);
-    formData.append("category", selectedCategory);
-
-    fetch("/education/evaluation_chat/", {
-        method: "POST",
-        headers: {
-            "X-CSRFToken": $("#csrf").val()
-        },
-        body: formData
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            if (data.output) {
-                const childDiv = document.createElement("div");
-                childDiv.className = "evaluated-message-bot";
-                childDiv.innerText = data.output;
-                document.getElementById("readonly-chat-content").appendChild(childDiv); // 챗봇 응답을 readonly-chat-content div에 추가
-            } else if (data.error) {
-                console.error("Error from server:", data.error);
-            }
-        })
-        .catch((error) => {
-            console.error("Error:", error);
-        });
+function windowChange(bool) {
+    document.getElementById("category-selection").classList.toggle("hidden", bool);
+    document.getElementById("guide-section").classList.toggle("hidden", bool);
+    document.getElementById("chat-section").classList.toggle("hidden", !bool);
+    document.getElementById("chat-section-readonly").classList.toggle("hidden", !bool);
+    document.getElementById("submit-container").classList.toggle("hidden", !bool);
 }
