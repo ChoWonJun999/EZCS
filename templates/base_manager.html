@@ -2,37 +2,50 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>{% block title %}Admin Dashboard{% endblock %}</title>
 
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'css/management.css' %}">
-        <link href="/static/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-        <script src="/static/js/bootstrap/bootstrap.bundle.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="/static/js/management.js"></script>
-    </head>
-    <style>
-        @font-face {
-            font-family: 'GmarketSansMedium';
-            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
-            font-weight: normal;
-            font-style: normal;
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Dashboard{% endblock %}</title>
+
+    <link href="/static/css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <script src="/static/js/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    {% load static %}
+    <link href="{% static '/css/management.css' %}" rel="stylesheet" />
+    <script src="/static/js/management.js"></script>
+    <script>
+        function openContractPopup() {
+            var width = 800;
+            var height = 600;
+            var left = (screen.width - width) / 2;
+            var top = (screen.height - height) / 2;
+            window.open("{% url 'main:contract' %}", "Terms and Conditions", "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left);
         }
-    </style>
+
+        function openPrivacyPopup() {
+            var width = 800;
+            var height = 600;
+            var left = (screen.width - width) / 2;
+            var top = (screen.height - height) / 2;
+            window.open("{% url 'main:privacy' %}", "Privacy Policy", "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left);
+        }
+    </script>
 </head>
 
 <body>
     <div class="header">
-        <div class="company-name">관리자 페이지</div>
+        <div class="company-name" style="font-size: x-large">관리자 페이지</div>
         <div class="header-right">
             <div class="profile-info">안녕하세요, {{ request.user.username }} 관리자님.</div>
+            {% if request.user.is_superuser %}
+            <div class="admin-page">
+                <a href="{% url 'main:user_dashboard' %}">메인 페이지</a>
+            </div>
             <div class="logout">
                 <a href="{% url 'accounts:logout' %}">로그아웃</a>
             </div>
+            {%endif%}
         </div>
     </div>
     <div class="container-fuild">
@@ -40,11 +53,11 @@
             <ul class="nav nav-tabs">
                 <li class="nav-item">
                     {% url 'management:list' 'm' as management_list_m_url %}
-                    <a class="nav-link {% if request.path == management_list_m_url %}active{% endif %}" aria-current="page" href="{{ management_list_m_url }}">직원 관리</a>
+                    <a class="nav-link {% if request.path == management_list_m_url %}active{% endif %}" style="font-size: 20px;" aria-current="page" href="{{ management_list_m_url }}">직원 관리</a>
                 </li>
                 <li class="nav-item">
                     {% url 'management:list' 'a' as management_list_a_url %}
-                    <a class="nav-link {% if request.path == management_list_a_url %}active{% endif %}" href="{{ management_list_a_url }}">가입 승인</a>
+                    <a class="nav-link {% if request.path == management_list_a_url %}active{% endif %}" style="font-size: 20px;" href="{{ management_list_a_url }}">가입 승인</a>
                 </li>
             </ul>
             {% comment %}
@@ -61,6 +74,13 @@
                 <!-- 관리자 대시보드 내용 -->
                 {% endblock %}
             </div>
+            <footer class="footer">
+                <div class="footer-content">
+                    <p><a href="javascript:void(0);" onclick="openPrivacyPopup();">개인정보 처리방침</a> | <a href="javascript:void(0);" onclick="openContractPopup();">이용약관</a></p>
+                    <p>㈜KT 에이블스쿨팀 충남/충북권역, 대표자: team21 </p>
+                    <p>&copy; 2024 aivleschool team21. All rights reserved.</p>
+                </div>
+            </footer>
         </div>
     </div>
 </body>

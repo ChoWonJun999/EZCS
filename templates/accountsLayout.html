@@ -20,22 +20,21 @@
         <script src="{% static 'accounts\js\signup.js' %}"></script>
         <script src="{% static 'accounts\js\searchpw.js' %}"></script>
         <script src="{% static 'accounts\js\reset_password.js' %}"></script>
-
-
-        <title>
-            {% block title %}{% endblock %}
-        </title>
     </head>
     <style>
         body {
             min-height: 100vh;
-            font-family: 'GmarketSansMedium', Arial, sans-serif !important;
+            font-family: 'GmarketSansMedium', Arial, sans-serif;
             background: url("{% static 'main/images/home.png' %}") no-repeat center center fixed;
             background-size: cover;
             background-attachment: fixed;
-            height: 90%;
+
             margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
+        
         @font-face {
             font-family: 'GmarketSansMedium';
             src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');

@@ -16,9 +16,9 @@
     <div class="dashboard">
         <div>
             {% if flag == 'm' %}
-            <h2>직원 관리</h2>
+            <h2 style="font-weight: bold;">직원 관리</h2>
             {% else %}
-            <h2>직원 승인</h2>
+            <h2 style="font-weight: bold;">직원 승인</h2>
             {% endif %}
         </div>
         <div>
@@ -31,7 +31,7 @@
                         <option value="email" {% if searchSelect == 'email' %}selected{% endif %}>E-mail</option>
                     </select>
                 </li>
-                <li><input type="text" class="form-control" id="searchText" name="searchText" placeholder="검색창" value="{{ searchText }}"></li>
+                <li><input type="text" class="form-control" style="width: 395px; height: 33px;" id="searchText" name="searchText" placeholder="검색창" value="{{ searchText }}"></li>
                 <li><span class="form-control my-span">가입 일자</span></li>
                 <li>
                     <input type="date" id="startDate" name="startDate" class="form-control" value="{{ startDate }}" onkeydown="return false">
@@ -44,7 +44,7 @@
             </ul>
         </div>
         <div>
-            <span style="float: right;">총 {{ data|length }}건</span>
+            <span style="float: left;">총 {{ data|length }}건</span>
         </div>
         <div>
             <table class="styled-table">

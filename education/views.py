@@ -41,8 +41,6 @@ def chat_view(request):
             output = chatbot.chat(message)
 
             evaluation_chatbot = Chatbot(
-                api_key=settings.OPENAI_API_KEY,
-                db_path=settings.DB_PATH,
                 model_id="ft:gpt-3.5-turbo-0125:personal::9gS63IJD",
                 category=category,
                 THRESHOLD=2,
@@ -66,8 +64,6 @@ def chat_view(request):
         elif category:
             # Chatbot 객체 초기화
             chatbot = Chatbot(
-                api_key=settings.OPENAI_API_KEY,
-                db_path=settings.DB_PATH,
                 model_id="ft:gpt-3.5-turbo-0125:personal::9gS63IJD",
                 category=category,
                 THRESHOLD=2,

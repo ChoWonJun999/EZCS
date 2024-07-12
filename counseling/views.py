@@ -34,8 +34,6 @@ def counsel(request):
             , 'customer': customer
         }
         trans_chat_bot = Chatbot(
-            api_key=settings.OPENAI_API_KEY,
-            db_path=settings.DB_PATH,
             model_id='ft:gpt-3.5-turbo-0125:personal::9god26fK',
             behavior_policy=None,
         )
@@ -45,8 +43,6 @@ def counsel(request):
         예시: 네, 고객님 해당 문의 내용은 월사용요금을 kt에서 신용카드사로 청구하면 고객이 신용카드사에 결제대금을 납부하는 제도입니다."
 
         recommend_chat_bot = Chatbot(
-            api_key=settings.OPENAI_API_KEY,
-            db_path=settings.DB_PATH,
             behavior_policy=messages
         )
         

@@ -8,16 +8,32 @@
     margin: 0;
 } */
 img.ezcs-logo {
-    /* position: fixed; */
     position: relative;
     width: 200px;
     height: auto;
-    top: 6%;
+    top: 0%;
     left: 50%;
     padding: 20px;
-    transform: translate(-50%, -50%);
-
+    transform: translate(-50%, 0%);
 }
+@media (max-width: 768px) {
+    .ezcs-logo {
+        width: 70px;
+    }
+    .logo-container {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .ezcs-logo {
+        width: 50px;
+    }
+    .logo-container {
+        padding: 10px;
+    }
+}
+
 .my-form {
     width: 100% !important;
 }
@@ -27,7 +43,6 @@ img.ezcs-logo {
 }
 
 .container-fluid {
-    height: 100%;
     padding: 20px;
     box-sizing: border-box;
 }
