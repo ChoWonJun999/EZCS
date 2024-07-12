@@ -67,7 +67,7 @@
 
     <div class="mb-3 d-flex justify-content-between">
         <a onclick="history.back()" class="btn btn-lg btn-primary flex-grow-1 me-2" style="max-width: fit-content;">뒤로가기</a>
-        {% if flag == 'm'%}
+        {% if flag == 'm' or flag == 'ad'%}
         <a href="{% url 'management:edit' data.id flag %}" class="btn btn-lg btn-primary flex-grow-1" style="max-width: fit-content;">수정하기</a>
         {% else %}
         <input type="button" value="승인" class="btn btn-primary" data-url="{% url 'management:update_auth' data.id 1 %}" data-username="{{ data.auth_user.username }}" onclick="approval(this);">

@@ -292,3 +292,26 @@ def save_consultation(request):
         except Exception as e:
             return JsonResponse({'success': False, 'error': str(e)})
     return JsonResponse({'success': False, 'error': 'Invalid request'})
+
+@csrf_exempt
+def save_consultation(request):
+    if request.method == 'POST':
+        try:
+            log_id = request.POST.get('log_id')
+            inquiry_text = request.POST.get('inquiry_text')
+            action_text = request.POST.get('action_text')
+
+            if log_id and (inquiry_text or action_text):
+                counsel_log = Log.objects.get(id=log_id)
+                memo = json.loads(counsel_log.memo) if isinstance(counsel_log.memo, str) else counsel_log.memo or {}
+                memo['inquiry_text'] = inquiry_text
+                memo['action_text'] = action_text
+                counsel_log.memo = json.dumps(memo, ensure_ascii=False)
+                counsel_log.save()
+
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'Missing log_id, inquiry_text, or action_text'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid request'})

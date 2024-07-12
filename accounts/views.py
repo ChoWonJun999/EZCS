@@ -35,7 +35,7 @@ def user_login(request):
             counselor = CounselorProfile.objects.filter(auth_user_id=user.id).first()
             admin = AdministratorProfile.objects.filter(auth_user_id=user.id).first()
 
-            if (counselor and counselor.active_status != 1) or (admin and admin.active_status != 1):
+            if (counselor and counselor.active_status != 1):
                 message = '로그인 권한이 없습니다.'
             elif flag == '1' and user.is_superuser == False:
                 message = '관리자가 아닙니다.'

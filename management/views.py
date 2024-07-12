@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from accounts.models import CounselorProfile
+from accounts.models import *
 from django.db.models import Q
 from django.core.paginator import Paginator
 from datetime import datetime, timedelta
@@ -19,10 +19,11 @@ def list(request, flag):
     if flag == 'm':
         query &= Q(auth_user__is_superuser=False)
         query &= Q(active_status=1)
+    elif flag == 'ad':
+        query &= Q(auth_user__is_superuser=True)
     else:
         query &= Q(auth_user__is_superuser=False)
         query &= Q(active_status=0)
-
     query1 = Q()
     if search_select:
         valid_fields = {
@@ -50,7 +51,10 @@ def list(request, flag):
         start_date = one_month_ago.strftime('%Y-%m-%d')
         end_date = datetime.now().strftime('%Y-%m-%d')
 
-    data = CounselorProfile.objects.filter(query & query1 & query2)
+    if flag == 'ad':
+        data = AdministratorProfile.objects.filter(query & query1 & query2)
+    else:
+        data = CounselorProfile.objects.filter(query & query1 & query2)
     paginator = Paginator(data, 10)
     page = request.GET.get('page')
     data = paginator.get_page(page)

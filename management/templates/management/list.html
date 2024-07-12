@@ -17,6 +17,8 @@
         <div>
             {% if flag == 'm' %}
             <h2 style="font-weight: bold;">직원 관리</h2>
+            {% elif flag == 'ad' %}
+            <h2>관리자 리스트</h2>
             {% else %}
             <h2 style="font-weight: bold;">직원 승인</h2>
             {% endif %}
@@ -65,7 +67,7 @@
                     <th>이름</th>
                     <th>E-mail</th>
                     <th>소속</th>
-                    {% if flag == 'm' %}
+                    {% if flag == 'm' or flag == 'ad' %}
                     <th>가입 일자</th>
                     {% else %}
                     <th>가입 요청 일자</th>
@@ -74,6 +76,7 @@
                 </thead>
                 <tbody>
                     {% if data %}
+                    {}
                     {% for item in data %}
                     <tr data-url="{% url 'management:detail' item.id flag %}" class="active-row">
                         <td>{{ forloop.counter }}</td>
