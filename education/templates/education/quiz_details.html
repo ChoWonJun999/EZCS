@@ -9,42 +9,46 @@
     <h3>퀴즈 상세보기</h3>
     <div class="log-detail">
         <div class="detail-item">
-            <p><strong>번호:</strong> {{ log.id }}</p>
+            <p><strong>번호:</strong> {{ head.id }}</p>
         </div>
         <div class="detail-item">
-            <p><strong>카테고리:</strong> {{ log.get_category_display }}</p>
+            <p><strong>카테고리:</strong> {{ head.get_category_display }}</p>
         </div>
         <div class="detail-item">
-            <p><strong>결과:</strong> <span class="{{ log.is_passed|yesno:'pass,fail' }}">{{ log.is_passed|yesno:"통과,실패" }}</span></p>
+            <p><strong>결과:</strong> <span class="{{ head.is_passed|yesno:'pass,fail' }}">{{ head.is_passed|yesno:"통과,실패" }}</span></p>
         </div>
         <div class="detail-item">
-            <p><strong>날짜:</strong> {{ log.create_time|date:"Y-m-d H:i" }}</p>
+            <p><strong>날짜:</strong> {{ head.create_time|date:"Y-m-d H:i" }}</p>
         </div>
         <div class="detail-item">
-            <p><strong>사용자:</strong> {{ log.user_id.username }}</p>
+            <p><strong>사용자:</strong> {{ head.auth_user.username }}</p>
         </div>
     </div>
 
     <div class="quiz-history">
+        <h3>퀴즈 창 복원 영역</h3>
+        
+        <h2>퀴즈 결과</h2>
+
         <h1>퀴즈 결과</h1>
 
-        {% for item in items %}
+        {% for item in data %}
         <div class="question">
-            <p>{{ forloop.counter }}. {{ item.education_quiz_id.question }}</p>
+            <p>{{ forloop.counter }}. {{ item.quiz.question }}</p>
             {% if item.quiz.flag == 0 %}
             <div class="input-container">
                 <input type="text" value="{{ item.answer }}" readonly>
             </div>
             {% else %}
             <div>
-                <label><input type="radio" {% if item.answer == '1' %}checked{% endif %} disabled> {{ item.education_quiz_id.choice1 }}</label><br>
-                <label><input type="radio" {% if item.answer == '2' %}checked{% endif %} disabled> {{ item.education_quiz_id.choice2 }}</label><br>
-                <label><input type="radio" {% if item.answer == '3' %}checked{% endif %} disabled> {{ item.education_quiz_id.choice3 }}</label><br>
-                <label><input type="radio" {% if item.answer == '4' %}checked{% endif %} disabled> {{ item.education_quiz_id.choice4 }}</label>
+                <label><input type="radio" {% if item.answer == '1' %}checked{% endif %} disabled> {{ item.quiz.choice1 }}</label><br>
+                <label><input type="radio" {% if item.answer == '2' %}checked{% endif %} disabled> {{ item.quiz.choice2 }}</label><br>
+                <label><input type="radio" {% if item.answer == '3' %}checked{% endif %} disabled> {{ item.quiz.choice3 }}</label><br>
+                <label><input type="radio" {% if item.answer == '4' %}checked{% endif %} disabled> {{ item.quiz.choice4 }}</label>
             </div>
             {% endif %}
             <div class="feedback">
-                {% if item.education_quiz_id.answer == item.answer %}
+                {% if item.quiz.answer == item.answer %}
                 <span class="feedback-correct">정답입니다.</span>
                 {% else %}
                 <span class="feedback-incorrect">오답입니다!</span>
@@ -53,12 +57,12 @@
             <div class="explanation">
                 <div class="explanation-title">퀴즈 해설</div>
                 <div class="explanation-content">
-                    {{ item.education_quiz_id.commentary }}
+                    {{ item.quiz.commentary }}
                 </div>
             </div>
             <div class="correct-answer">
                 <div class="correct-answer-title">정답</div>
-                <div class="correct-answer-content">{{ item.education_quiz_id.answer }}</div>
+                <div class="correct-answer-content">{{ item.quiz.answer }}</div>
             </div>
         </div>
         {% endfor %}

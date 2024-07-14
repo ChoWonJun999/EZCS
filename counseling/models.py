@@ -83,12 +83,16 @@ class Log(models.Model):
     )
 
     inquiries = models.TextField(
-        verbose_name="Customer Inquiries"
+        null=True
+        , blank=True
+        , verbose_name="Customer Inquiries"
         , db_comment="Customer Inquiries"
     )
     
     action = models.TextField(
-        verbose_name="Action for Customer Inquiries"
+        null=True
+        , blank=True
+        , verbose_name="Action for Customer Inquiries"
         , db_comment="Action for Customer Inquiries"
     )
 
@@ -132,6 +136,13 @@ class LogItem(models.Model):
     message = models.TextField(
         verbose_name="Customer or counselor's message"
         , db_comment="Customer or counselor's message"
+    )
+
+    translate = models.TextField(
+        null=True
+        , blank=True
+        , verbose_name="Recommended response comments"
+        , db_comment="Recommended response comments"
     )
 
     recommend = models.TextField(

@@ -4,12 +4,13 @@ from langchain_community.chat_message_histories import ChatMessageHistory
  
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
+from django.conf import settings
  
  
 class Chatbot:
     def __init__(self,
-                api_key,
-                db_path,
+                api_key=settings.OPENAI_API_KEY,
+                db_path=settings.DB_PATH,
                 category=None,
                 model_id='gpt-3.5-turbo',
                 behavior_policy=None,

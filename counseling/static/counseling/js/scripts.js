@@ -1,72 +1,62 @@
-const phoneInput = document.getElementById("phone");
 const transcription = document.getElementById("transcription");
-const customerStartButton = document.getElementById("customer-start-button");
-const counselorStartButton = document.getElementById("counselor-start-button");
-const stopButton = document.getElementById("stop-button");
-const saveButton = document.getElementById("save-button");
 const translationContent = document.getElementById("translation-content");
 let mediaRecorder;
 let audioChunks = [];
 let recognition;
 let currentStream;
 let audioBlob;
-let currentInterimDiv; // 현재 interim 메시지 div
+let currentInterimDiv;
 
-document.addEventListener("DOMContentLoaded", function () {
-    // 고객 정보 폼
-    document.getElementById("customer-form").addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            saveCustomerInfo();
-        }
-    });
+function updateLog() {
+    let phone_number = $("#phone").val();
+    if (phone_number.length !== 11 || !/^\d{11}$/.test(phone_number)) {
+        alert("전화번호는 11자리 숫자여야 합니다.");
+        return;
+    }
 
-    // 메모 폼
-    document.getElementById("memo-form").addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            saveMemo();
-        }
-    });
-
-    // 문의/조치 내용 폼
-    document.getElementById("consultation-form").addEventListener("keypress", function (event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            saveConsultation();
-        }
-    });
-});
-
-function editCustomerInfo() {
     const form = document.getElementById("customer-form");
-    const inputs = form.querySelectorAll('input:not([type="button"])');
-    inputs.forEach((input) => (input.disabled = false));
 
-    form.querySelector(".edit-button").style.display = "none";
-    form.querySelectorAll(".save-button, .cancel-button").forEach((button) => {
-        button.style.display = "inline-block";
-    });
+    const formData = new FormData(form);
+    formData.append("logId", $("#logId").val());
+    formData.append("inquiries", $("#inquiry-text").val());
+    formData.append("action", $("#action-text").val());
+    fetch(form.action, {
+        method: "POST",
+        headers: { "X-CSRFToken": $("#csrf").val() },
+        body: formData
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success) {
+                alert("고객 정보가 저장되었습니다.");
+            } else {
+                alert("고객 정보 저장에 실패했습니다.");
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            alert("고객 정보 저장 중 오류가 발생했습니다.");
+        });
 }
 
 function saveCustomerInfo() {
+    // 고객 정보 수정 저장 버튼
+    let phone_number = $("#phone").val();
+
     const form = document.getElementById("customer-form");
     const inputs = form.querySelectorAll('input:not([type="button"])');
 
     // 고객 정보를 저장하는 로직 추가, 예: 서버로 데이터 전송
-    if (phoneInput.value.length !== 11 || !/^\d{11}$/.test(phoneInput.value)) {
+    if (phone_number.length !== 11 || !/^\d{11}$/.test(phone_number)) {
         alert("전화번호는 11자리 숫자여야 합니다.");
-        phoneInput.disabled = false; // 입력 필드 다시 활성화
         return;
     }
 
     const formData = new FormData(form);
-    fetch("/counseling/save_customer_info/", {
+    fetch(form.action, {
         method: "POST",
-        body: formData,
-        headers: {
-            "X-CSRFToken": getCookie("csrftoken")
-        }
+        headers: { "X-CSRFToken": $("#csrf").val() },
+        body: formData
     })
         .then((response) => response.json())
         .then((data) => {
@@ -89,6 +79,7 @@ function saveCustomerInfo() {
 }
 
 function cancelEdit() {
+    // 고객 정보 수정 취소 버튼
     const form = document.getElementById("customer-form");
     const inputs = form.querySelectorAll('input:not([type="button"])');
     inputs.forEach((input) => (input.disabled = true));
@@ -101,6 +92,7 @@ function cancelEdit() {
         button.style.display = "none";
     });
 }
+
 
 function editMemo() {
     const textarea = document.getElementById("memo-text");
@@ -217,14 +209,6 @@ function cancelConsultationEdit() {
 // 기본 메시지 저장
 const defaultTranscriptionMessage = transcription.innerHTML;
 
-function startCustomerCounseling() {
-    startCounseling("customer");
-}
-
-function startCounselorCounseling() {
-    startCounseling("counselor");
-}
-
 function startCounseling(type) {
     navigator.mediaDevices
         .getUserMedia({ audio: true })
@@ -246,12 +230,8 @@ function startCounseling(type) {
             mediaRecorder.start();
 
             recognition.onstart = () => {
-                if (type === "customer") {
-                    customerStartButton.disabled = true;
-                } else {
-                    counselorStartButton.disabled = true;
-                }
-                stopButton.disabled = false;
+                changeDisabled(true);
+
                 console.log("Counseling started");
 
                 // 기존 interimDiv 제거
@@ -283,22 +263,12 @@ function startCounseling(type) {
 
             recognition.onerror = (event) => {
                 console.error("Speech recognition error:", event.error);
-                if (type === "customer") {
-                    customerStartButton.disabled = false;
-                } else {
-                    counselorStartButton.disabled = false;
-                }
-                stopButton.disabled = true;
+                changeDisabled(false);
             };
 
             recognition.onend = () => {
-                if (type === "customer") {
-                    customerStartButton.disabled = false;
-                } else {
-                    counselorStartButton.disabled = false;
-                }
-                stopButton.disabled = true;
-                saveButton.disabled = false;
+                changeDisabled(false);
+
                 console.log("Counseling ended");
 
                 if (finalTranscript.trim() !== "") {
@@ -308,6 +278,7 @@ function startCounseling(type) {
                         evaluationTextToChatbot(finalTranscript);
                         addCustomerMessageToTranslationContent(finalTranscript);
                     }
+                    loadAIMessages(type, finalTranscript);
                 }
 
                 mediaRecorder.stop();
@@ -342,9 +313,7 @@ function stopCounseling() {
         currentStream.getTracks().forEach((track) => track.stop());
     }
 
-    customerStartButton.disabled = false;
-    counselorStartButton.disabled = false;
-    stopButton.disabled = true;
+    changeDisabled(false);
 
     if (mediaRecorder && mediaRecorder.state !== "inactive") {
         mediaRecorder.stop();
@@ -352,6 +321,40 @@ function stopCounseling() {
             audioBlob = new Blob(audioChunks, { type: "audio/webm" });
         };
     }
+}
+
+function loadAIMessages(classify, message) {
+    const formData = new FormData();
+    formData.append("classify", classify);
+    formData.append("message", message);
+    formData.append("logId", $("#logId").val());
+
+    fetch($("#url").val(), {
+        method: "POST",
+        headers: { "X-CSRFToken": $("#csrf").val() },
+        body: formData
+    })
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.success && classify === "customer") {
+                addCustomerMessageToTranslationContent(data.trans_output);
+                const childDiv = document.createElement("div");
+                childDiv.className = "chatbot-response";
+                childDiv.innerText = data.recommend_output;
+                translationContent.appendChild(childDiv);
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            alert("ERROR:", error);
+        });
+}
+
+function changeDisabled(bool) {
+    document.getElementById("customer-start-button").disabled = bool;
+    document.getElementById("counselor-start-button").disabled = bool;
+    document.getElementById("stop-button").disabled = !bool;
+    document.getElementById("save-button").disabled = bool;
 }
 
 function removeExistingInterimDiv() {
@@ -379,13 +382,11 @@ function saveCounselingLog() {
     const raw_data = [];
     const chatbot_data = [];
 
-    const phoneInput = document.getElementById("phone");
-    const phone_number = phoneInput.value;
+    let phone_number = $("#phone").val();
 
     // 전화번호 유효성 검사
-    if (phoneInput.value.length !== 11 || !/^\d{11}$/.test(phoneInput.value)) {
+    if (phone_number.length !== 11 || !/^\d{11}$/.test(phone_number)) {
         alert("고객의 전화번호를 입력하여주세요.");
-        phoneInput.disabled = false; // 입력 필드 다시 활성화
         return;
     }
 
@@ -429,6 +430,7 @@ function saveCounselingLog() {
             });
         }
     });
+
     console.log(window.username);
     // 상담 로그 데이터 객체 생성
     const counselingLog = {
@@ -444,15 +446,12 @@ function saveCounselingLog() {
         }
     };
 
-    // CSRF 토큰 가져오기
-    const csrftoken = getCookie("csrftoken");
-
     // 상담 로그 데이터 서버로 전송
     fetch("/counseling/save_counseling_log/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "X-CSRFToken": csrftoken
+            "X-CSRFToken": $("#csrf").val()
         },
         body: JSON.stringify(counselingLog)
     })
@@ -467,44 +466,6 @@ function saveCounselingLog() {
         .catch((error) => {
             console.error("Error:", error);
             alert("상담 로그 저장 중 오류가 발생했습니다.");
-        });
-}
-
-// 파일 저장은 임시로 사용하지 않음
-function saveRecording() {
-    if (!audioBlob) {
-        alert("녹음된 파일이 없습니다.");
-        return;
-    }
-
-    const userConfirmed = confirm("파일을 저장하시겠습니까?");
-    if (userConfirmed) {
-        sendAudioToServer(audioBlob);
-    }
-}
-
-function sendAudioToServer(audioBlob) {
-    const formData = new FormData();
-    formData.append("audio", audioBlob, "recording.webm");
-
-    fetch("/counseling/save_audio/", {
-        method: "POST",
-        body: formData,
-        headers: {
-            "X-CSRFToken": getCookie("csrftoken")
-        }
-    })
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            alert("파일이 성공적으로 저장되었습니다.");
-        })
-        .catch((error) => {
-            console.error("Error:", error);
         });
 }
 
@@ -524,7 +485,7 @@ function evaluationTextToChatbot(text) {
         method: "POST",
         body: formData,
         headers: {
-            "X-CSRFToken": getCookie("csrftoken")
+            "X-CSRFToken": $("#csrf").val()
         }
     })
 
@@ -548,33 +509,4 @@ function evaluationTextToChatbot(text) {
         .catch((error) => {
             console.error("Error:", error); // 오류 로그 추가
         });
-}
-
-// 오디오 데이터를 서버로 전송하는 함수(임시로 로컬로 저장하게 구현)
-function sendAudioToServer(audioBlob) {
-    const url = URL.createObjectURL(audioBlob);
-    const a = document.createElement("a");
-    a.style.display = "none";
-    a.href = url;
-    a.download = "recording.webm"; // 파일명 설정
-    document.body.appendChild(a);
-    a.click();
-    window.URL.revokeObjectURL(url);
-    document.body.removeChild(a);
-}
-
-// CSRF 토큰을 가져오는 함수
-function getCookie(name) {
-    let cookieValue = null;
-    if (document.cookie && document.cookie !== "") {
-        const cookies = document.cookie.split(";");
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.substring(0, name.length + 1) === name + "=") {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
 }
