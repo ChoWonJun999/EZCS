@@ -34,8 +34,6 @@ def counsel(request):
             , 'customer': customer
         }
         trans_chat_bot = Chatbot(
-            api_key=settings.OPENAI_API_KEY,
-            db_path=settings.DB_PATH,
             model_id='ft:gpt-3.5-turbo-0125:personal::9god26fK',
             behavior_policy=None,
         )
@@ -45,8 +43,6 @@ def counsel(request):
         예시: 네, 고객님 해당 문의 내용은 월사용요금을 kt에서 신용카드사로 청구하면 고객이 신용카드사에 결제대금을 납부하는 제도입니다."
 
         recommend_chat_bot = Chatbot(
-            api_key=settings.OPENAI_API_KEY,
-            db_path=settings.DB_PATH,
             behavior_policy=messages
         )
         
@@ -273,6 +269,29 @@ def save_counseling_log(request):
             return JsonResponse({"success": False, "error": str(e)})
 
     return JsonResponse({"error": "Invalid request"}, status=400)
+
+@csrf_exempt
+def save_consultation(request):
+    if request.method == 'POST':
+        try:
+            log_id = request.POST.get('log_id')
+            inquiry_text = request.POST.get('inquiry_text')
+            action_text = request.POST.get('action_text')
+
+            if log_id and (inquiry_text or action_text):
+                counsel_log = Log.objects.get(id=log_id)
+                memo = json.loads(counsel_log.memo) if isinstance(counsel_log.memo, str) else counsel_log.memo or {}
+                memo['inquiry_text'] = inquiry_text
+                memo['action_text'] = action_text
+                counsel_log.memo = json.dumps(memo, ensure_ascii=False)
+                counsel_log.save()
+
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'Missing log_id, inquiry_text, or action_text'})
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid request'})
 
 @csrf_exempt
 def save_consultation(request):

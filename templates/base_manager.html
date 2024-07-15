@@ -59,6 +59,10 @@
                     {% url 'management:list' 'a' as management_list_a_url %}
                     <a class="nav-link {% if request.path == management_list_a_url %}active{% endif %}" style="font-size: 20px;" href="{{ management_list_a_url }}">가입 승인</a>
                 </li>
+                <li class="nav-item">
+                    {% url 'management:list' 'ad' as management_list_a_url %}
+                    <a class="nav-link {% if request.path == management_list_a_url %}active{% endif %}" href="{{ management_list_a_url }}">관리자 리스트</a>
+                </li>
             </ul>
             {% comment %}
             <nav class="nev-form">
