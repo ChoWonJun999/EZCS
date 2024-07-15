@@ -93,119 +93,6 @@ function cancelEdit() {
     });
 }
 
-
-function editMemo() {
-    const textarea = document.getElementById("memo-text");
-    textarea.disabled = false;
-
-    document.querySelector("#memo-form .edit-button").style.display = "none";
-    document.querySelectorAll("#memo-form .save-button, #memo-form .cancel-button").forEach((button) => {
-        button.style.display = "inline-block";
-    });
-}
-
-function saveMemo() {
-    const textarea = document.getElementById("memo-text");
-    textarea.disabled = true;
-
-    // 메모 내용을 저장하는 로직 추가, 예: 서버로 데이터 전송
-    // alert('메모가 저장되었습니다.');
-
-    document.querySelector("#memo-form .edit-button").style.display = "inline-block";
-    document.querySelectorAll("#memo-form .save-button, #memo-form .cancel-button").forEach((button) => {
-        button.style.display = "none";
-    });
-}
-
-function cancelMemoEdit() {
-    const textarea = document.getElementById("memo-text");
-    textarea.disabled = true;
-
-    // 메모 수정 취소를 처리하는 로직 추가, 예: 변경 사항 되돌리기
-    // alert('메모 수정이 취소되었습니다.');
-
-    document.querySelector("#memo-form .edit-button").style.display = "inline-block";
-    document.querySelectorAll("#memo-form .save-button, #memo-form .cancel-button").forEach((button) => {
-        button.style.display = "none";
-    });
-}
-
-function editConsultation() {
-    const form = document.getElementById('consultation-form');
-    const inquiryTextareas = form.querySelectorAll('textarea[name="inquiry-text"]');
-    const actionTextareas = form.querySelectorAll('textarea[name="action-text"]');
-
-    inquiryTextareas.forEach((textarea) => (textarea.disabled = false));
-    actionTextareas.forEach((textarea) => (textarea.disabled = false));
-
-    document.querySelector("#consultation-form .edit-button").style.display = "none";
-    document.querySelectorAll("#consultation-form .save-button, #consultation-form .cancel-button").forEach((button) => {
-        button.style.display = "inline-block";
-    });
-}
-
-function saveConsultation() {
-
-    const form = document.getElementById("consultation-form");
-    const inquiryTextareas = form.querySelectorAll('textarea[name="inquiry-text"]');
-    const actionTextareas = form.querySelectorAll('textarea[name="action-text"]');
-
-    inquiryTextareas.forEach((textarea) => {
-        const logId = textarea.getAttribute("data-log-id");
-        const inquiryText = textarea.value;
-
-        const actionTextarea = form.querySelector(`textarea[name="action-text"][data-log-id="${logId}"]`);
-        const actionText = actionTextarea ? actionTextarea.value : "";
-
-        const formData = new FormData();
-        formData.append("log_id", logId);
-        formData.append("inquiry_text", inquiryText);
-        formData.append("action_text", actionText);
-
-        fetch("/counseling/save_consultation/", {
-            method: "POST",
-            body: formData,
-            headers: {
-                "X-CSRFToken": getCookie("csrftoken")
-            }
-        })
-            .then((response) => response.json())
-            .then((data) => {
-                if (data.success) {
-                    alert("문의 내용이 저장되었습니다.");
-                    textarea.disabled = true;
-                    if (actionTextarea) actionTextarea.disabled = true;
-                    document.querySelector("#consultation-form .edit-button").style.display = "inline-block";
-                    document.querySelectorAll("#consultation-form .save-button, #consultation-form .cancel-button").forEach((button) => {
-                        button.style.display = "none";
-                    });
-                } else {
-                    alert("문의 내용 저장에 실패했습니다.");
-                    console.error("Error:", data.error); // 에러 메시지 출력
-                }
-            })
-            .catch((error) => {
-                console.error("Error:", error);
-                alert("문의 내용 저장 중 오류가 발생했습니다.");
-            });
-    });
-}
-
-function cancelConsultationEdit() {
-
-    const form = document.getElementById("consultation-form");
-    const inquiryTextareas = form.querySelectorAll('textarea[name="inquiry-text"]');
-    const actionTextareas = form.querySelectorAll('textarea[name="action-text"]');
-
-    inquiryTextareas.forEach((textarea) => (textarea.disabled = true));
-    actionTextareas.forEach((textarea) => (textarea.disabled = true));
-
-    document.querySelector("#consultation-form .edit-button").style.display = "inline-block";
-    document.querySelectorAll("#consultation-form .save-button, #consultation-form .cancel-button").forEach((button) => {
-        button.style.display = "none";
-    });
-}
-
 // 기본 메시지 저장
 const defaultTranscriptionMessage = transcription.innerHTML;
 
@@ -274,10 +161,6 @@ function startCounseling(type) {
                 if (finalTranscript.trim() !== "") {
                     const finalDiv = createFinalDiv(finalTranscript, type);
                     transcription.appendChild(finalDiv);
-                    if (type === 'customer') {
-                        evaluationTextToChatbot(finalTranscript);
-                        addCustomerMessageToTranslationContent(finalTranscript);
-                    }
                     loadAIMessages(type, finalTranscript);
                 }
 
@@ -302,7 +185,6 @@ function startCounseling(type) {
             console.error("Error accessing media devices.", error);
         });
 }
-
 
 function stopCounseling() {
     if (recognition) {
@@ -475,7 +357,6 @@ function scrollToBottom() {
 
 // 텍스트 데이터를 챗봇에 전송하는 함수(view.py에 전송)
 function evaluationTextToChatbot(text) {
-
     console.log("Sending text to chatbot:", text); // 로그 추가
 
     const formData = new FormData();
@@ -488,7 +369,6 @@ function evaluationTextToChatbot(text) {
             "X-CSRFToken": $("#csrf").val()
         }
     })
-
         .then((response) => {
             console.log(response); // 응답 로그 추가
             if (!response.ok) {
