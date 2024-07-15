@@ -4,6 +4,7 @@
 {% block content %}
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="/static/js/execDaumPost.js"></script>
+
 <style>
     .mb-3 {
         margin-bottom: 0.5rem !important;
@@ -92,7 +93,7 @@
                         <label for="birthdate">생년월일</label>
                     </div>
                     <div>
-                        <input type="date" id="birthdate" name="birthdate" style="width: 395px; height: 33px;">
+                        <input type="date" id="birthdate" name="birthdate" class="form-control form-control-sm" style="width: 395px; height: 33px;">
                         <div id="birthdateError" class="invalid-feedback"></div>
                     </div>
                 </div>
