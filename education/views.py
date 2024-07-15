@@ -18,12 +18,15 @@ from prompt import Prompt
 
 logger = logging.getLogger(__name__)
 
-
-chatbot = None
-evaluation_chatbot = None
 prompt = Prompt()
 prompt.set_initial_behavior_policy_for_education()
 
+behavior_policy = prompt.get_behavior_policy()
+chatbot = Chatbot(
+                model_id="ft:gpt-3.5-turbo-0125:personal::9gS63IJD",
+                THRESHOLD=2,
+                behavior_policy=behavior_policy,
+            )
 
 def chat_view(request):
     '''
@@ -40,14 +43,9 @@ def chat_view(request):
             # 사용자 메시지에 대한 응답 생성
             output = chatbot.chat(message)
 
-            evaluation_chatbot = Chatbot(
-                model_id="ft:gpt-3.5-turbo-0125:personal::9gS63IJD",
-                category=category,
-                THRESHOLD=2,
-                behavior_policy=prompt.get_messages_for_evaluation(output, message),
-            )
+            message = prompt.get_messages_for_evaluation(output, message)
 
-            evaluation_output = evaluation_chatbot.chat(message)
+            evaluation_output = chatbot.chat(message)
 
             LogItem.objects.create(
                 chatbot=output
@@ -63,12 +61,9 @@ def chat_view(request):
             })
         elif category:
             # Chatbot 객체 초기화
-            chatbot = Chatbot(
-                model_id="ft:gpt-3.5-turbo-0125:personal::9gS63IJD",
-                category=category,
-                THRESHOLD=2,
-                behavior_policy=prompt.get_behavior_policy(),
-            )
+            chatbot.clear_memory()
+            
+            chatbot.set_behavior_policy = behavior_policy
 
             # 첫 질문 생성
             initial_question = chatbot.chat("고객의 역할에서 민원을 말해줘")
