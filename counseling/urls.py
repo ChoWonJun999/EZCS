@@ -26,5 +26,4 @@ urlpatterns = [
 
 
     # path('customer_detail/', views.customer_detail, name='customer_detail')
-
 ]
