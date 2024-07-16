@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from chat import Chatbot
+from chat_trans import Chatbot_trans
 from django.views.decorators.csrf import csrf_exempt
 import logging
 from .models import *
@@ -10,9 +11,11 @@ from django.core.paginator import Paginator
 import random
 from django.conf import settings
 from datetime import datetime, timedelta
+from abuse_filter import AbuseFilter
 
 
 logger = logging.getLogger(__name__)
+abuse_filter = AbuseFilter()
 
 trans_chat_bot = None
 recommend_chat_bot = None 
@@ -33,7 +36,7 @@ def counsel(request):
             'logId': log.id
             , 'customer': customer
         }
-        trans_chat_bot = Chatbot(
+        trans_chat_bot = Chatbot_trans(
             model_id='ft:gpt-3.5-turbo-0125:personal::9god26fK',
             behavior_policy=None,
         )
@@ -43,7 +46,8 @@ def counsel(request):
         예시: 네, 고객님 해당 문의 내용은 월사용요금을 kt에서 신용카드사로 청구하면 고객이 신용카드사에 결제대금을 납부하는 제도입니다."
 
         recommend_chat_bot = Chatbot(
-            behavior_policy=messages
+            behavior_policy=messages,
+            k = 1
         )
         
         return render(request, "counseling/index.html", context)
@@ -104,7 +108,8 @@ def ai_model(request):
             }
             if not classify:
                 global trans_chat_bot, recommend_chat_bot
-                trans_output = trans_chat_bot.chat(message)
+                trans_output = trans_chat_bot.ask(message)
+                trans_output = abuse_filter.abuse_clean(trans_output)
                 recommend_output = recommend_chat_bot.chat(message)
                 columns['recommend'] = recommend_output
                 columns['translate'] = trans_output

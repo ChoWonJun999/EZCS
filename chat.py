@@ -14,7 +14,8 @@ class Chatbot:
                 category=None,
                 model_id='gpt-3.5-turbo',
                 behavior_policy=None,
-                THRESHOLD=0.4
+                THRESHOLD=0.4,
+                k = 3
                 ):
         """
         explanation: Chatbot 클래스는 OpenAI GPT-3.5-turbo 모델을 사용하여 사용자의 질문에 답변을 해주는 클래스입니다.
@@ -34,6 +35,7 @@ class Chatbot:
  
         self.category = category
         self.THRESHOLD = THRESHOLD
+        self.k = k
        
         self.memory = ChatMessageHistory()
         self.behavior_policy = behavior_policy
@@ -58,7 +60,7 @@ class Chatbot:
    
    
     def search(self, query, k=3):
-        sim_docs = self.database.similarity_search_with_score(query, k=k, filter={"category":self.category}) if self.category else self.database.similarity_search_with_score(query, k=k)
+        sim_docs = self.database.similarity_search_with_score(query, k=self.k, filter={"category":self.category}) if self.category else self.database.similarity_search_with_score(query, k=self.k)
        
         return sim_docs
    
