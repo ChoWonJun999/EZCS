@@ -23,8 +23,12 @@
     }
 
     .all-div {
-        display: flex !important;
+        display: flex;
         width: 100%;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align-last: center;
     }
 </style>
 <!-- 직원용 대시보드 내용 -->
@@ -33,7 +37,7 @@
 <input type="hidden" name="logId" id="logId" value="{{ logId }}">
 <input type="hidden" name="requestMethod" id="requestMethod" value="{{ request.method }}">
 {% if request.method != 'POST' %}
-<div class="dashboard all-div">
+<div class="all-div" style="height: 69vh;">
     <form action="{% url 'counseling:counsel' %}" method="post">
         {% csrf_token %}
         <input type="hidden" name="customerId" id="customerId" value="{{ customer.id }}">
@@ -45,48 +49,42 @@
     </form>
 </div>
 {% endif %}
-<div class="dashboard all-div" {% if request.method != 'POST' %}style="display: none !important;" {% endif %}>
+<div class="all-div" {% if request.method != 'POST' %}style="display: none !important;" {% endif %}>
     <div style="height: 100%; width: 30%;">
-        <div class="customer-info">
+        <div class="customer-info" style="height: 446px; max-height: 100vh;">
             <h4>고객 정보</h4>
-            <form id="customer-form" action="{% url 'counseling:updateLog' %}">
+            <form id="customer-form" action="{% url 'counseling:updateLog' %}" style="text-align-last: left;">
                 <input type="hidden" name="customer-id" id="customer-id" value="{{ customer.id }}">
-                <table>
+                <table style="width: 100%; border-collapse: separate; border-spacing: 0 15px;">
                     <tbody>
                         <tr>
                             <td>
                                 <label for="customer-name">고객명</label>
+                                <input type="text" id="customer-name" name="customer-name" value="{{ customer.name }}" style="margin-left: 16px;">
                             </td>
-                            <td>
-                                <input type="text" id="customer-name" name="customer-name" value="{{ customer.name }}">
-                            </td>
+                        </tr>
+                        <tr>
                             <td>
                                 <label for="birthdate">생년월일</label>
-                            </td>
-                            <td>
                                 <input type="date" id="birthdate" name="birthdate" value="{{ customer.birth_date|date:'Y-m-d'}}">
                             </td>
                         </tr>
                         <tr>
                             <td>
                                 <label for="phone">전화번호</label>
-                            </td>
-                            <td>
                                 <input type="tel" id="phone" name="phone" value="{{ customer.phone_number }}" maxlength="11" pattern="\d{3}\d{4}\d{4}">
-                            </td>
-                            <td>
-                                <label for="join-date">가입일</label>
-                            </td>
-                            <td>
-                                <input type="date" id="join-date" name="join-date" value="{{ customer.joined_date|date:'Y-m-d' }}">
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <label for="address">주소</label>
+                                <label for="join-date">가입일</label>
+                                <input type="date" id="join-date" name="join-date" value="{{ customer.joined_date|date:'Y-m-d' }}" style="margin-left: 15px;">
                             </td>
+                        </tr>
+                        <tr>
                             <td colspan="3">
-                                <input type="text" id="address" name="address" value="{{ customer.address }}">
+                                <label for="address">주소</label>
+                                <input type="text" id="address" name="address" value="{{ customer.address }}" style="margin-left: 30px;">
                             </td>
                         </tr>
                     </tbody>
@@ -99,7 +97,7 @@
 
         <div class="memo-section">
             <h4>문의/조치 내용</h4>
-            <form id="consultation-form" style="height: 80%;">
+            <form id="consultation-form" style="height: 80%; text-align-last: left;">
                 <div class="memo-content" style="height: 100%;">
                     <table style="width: 100%; height: 100%;">
                         <colgroup>
@@ -128,24 +126,23 @@
                 </div>
                 <div class="buttons">
                     <input type="reset" class="save-button" value="초기화">
+                    
+                    <button id="save-button" type="button" class="submit-button" onclick="updateLog()" style="float: right;">
+                        <i class="fas fa-save"></i> 저장
+                    </button>
                 </div>
             </form>
-        </div>
-        <div>
-            <button id="save-button" type="button" class="submit-button" onclick="updateLog()">
-                <i class="fas fa-save"></i> 저장
-            </button>
         </div>
     </div>
 
     <div style="height: 100%; width: 70%;">
-        <div style="display: inline-flex; height: 52.5%; width: 100%;">
-            <div class="stt-content">
+        <div style="display: flex; height: 97%; width: 100%;">
+            <div class="stt-content" style="height: 709px; max-height: 100vh;">
                 <h4>고객-상담원</h4>
                 <div class="stt">
                     <div id="transcription">여기에 음성 입력 내용이 표시됩니다...</div>
-                    <div class="button-container">
-                        <button id="customer-start-button" class="customer-mic-button" onclick="startCounseling('customer')">
+                    <div class="button-container" style="font-size: smaller;">
+                        <button id="customer-start-button" class="customer-mic-button" style="padding: 0px;" onclick="startCounseling('customer')">
                             <i class="fas fa-microphone"></i> 고객 마이크 연결
                         </button>
                         <button id="counselor-start-button" class="mic-button" onclick="startCounseling('counselor')">
@@ -157,20 +154,23 @@
                     </div>
                 </div>
             </div>
-            <div class="stt-content">
+            <div class="stt-content" style="height: 709px; max-height: 100vh;">
                 <h4>고객음성번역-챗봇추천응대멘트</h4>
                 <div class="translation">
                     <div id="translation-content">여기에 번역된 내용이 표시됩니다...</div>
                 </div>
+                <div action="{% url 'counseling:counsel' %}" method="get">
+                    <button id="save-button" type="button" class="submit-button" onclick="submit();" style="float: right;">
+                        <i class="fas fa-save"></i> 종료
+                    </button>
+                </div>
             </div>
         </div>
-        <div>
-            <form action="{% url 'counseling:counsel' %}" method="get">
-                <button id="save-button" type="button" class="submit-button" onclick="submit();">
+        <!-- <form action="{% url 'counseling:counsel' %}" method="get">
+                <button id="save-button" type="button" class="submit-button" onclick="submit();" style="float: right;">
                     <i class="fas fa-save"></i> 종료
                 </button>
-            </form>
-        </div>
+            </form> -->
     </div>
 </div>
 

@@ -16,6 +16,7 @@
                 <h2>회원가입</h2>
             </div>
             <form id="signupForm" class="validation-form" novalidate data-url="{% url 'accounts:signup' %}" data-csrf="{{ csrf_token }}">
+                {% csrf_token %}
                 <input type="hidden" name="csrf" id="csrf" value="{{ csrf_token }}">
 
                 <div class="mb-3 my-form ">

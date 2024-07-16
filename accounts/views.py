@@ -5,11 +5,12 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from django.urls import reverse
 import logging
+from django.views.decorators.csrf import csrf_exempt
 
 
 logger = logging.getLogger(__name__)
 
-
+@csrf_exempt
 def user_login(request):
     """
         request.method == 'GET': 접속
@@ -35,7 +36,7 @@ def user_login(request):
             counselor = CounselorProfile.objects.filter(auth_user_id=user.id).first()
             admin = AdministratorProfile.objects.filter(auth_user_id=user.id).first()
 
-            if (counselor and counselor.active_status != 1):
+            if counselor and counselor.active_status != 1:
                 message = '로그인 권한이 없습니다.'
             elif flag == '1' and user.is_superuser == False:
                 message = '관리자가 아닙니다.'
@@ -66,8 +67,7 @@ def user_logout(request):
     logout(request)
     return redirect('/')
 
-
-
+@csrf_exempt
 def signup(request):
     if request.method == 'GET':
         return render(request, 'accounts/signup.html')
@@ -105,7 +105,7 @@ def signup(request):
 
         return JsonResponse({'result': result, 'msg': msg})
 
-
+@csrf_exempt
 def check_username(request):
     username = request.POST.get('username')
     is_taken = User.objects.filter(username=username).exists()

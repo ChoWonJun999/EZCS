@@ -26,9 +26,7 @@ SECRET_KEY = "django-insecure-uqq*r93rmw$um61%h3xs*zt%^2cv%n84^-sx0k&dx1tt!@s4d*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
-# CSRF_TRUSTED_ORIGINS = ['*']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 # Application definition
 
@@ -132,11 +130,12 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-    # os.path.join(BASE_DIR, 'education/static'),
-]
+STATIC_ROOT = os.path.join('staticfiles')
 
+STATICFILES_DIRS = [
+	BASE_DIR / 'static',
+]
+ 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -159,9 +158,13 @@ LOGGING = {
     }
 }
 
-SESSION_COOKIE_SECURE = True
+# CSRF_TRUSTED_ORIGINS = ['*']
 
 CSRF_COOKIE_SECURE = True
+
+CSRF_COOKIE_HTTPONLY = True
+
+SESSION_COOKIE_SECURE = True
 
 # SESSION_COOKIE_AGE = 24 * 60 * 60
 SESSION_COOKIE_AGE = 30 * 60

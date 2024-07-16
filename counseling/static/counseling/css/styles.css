@@ -8,26 +8,30 @@
 .dashboard {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1.5fr 3fr; 
+    grid-template-rows: 1.5fr 3fr;
     gap: 20px;
-    height: calc(100vh - 40px); 
+    height: calc(100vh - 40px);
     box-sizing: border-box;
     padding: 20px;
-    position: relative; 
+    position: relative;
 }
 
-.customer-info, .memo-section, .stt-content, .chat-section-readonly {
+.customer-info,
+.memo-section,
+.stt-content,
+.chat-section-readonly {
     border: 1px solid #ccc;
     padding: 20px;
     box-sizing: border-box;
-    background-color: #fff; 
-    border-radius: 8px; 
+    background-color: #fff;
+    border-radius: 8px;
     /* display: flex; */
     flex-direction: column;
-    overflow: auto; 
+    overflow: auto;
 }
 
-.customer-info, .memo-section {
+.customer-info,
+.memo-section {
     max-height: 50vh;
 }
 
@@ -35,15 +39,16 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    max-height: 50vh; 
-    overflow: hidden; 
+    max-height: 50vh;
+    overflow: hidden;
 }
 
-.stt-content .stt, .translation {
+.stt-content .stt,
+.translation {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    overflow-y: auto; 
+    overflow-y: auto;
 }
 
 .button-container {
@@ -63,8 +68,8 @@
     background-color: #58b0e3;
     color: black;
     transition: background-color 0.3s;
-    flex: 1; 
-    margin: 0 5px; 
+    flex: 1;
+    margin: 0 5px;
 }
 
 .customer-mic-button {
@@ -78,8 +83,8 @@
     background-color: #df6977;
     color: black;
     transition: background-color 0.3s;
-    flex: 1; 
-    margin: 0 5px; 
+    flex: 1;
+    margin: 0 5px;
 }
 
 .mic-button:disabled {
@@ -95,7 +100,8 @@
     background-color: #0056b3;
 }
 
-#transcription, #translation-content {
+#transcription,
+#translation-content {
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -111,7 +117,7 @@
 }
 
 .output-msg.customer {
-    background-color: #e0f7fa; 
+    background-color: #e0f7fa;
     padding: 10px;
     border-radius: 15px;
     margin-bottom: 10px;
@@ -122,7 +128,7 @@
 }
 
 .output-msg.counselor {
-    background-color: #e0f7e9; 
+    background-color: #e0f7e9;
     padding: 10px;
     border-radius: 15px;
     margin-bottom: 10px;
@@ -138,7 +144,7 @@
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 15px;
-    background-color: #e9ecef; 
+    background-color: #e9ecef;
     max-width: 80%;
     word-break: break-word;
 }
@@ -191,7 +197,7 @@
 @media (max-width: 768px) {
     .dashboard {
         grid-template-columns: 1fr;
-        grid-template-rows: repeat(5, 1fr); 
+        grid-template-rows: repeat(5, 1fr);
         gap: 20px;
         height: auto;
     }
@@ -206,8 +212,8 @@
 
     .submit-container {
         grid-column: 1 / 2;
-        justify-self: center; 
-        align-self: start; 
+        justify-self: center;
+        align-self: start;
     }
 }
 

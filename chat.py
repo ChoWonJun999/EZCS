@@ -4,19 +4,10 @@ from langchain_community.chat_message_histories import ChatMessageHistory
  
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.vectorstores import Chroma
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from django.conf import settings
-
-
-class SingletonType(type):
-    _instances = {}
-    
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(SingletonType, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
  
-class Chatbot(metaclass=SingletonType):
+ 
+class Chatbot:
     def __init__(self,
                 api_key=settings.OPENAI_API_KEY,
                 db_path=settings.DB_PATH,
@@ -37,7 +28,7 @@ class Chatbot(metaclass=SingletonType):
             behavior_policy (str): systemMessage
         """
        
-        self.chat_model = ChatOpenAI(model=model_id, api_key=api_key, streaming=True, callbacks=[StreamingStdOutCallbackHandler()])
+        self.chat_model = ChatOpenAI(model=model_id, api_key=api_key)
         self.embeddings = OpenAIEmbeddings(model="text-embedding-ada-002", api_key=api_key)
         self.database = Chroma(persist_directory=db_path, embedding_function=self.embeddings)
  
@@ -64,21 +55,6 @@ class Chatbot(metaclass=SingletonType):
         self.memory.add_message(AIMessage(content=output))
        
         return output
-    
-    def set_behavior_policy(self, behavior_policy):
-        self.behavior_policy = behavior_policy
-    
-    def set_category(self, category):
-        self.category = category
-    
-    def eval_chat(self, query):
-        sim_docs = self.search(query)
-       
-        prompt = self.prompting(query, sim_docs)
-       
-        output = self.chat_model.invoke(prompt).content
-        
-        return output
    
    
     def search(self, query, k=3):
@@ -103,9 +79,3 @@ class Chatbot(metaclass=SingletonType):
             prompt = [HumanMessage(content=prompt, history=self.memory.messages)]
        
         return prompt
-
-    def clear_memory(self):
-        self.memory.clear()
-    
-    def get_memory(self):
-        print(self.memory)

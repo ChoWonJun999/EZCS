@@ -4,11 +4,13 @@
 {% block content %}
 {% load static %}
 
-{% comment %} <link rel="stylesheet" href="{% static 'accounts/css/login.css' %}"> {% endcomment %}
+{% comment %}
+<link rel="stylesheet" href="{% static 'accounts/css/login.css' %}"> {% endcomment %}
 <div class="container">
     <div class="input-form-backgroud row">
-        <div class="input-form" >
+        <div class="input-form">
             <form id="loginForm" data-url="{% url 'accounts:login' %}" data-csrf="{{ csrf_token }}">
+                {% csrf_token %}
                 <div class="container-sm my_container">
                     <div class="p-3 text-primary-emphasis bg-primary-subtle border border-primary-subtle rounded-3">
                         21조에 오신 것을 환영합니다! 👋
