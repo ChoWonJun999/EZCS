@@ -8,6 +8,11 @@ urlpatterns = [
     path('detail/<int:id>/<str:flag>/', views.detail, name='detail'),
     path('update_auth/<int:id>/<int:status>', views.update_auth, name='update_auth'),
     path('edit/<int:id>/<str:flag>/', views.edit, name='edit'),
+    path('adminsignup', views.adminsignup, name='adminsignup'),
+    path('admincheck-username/', views.admincheck_username, name='admincheck-username'),
+    path('admincheck-email/', views.admincheck_email, name='admincheck-email'),
+    path('admincheck-phone/', views.admincheck_phone, name='admincheck-phone'), 
+    path('adminreset_password/', views.adminreset_password, name='adminreset-password'),
 
 
 
@@ -25,4 +30,9 @@ urlpatterns = [
     path('search/', views.search, name='search'), #검색기능
     path('allow_search/', views.allow_search, name='allow_search'), #검색기능
     path('inactive_search/', views.inactive_search, name='inactive_search'), #검색기능
+
+
+    path('list/board/', views.list, {'flag': 'board'}, name='board_list'),  # 공지사항 목록
+    path('list/board/create/', views.board_create, name='board_create'),  # 공지사항 작성
+    path('list/board/<int:id>/', views.board_detail, name='board_detail'),  # 공지사항 상세보기
 ]

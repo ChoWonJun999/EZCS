@@ -1,9 +1,11 @@
-{% extends 'accountsLayout.html' %}
+{% extends 'base_manager.html' %}
 {% block title %}회원 가입{% endblock %}
 
 {% block content %}
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="/static/js/execDaumPost.js"></script>
+{% load static %}
+<script src="{% static 'management/js/signup.js' %}"></script>
 <style>
     .mb-3 {
         margin-bottom: 0.5rem !important;
@@ -15,7 +17,7 @@
             <div>
                 <h2>회원가입</h2>
             </div>
-            <form id="signupForm" class="validation-form" novalidate data-url="{% url 'accounts:signup' %}" data-csrf="{{ csrf_token }}">
+            <form id="signupForm" class="validation-form" novalidate data-url="{% url 'management:adminsignup' %}" data-csrf="{{ csrf_token }}">
                 {% csrf_token %}
                 <input type="hidden" name="csrf" id="csrf" value="{{ csrf_token }}">
 
@@ -27,7 +29,7 @@
                             <div id="usernameVaild" class="valid-feedback"></div>
                             <div id="usernameError" class="invalid-feedback"></div>
                             <input type="hidden" name="usernameChk" id="usernameChk" value="">
-                            <input type="hidden" name="usernameChkUrl" id="usernameChkUrl" value="{% url 'accounts:check_username' %}">
+                            <input type="hidden" name="usernameChkUrl" id="usernameChkUrl" value="{% url 'management:admincheck-username' %}">
                         </div>
                         <div>
                             <input type="button" value="중복 확인" class="btn btn-sm btn-primary" onclick="chkUserName();">
@@ -58,7 +60,7 @@
                             <option value="">직접입력</option>
                         </select>
                         <input type="hidden" name="emailChk" id="emailChk" value="">
-                        <input type="hidden" name="emailChkUrl" id="emailChkUrl" value="{% url 'accounts:check_email' %}">
+                        <input type="hidden" name="emailChkUrl" id="emailChkUrl" value="{% url 'management:admincheck-email' %}">
                     </div>
                     <div id="emailError" class="invalid-feedback"></div>
                 </div>
@@ -79,7 +81,7 @@
                     <input type="text" class="form-control form-control-sm" id="phone" name="phone" maxlength="11" onblur="chkPhoneNumber();">
                     <div id="phoneError" class="invalid-feedback"></div>
                     <input type="hidden" name="phoneChk" id="phoneChk" value="">
-                    <input type="hidden" name="phoneChkUrl" id="phoneChkUrl" value="{% url 'accounts:check_phone' %}">
+                    <input type="hidden" name="phoneChkUrl" id="phoneChkUrl" value="{% url 'management:admincheck-phone' %}">
                 </div>
 
                 <div class="mb-3 my-form">
@@ -112,17 +114,17 @@
 
                 <hr class="mb-4">
 
-                {% comment %} <div class="custom-control custom-checkbox">
+                <div class="custom-control custom-checkbox">
                     <input type="checkbox" class="custom-control-input" id="aggrement" required>
                     <label class="custom-control-label" for="aggrement">개인정보 수집 및 이용에 동의합니다.</label>
-                </div> {% endcomment %}
+                </div>
                 <div style="text-align: center;">
-                    <input type="button" value="회원 요청" class="btn btn-outline-primary" onclick="signup()">
+                    <input type="button" value="회원 생성" class="btn btn-outline-primary" onclick="signup()">
                     <!-- </div> -->
                 </div>
                 <div>
                     <p>
-                        <a href="{% url 'accounts:login' %}"> 로그인으로 돌아가기</a>
+                        <a href="{% url 'management:list' flag='ad' %}"> 뒤로가기</a>
                     </p>
                 </div>
             </form>

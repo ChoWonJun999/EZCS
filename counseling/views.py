@@ -75,7 +75,7 @@ def update_log(request):
         try:
             customer = CustomerProfile.objects.get(id=customer_id)
             customer.phone_number = phone_number
-            customer.customer_name = customer_name
+            customer.name = customer_name
             customer.birth_date = birth_date
             customer.joined_date = joined_date
             customer.address = address

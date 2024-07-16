@@ -67,6 +67,10 @@ def user_logout(request):
     logout(request)
     return redirect('/')
 
+
+def consent(request):
+    return render(request, 'accounts/consent.html')
+
 @csrf_exempt
 def signup(request):
     if request.method == 'GET':

@@ -7,9 +7,23 @@ from django.contrib.auth.hashers import make_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 from django.urls import reverse
+from management.models import Board
+from django.core.paginator import Paginator
+
 
 def user_dashboard(request):
-    return render(request, 'main/index.html')
+    notices = Board.objects.filter(flag=0).order_by('-create_time')
+    paginator = Paginator(notices, 10)
+    page = request.GET.get('page')
+    notices = paginator.get_page(page)
+    return render(request, 'main/index.html', {'notices': notices})
+
+def notice_detail(request, id):
+    notice = get_object_or_404(Board, id=id)
+    is_image = False
+    if notice.file:
+        is_image = notice.file.url.lower().endswith(('.jpg', '.jpeg', '.png'))
+    return render(request, 'main/notice_detail.html', {'notice': notice, 'is_image': is_image})
 
 def start_ezcs(request):
     return render(request, 'main/startezcs.html')

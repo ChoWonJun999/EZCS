@@ -7,43 +7,34 @@
 <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
 
     <div class="dashboard-content">
-        <div class="status-section">
-            <h2>출결 현황</h2>
-            <div class="status-overview">
-                <div class="status-circle">
-                    <div class="circle">59% 출석률</div>
-                </div>
-                <div class="status-details">
-                    <p>최희*님의 출결 현황입니다.</p>
-                    <p>교육일 수: 22일</p>
-                    <p>출석일 수: 13일</p>
-                    <p>결석일 수: 0일</p>
-                </div>
-            </div>
-        </div>
         <div class="announcement-section">
             <h2>공지사항</h2>
             <ul>
-                <li><a href="#">[소식] 2024년 여성가족부 공공데이터 융복합 아이디어 ...</a> <span>2024.07.05</span></li>
-                <li><a href="#">[소식] 2024년 여성가족부 공공데이터 융복합 아이디어 ...</a> <span>2024.07.05</span></li>
-                <li><a href="#">[소식] 대구대학교 빅데이터 아이디어 공모전 우수상</a> <span>2024.06.27</span></li>
-                <li><a href="#">[안내] KT 아이스크림 인스타그램 6기 소문내기 이벤트</a> <span>2024.06.21</span></li>
-                <li><a href="#">[소식] '빅 공모전 글로벌 예측 AI 경진대회' 3위 수상</a> <span>2024.06.21</span></li>
+                {% for notice in notices %}
+                <li>
+                    <a href="{% url 'main:notice_detail' notice.id %}">{{ notice.title }}</a>
+                    <span>{{ notice.create_time|date:"Y.m.d" }}</span>
+                </li>
+                {% empty %}
+                <li>등록된 공지사항이 없습니다.</li>
+                {% endfor %}
             </ul>
-        </div>
-        <div class="community-section">
-            <h2>우리반 커뮤니티</h2>
-            <ul>
-                <li><a href="#">[공지] 빅프로젝트_조편성표</a> <span>2024.06.11</span></li>
-                <li><a href="#">[공지] 기사단 모집 공지</a> <span>2024.03.04</span></li>
-                <li><a href="#">[공지] 교육장 이용 주의사항</a> <span>2024.02.28</span></li>
-                <li><a href="#">[공지] 17주차_주차별 과정 안내</a> <span>2024.06.05</span></li>
-            </ul>
-        </div>
-        <div class="self-study-section">
-            <h2>방명록</h2>
-            <div class="study-content">
-                <p>등록된 게시글이 없습니다.</p>
+            <div class="pagination">
+                <span class="step-links">
+                    {% if notices.has_previous %}
+                        <a href="?page=1">&laquo; 처음</a>
+                        <a href="?page={{ notices.previous_page_number }}">이전</a>
+                    {% endif %}
+    
+                    <span class="current">
+                        Page {{ notices.number }} of {{ notices.paginator.num_pages }}.
+                    </span>
+    
+                    {% if notices.has_next %}
+                        <a href="?page={{ notices.next_page_number }}">다음</a>
+                        <a href="?page={{ notices.paginator.num_pages }}">마지막 &raquo;</a>
+                    {% endif %}
+                </span>
             </div>
         </div>
     </div>

@@ -13,4 +13,5 @@ urlpatterns = [
     path('check-email/', views.check_email, name='check_email'),
     path('check-phone/', views.check_phone, name='check_phone'), 
     path('reset_password/', views.reset_password, name='reset_password'),
+    path('consent/', views.consent, name='consent'),
 ]
