@@ -206,6 +206,8 @@ function stopCounseling() {
 }
 
 function loadAIMessages(classify, message) {
+    appendAILoading();
+
     const formData = new FormData();
     formData.append("classify", classify);
     formData.append("message", message);
@@ -219,6 +221,7 @@ function loadAIMessages(classify, message) {
         .then((response) => response.json())
         .then((data) => {
             if (data.success && classify === "customer") {
+                removeAILoading();
                 addCustomerMessageToTranslationContent(data.trans_output);
                 const childDiv = document.createElement("div");
                 childDiv.className = "chatbot-response";
@@ -227,9 +230,11 @@ function loadAIMessages(classify, message) {
             }
         })
         .catch((error) => {
+            removeAILoading();
             console.error("Error:", error);
             alert("ERROR:", error);
         });
+
 }
 
 function changeDisabled(bool) {
@@ -355,38 +360,16 @@ function scrollToBottom() {
     transcription.scrollTop = transcription.scrollHeight;
 }
 
-// 텍스트 데이터를 챗봇에 전송하는 함수(view.py에 전송)
-function evaluationTextToChatbot(text) {
-    console.log("Sending text to chatbot:", text); // 로그 추가
+function appendAILoading() {
+    const messageElement = document.createElement("div");
+    messageElement.className = "message-loading";
+    messageElement.innerHTML = "AI가 고객님의 메시지를 분석중입니다 <div class='spinner-grow spinner-grow-sm' role='status'></div>";
+    translationContent.appendChild(messageElement);
+}
 
-    const formData = new FormData();
-    formData.append("text", text);
-
-    fetch("/counseling/evaluation_chat/", {
-        method: "POST",
-        body: formData,
-        headers: {
-            "X-CSRFToken": $("#csrf").val()
-        }
-    })
-        .then((response) => {
-            console.log(response); // 응답 로그 추가
-            if (!response.ok) {
-                throw new Error("Network response was not ok");
-            }
-            return response.json();
-        })
-        .then((data) => {
-            if (data.output) {
-                const childDiv = document.createElement("div");
-                childDiv.className = "chatbot-response";
-                childDiv.innerText = data.output;
-                translationContent.appendChild(childDiv); // 챗봇 응답을 translation-content div에 추가
-            } else if (data.error) {
-                console.error("Error from server:", data.error);
-            }
-        })
-        .catch((error) => {
-            console.error("Error:", error); // 오류 로그 추가
-        });
+function removeAILoading() {
+    const messageElement = document.querySelector('.message-loading');
+    if (messageElement) {
+        messageElement.remove();
+    }
 }
