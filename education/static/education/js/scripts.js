@@ -45,6 +45,7 @@ function selectCategory(category) {
             document.getElementById("selected-category").innerText = category;
             document.getElementById("chat-content").innerHTML = ""; // 채팅 내용을 지움
             appendMessage("bot", data.initial_question); // 첫 질문 출력
+            textToSpeech(data.initial_question);
 
             windowChange(true);
         })
@@ -85,6 +86,7 @@ function sendMessage(event) {
             appendMessage("bot", data.response);
             // lastChatbotMessage = data.response;
             removeMessageInterimDiv();
+            textToSpeech(data.response);
             if (data.output) {
                 const childDiv = document.createElement("div");
                 childDiv.className = "evaluated-message-bot";
@@ -336,48 +338,9 @@ function windowChange(bool) {
     document.getElementById("submit-container").classList.toggle("hidden", !bool);
 }
 
-async function sendMessageTest(event) {
-    event.preventDefault(); // 기본 폼 제출 동작을 막습니다.
-
-    const message = document.getElementById("question").value;
-    const category = document.getElementById('category-selected').value;
-    const logHeader = document.getElementById('log-header').value;
-
-    const formData = new FormData();
-    formData.append("message", message);
-    formData.append("category", category);
-    formData.append("log_header", logHeader);
-
-    const response = await fetch('', {
-        method: 'POST',
-        headers: {
-            "X-CSRFToken": $("#csrf").val()
-        },
-        body: formData
-    });
-
-    const reader = response.body.getReader();
-    const decoder = new TextDecoder('utf-8');
-    const messageElement = document.createElement("div");
-    messageElement.className = "message-bot"
-    messageElement.innerHTML = ""
-    document.getElementById("chat-content").appendChild(messageElement);
-
-    let partialText = '';
-
-    while (true) {
-        const { value, done } = await reader.read();
-        if (done) {
-            break;
-        }
-        const chunk = decoder.decode(value, { stream: true });
-        const lines = chunk.split("\n");
-
-        lines.forEach(line => {
-            if (line.startsWith("data:")) {
-                partialText += line.replace("data:", "").trim();
-                messageElement.innerHTML = partialText;
-            }
-        });
-    }
+function textToSpeech(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'ko-KR'; // 한국어 설정
+    utterance.rate = 2;
+    speechSynthesis.speak(utterance);
 }

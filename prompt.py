@@ -22,14 +22,19 @@ class Prompt:
         """
         self.messages = messages
 
-    def set_initial_behavior_policy_for_counseling(self) -> None:
+    def get_behavior_policy_for_recommend(self) -> str:
         """상담에서 사용할 behavior policy 지정"""
-        self.behavior_policy = (
-            "당신은 콜센터 상담사에게 질문을 하기 위해 전화한 고객입니다. "
-            "콜센터 상담사에게 궁금했던 내용을 질문하세요. "
-            "질문은 한 번에 한 개씩만 하세요. "
-            "질문에 대한 원하는 답변이 나왔다면 마무리 인사를 하세요."
-        )
+        behavior_policy = "너는 친절하고 상냥하고 유능한 고객센터 상담원이야. \
+        고객의 질문에 대해 고객센터 매뉴얼을 참고해서 완벽한 답변 대본을 작성해줘.\
+        예시: 네, 고객님 해당 문의 내용은 월사용요금을 kt에서 신용카드사로 청구하면 고객이 신용카드사에 결제대금을 납부하는 제도입니다."
+
+        return behavior_policy
+
+    def get_behavior_policy_for_trans(self) -> str:
+        """상담에서 사용할 behavior policy 지정"""
+        behavior_policy = "방언을 표준어로 번역해주세요."
+
+        return behavior_policy
 
     def set_initial_behavior_policy_for_education(self) -> None:
         """교육에서 사용할 behavior policy 지정"""
