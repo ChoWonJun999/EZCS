@@ -1,0 +1,62 @@
+{% extends 'base_manager.html' %}
+{% block title %}공지사항 작성{% endblock %}
+
+{% block content %}
+<h2>공지사항 작성</h2>
+<form method="post" action="{% url 'management:board_create' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table class="styled-table-deail">
+        <tbody>
+            <tr>
+                <th>제목</th>
+                <td>
+                    <input type="text" class="form-control" name="title" required>
+                </td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td>
+                    <div id="editor-container"></div>
+                    <input type="hidden" id="body" name="body" required>
+                </td>
+            </tr>
+            <tr>
+                <th>상태</th>
+                <td>
+                    <select class="form-control" name="flag" required>
+                        <option value="0">활성화</option>
+                        <option value="1">비활성화</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>파일</th>
+                <td>
+                    <input type="file" class="form-control" name="file" accept=".jpg, .jpeg, .png">
+                    {% if error %}
+                    <div style="color: red;">{{ error }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-between mt-3">
+        <input type="button" class="btn btn-lg btn-primary" value="뒤로가기" onclick="history.back();">
+        <input type="submit" class="btn btn-lg btn-primary" value="작성하기">
+    </div>
+</form>
+
+<!-- Quill 에디터 설정 -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+    var quill = new Quill('#editor-container', {
+        theme: 'snow'
+    });
+
+    document.querySelector('form').onsubmit = function() {
+        var body = document.querySelector('input[name=body]');
+        body.value = quill.root.innerHTML;
+    };
+</script>
+{% endblock %}

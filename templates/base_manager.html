@@ -14,6 +14,7 @@
     {% load static %}
     <link href="{% static '/css/management.css' %}" rel="stylesheet" />
     <script src="/static/js/management.js"></script>
+    {% block extra_js %}{% endblock %}
     <script>
         function openContractPopup() {
             var width = 800;
@@ -61,8 +62,13 @@
                 </li>
                 <li class="nav-item">
                     {% url 'management:list' 'ad' as management_list_a_url %}
-                    <a class="nav-link {% if request.path == management_list_a_url %}active{% endif %}" href="{{ management_list_a_url }}">관리자 리스트</a>
+                    <a class="nav-link {% if request.path == management_list_a_url %}active{% endif %}" style="font-size: 20px;" href="{{ management_list_a_url }}">관리자 리스트</a>
                 </li>
+                <li class="nav-item">
+                    {% url 'management:list' 'board' as management_list_board_url %}
+                    <a class="nav-link {% if request.path == management_list_board_url %}active{% endif %}" style="font-size: 20px;" href="{{ management_list_board_url }}">공지사항 목록</a>
+                </li>
+
             </ul>
             {% comment %}
             <nav class="nev-form">

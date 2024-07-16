@@ -3,27 +3,37 @@ from accounts.models import *
 from django.db.models import Q
 from django.core.paginator import Paginator
 from datetime import datetime, timedelta
+from .models import Board
+from django.core.exceptions import ValidationError
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
+def validate_image(file):
+    valid_mime_types = ['image/jpeg', 'image/png']
+    if file.content_type not in valid_mime_types:
+        raise ValidationError('jpg, jpeg, and png 파일만 업로드 가능합니다.')
 
+    
 def list(request, flag):
-    """
-    관리자 메인페이지 DB에서 정보 받아오는 부분
-    """
     search_select = request.GET.get("searchSelect", "")
     search_text = request.GET.get("searchText", "")
-
     start_date = request.GET.get("startDate", "")
     end_date = request.GET.get("endDate", "")
-
     query = Q()
+
     if flag == 'm':
         query &= Q(auth_user__is_superuser=False)
         query &= Q(active_status=1)
     elif flag == 'ad':
         query &= Q(auth_user__is_superuser=True)
+    elif flag == 'board':
+        boards = Board.objects.all()
+        context = {'boards': boards}
+        return render(request, 'management/board_list.html', context)
     else:
         query &= Q(auth_user__is_superuser=False)
         query &= Q(active_status=0)
+    
     query1 = Q()
     if search_select:
         valid_fields = {
@@ -34,7 +44,6 @@ def list(request, flag):
 
         if search_select == 'all':
             for val in valid_fields.values():
-                print(val)
                 query1 |= Q(**{val: search_text})
         else:
             search_field = valid_fields[search_select]
@@ -42,6 +51,9 @@ def list(request, flag):
 
     query2 = Q()
     if start_date and end_date:
+        start_date = datetime.strptime(start_date, '%Y-%m-%d')
+        end_date = datetime.strptime(end_date, '%Y-%m-%d') + timedelta(days=1) - timedelta(seconds=1)
+        
         query2 &= Q(auth_user__date_joined__gte=start_date)
         query2 &= Q(auth_user__date_joined__lte=end_date)
     else:
@@ -55,6 +67,7 @@ def list(request, flag):
         data = AdministratorProfile.objects.filter(query & query1 & query2)
     else:
         data = CounselorProfile.objects.filter(query & query1 & query2)
+    
     paginator = Paginator(data, 10)
     page = request.GET.get('page')
     data = paginator.get_page(page)
@@ -71,6 +84,40 @@ def list(request, flag):
 
     return render(request, 'management/list.html', context)
 
+def board_create(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        body = request.POST.get('body')
+        flag = request.POST.get('flag', 0)  # 기본값으로 활성화 상태 설정
+
+        # 파일 형식 검증
+        if 'file' in request.FILES:
+            file = request.FILES['file']
+            file_extension = file.name.split('.')[-1].lower()
+            if file_extension not in ['jpg', 'jpeg', 'png']:
+                return render(request, 'management/board_create.html', {'error': '파일 형식이 유효하지 않습니다. jpg, jpeg, png 형식만 업로드 가능합니다.'})
+
+        board = Board.objects.create(
+            auth_user=request.user,
+            title=title,
+            body=body,
+            flag=flag
+        )
+
+        if 'file' in request.FILES:
+            board.file = request.FILES['file']
+            board.save()
+
+        return redirect('management:board_list')  # 공지사항 목록 페이지로 리디렉션
+    return render(request, 'management/board_create.html')
+
+def board_list(request):
+    boards = Board.objects.all()
+    return render(request, 'management/board_list.html', {'boards': boards})
+
+def board_detail(request, id):
+    board = get_object_or_404(Board, id=id)
+    return render(request, 'management/board_detail.html', {'board': board})
 
 def detail(request, id, flag):
     """
@@ -122,6 +169,77 @@ def edit(request, id, flag):
         user.active_status = request.POST.get('active_status')
         user.save()
         return redirect("management:detail", id, flag)
+
+@csrf_exempt
+def adminsignup(request):
+    if request.method == 'GET':
+        return render(request, 'management/adminsignup.html')
+    elif request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        name = request.POST.get('name')
+        phone_number = request.POST.get('phone_number')
+        email = request.POST.get('email')
+        birth_date = request.POST.get('birthdate')
+        address_code = request.POST.get('addressCode')
+        address = request.POST.get('address')
+        address_detail = request.POST.get('addressDetail')
+        department = request.POST.get('department')
+        
+        user = User.objects.create_user(
+            username = username,
+            password = password,
+            first_name = name,
+            email = email,
+            is_superuser = 1,
+        )
+        
+        AdministratorProfile.objects.create(
+            auth_user=User.objects.get(id=user.id)
+            , birth_date=birth_date
+            , phone_number=phone_number
+            , address_code=address_code
+            , address=address
+            , address_detail=address_detail
+            , department=department
+        )
+
+        result = True
+        msg = "회원가입 요청이 완료되었습니다."
+
+        return JsonResponse({'result': result, 'msg': msg})
+
+@csrf_exempt
+def admincheck_username(request):
+    username = request.POST.get('username')
+    is_taken = User.objects.filter(username=username).exists()
+    print(is_taken)
+    return JsonResponse({'is_taken': is_taken})
+
+def admincheck_email(request):
+    email = request.GET.get('email')
+    is_taken = User.objects.filter(email=email).exists()
+    return JsonResponse({'is_taken': is_taken})
+
+def admincheck_phone(request): 
+    phone_number = request.GET.get('phone_number')
+    is_taken = CounselorProfile.objects.filter(phone_number=phone_number).exists()
+    return JsonResponse({'is_taken': is_taken})
+
+def adminreset_password(request):
+    if request.method == 'POST':
+        new_password = request.POST.get('new_password')
+        user_id = request.session.get('reset_user_id')
+
+        try:
+            user = User.objects.get(id=user_id)
+            user.set_password(new_password)
+            user.save()
+            del request.session['reset_user_id']
+            return JsonResponse({'result': 'success', 'msg': '비밀번호가 성공적으로 변경되었습니다.'})
+        except User.DoesNotExist:
+            return JsonResponse({'result': 'error', 'msg': '사용자를 찾을 수 없습니다.'})
+    return render(request, 'accounts/reset_password.html')
 
 
 
@@ -312,4 +430,3 @@ def inactive_search(request):
     else:
         results = []
     return render(request, 'management/manager_dashboard.html', {'data': results, 'query': query})
-         

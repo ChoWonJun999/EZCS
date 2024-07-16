@@ -1,0 +1,17 @@
+{% extends 'base_manager.html' %}
+{% block title %}공지사항 목록{% endblock %}
+
+{% block content %}
+<h2>공지사항 목록</h2>
+<a href="{% url 'management:board_create' %}" class="btn btn-primary mb-3">공지사항 작성</a>
+<ul>
+    {% for board in boards %}
+    <li>
+        <a href="{% url 'management:board_detail' board.id %}">{{ board.title }}</a>
+        <span>{{ board.create_time|date:"Y.m.d" }}</span>
+    </li>
+    {% empty %}
+    <li>등록된 공지사항이 없습니다.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

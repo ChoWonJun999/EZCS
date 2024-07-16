@@ -16,12 +16,10 @@ img.ezcs-logo {
     padding: 20px;
     transform: translate(-50%, 0%);
 }
-
 @media (max-width: 768px) {
     .ezcs-logo {
         width: 70px;
     }
-
     .logo-container {
         padding: 15px;
     }
@@ -31,7 +29,6 @@ img.ezcs-logo {
     .ezcs-logo {
         width: 50px;
     }
-
     .logo-container {
         padding: 10px;
     }
@@ -40,7 +37,6 @@ img.ezcs-logo {
 .my-form {
     width: 100% !important;
 }
-
 .username-input {
     display: flex;
     align-items: center;
@@ -117,35 +113,3 @@ p a:hover {
     justify-content: center;
     margin-bottom: 20px;
 }
-
-.terms_content {
-    overflow-y: scroll;
-    height: 200px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    margin-top: 5px;
-    margin-bottom: 20px;
-}
-
-.input_check input {
-  margin-right: 5px;
-  position: relative;
-  top: 1.5px;
-
-}
-.input_check_all input {
-    margin-right: 5px;
-    position: relative;
-    top: -14.0px;
-}
-
-.input_check label,
-.input_check_all label {
-    font-weight: 700;
-
-}
-
-.input_check_all {
-    display: flex;
-}
-

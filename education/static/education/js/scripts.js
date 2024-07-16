@@ -87,6 +87,7 @@ function sendMessage(event) {
             // lastChatbotMessage = data.response;
             removeMessageInterimDiv();
             textToSpeech(data.response);
+
             if (data.output) {
                 const childDiv = document.createElement("div");
                 childDiv.className = "evaluated-message-bot";
@@ -343,4 +344,3 @@ function textToSpeech(text) {
     utterance.lang = 'ko-KR'; // 한국어 설정
     utterance.rate = 2;
     speechSynthesis.speak(utterance);
-}
