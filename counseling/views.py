@@ -38,7 +38,7 @@ def counsel(request):
         }
         trans_chat_bot = Chatbot_trans(
             model_id='ft:gpt-3.5-turbo-0125:personal::9god26fK',
-            behavior_policy=None,
+            behavior_policy='방언을 표준어로 번역해주세요.'
         )
         
         messages = "너는 친절하고 상냥하고 유능한 고객센터 상담원이야. \
