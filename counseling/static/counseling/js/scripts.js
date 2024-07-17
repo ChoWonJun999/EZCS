@@ -157,6 +157,9 @@ function startCounseling(type) {
                 changeDisabled(false);
 
                 console.log("Counseling ended");
+                if (type == "customer") {
+                    appendAILoading();
+                }
 
                 if (finalTranscript.trim() !== "") {
                     const finalDiv = createFinalDiv(finalTranscript, type);
@@ -206,8 +209,6 @@ function stopCounseling() {
 }
 
 function loadAIMessages(classify, message) {
-    appendAILoading();
-
     const formData = new FormData();
     formData.append("classify", classify);
     formData.append("message", message);

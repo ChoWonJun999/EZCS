@@ -344,3 +344,4 @@ function textToSpeech(text) {
     utterance.lang = 'ko-KR'; // 한국어 설정
     utterance.rate = 2;
     speechSynthesis.speak(utterance);
+}
