@@ -1,9 +1,11 @@
 document.addEventListener("DOMContentLoaded", function () {
-    window.addEventListener('beforeunload', function (event) {
+    function BeforeUnloadFunc(event) {
         event.preventDefault();
         event.returnValue = '';
         return '';
-    });
+    }
+
+    window.addEventListener('beforeunload', BeforeUnloadFunc);
 
     const form = document.getElementById("quiz-form");
     form.addEventListener("submit", function (event) {
@@ -77,6 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         correctAnswer.querySelector('.correct-answer-content').innerText = result.correct_answer || "정답 없음";
                     }
                 }
+                window.removeEventListener('beforeunload', BeforeUnloadFunc);
             }
         })
         .catch((error) => {

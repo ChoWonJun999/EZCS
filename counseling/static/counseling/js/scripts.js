@@ -28,14 +28,13 @@ function updateLog() {
         .then((response) => response.json())
         .then((data) => {
             if (data.success) {
-                alert("고객 정보가 저장되었습니다.");
+                alert("문의/조치내용이 저장되었습니다.");
             } else {
-                alert("고객 정보 저장에 실패했습니다.");
+                alert("문의/조치내용 저장에 실패했습니다.");
             }
         })
         .catch((error) => {
             console.error("Error:", error);
-            alert("고객 정보 저장 중 오류가 발생했습니다.");
         });
 }
 
@@ -353,6 +352,7 @@ function saveCounselingLog() {
             console.error("Error:", error);
             alert("상담 로그 저장 중 오류가 발생했습니다.");
         });
+    
 }
 
 function scrollToBottom() {
@@ -370,5 +370,13 @@ function removeAILoading() {
     const messageElement = document.querySelector(".message-loading");
     if (messageElement) {
         messageElement.remove();
+    }
+}
+
+function endCounseling() {
+    const userConfirmed = confirm("상담을 종료하시겠습니까?\n상담 종료시 대시보드로 이동합니다.");
+    if (userConfirmed) {
+        updateLog();
+        window.location.href = "/";
     }
 }
