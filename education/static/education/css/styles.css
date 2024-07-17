@@ -5,7 +5,7 @@
     font-style: normal;
 }
 
-.loading{
+.loading {
     position: absolute;
     top: 0;
     left: 0;
@@ -30,6 +30,7 @@
     box-sizing: border-box;
     position: relative;
     align-items: stretch;
+    width: 100%;
 }
 
 .hidden {

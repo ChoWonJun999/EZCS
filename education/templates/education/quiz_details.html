@@ -8,9 +8,11 @@
 <div class="dashboard">
     <h3>퀴즈 상세보기</h3>
     <div class="log-detail">
+        <!-- 
         <div class="detail-item">
             <p><strong>번호:</strong> {{ head.id }}</p>
         </div>
+         -->
         <div class="detail-item">
             <p><strong>카테고리:</strong> {{ head.get_category_display }}</p>
         </div>
@@ -27,10 +29,11 @@
 
     <div class="quiz-history">
         <h3>퀴즈 창 복원 영역</h3>
-
+        <br>
+        <hr>
+        <br>
         <h2>퀴즈 결과</h2>
-
-        <h1>퀴즈 결과</h1>
+        <br>
 
         {% for item in data %}
         <div class="question">

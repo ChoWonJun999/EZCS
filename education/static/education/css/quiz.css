@@ -4,6 +4,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     margin-top: 20px;
+    width: 100%;
 }
 
 h1 {
@@ -12,7 +13,8 @@ h1 {
     margin-bottom: 20px;
 }
 
-.log-detail, .quiz-history {
+.log-detail,
+.quiz-history {
     background-color: #ffffff;
     padding: 20px;
     border-radius: 8px;
@@ -104,13 +106,15 @@ h1 {
     margin-bottom: 20px; /* 추가된 여백 */
 }
 
-.explanation-title, .correct-answer-title {
+.explanation-title,
+.correct-answer-title {
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 10px;
 }
 
-.explanation-content, .correct-answer-content {
+.explanation-content,
+.correct-answer-content {
     font-size: 16px;
     line-height: 1.5;
 }

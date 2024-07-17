@@ -162,9 +162,11 @@ def edit(request, id, flag):
         }
         return render(request, 'management/edit.html', context)
     else:
+        auth_user = User.objects.get(id=user.auth_user)
         user.auth_user.username = request.POST.get('loginUsername')
         user.auth_user.name = request.POST.get('name')
         user.auth_user.email = request.POST.get('emailLocal') + '@' + request.POST.get('emailDomain')
+
         user.phone_number = request.POST.get('phone')
         user.department = request.POST.get('department')
         user.birth_date = request.POST.get('birthdate')

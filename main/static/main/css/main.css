@@ -1,12 +1,12 @@
 .dashboard {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: 1.5fr 3fr; 
+    grid-template-rows: 1.5fr 3fr;
     gap: 20px;
-    height: calc(100vh - 40px); 
+    height: calc(100vh - 40px);
     box-sizing: border-box;
     padding: 20px;
-    position: relative; 
+    position: relative;
 }
 
 .dashboard-header {
@@ -20,20 +20,27 @@
 }
 
 .dashboard-content {
-    display: grid;
+    display: flex;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+    width: 100%;
     /* height: 100%; */
 }
 
-.status-section, .announcement-section, .community-section, .self-study-section {
+.status-section,
+.announcement-section,
+.community-section,
+.self-study-section {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.status-section h2, .announcement-section h2, .community-section h2, .self-study-section h2 {
+.status-section h2,
+.announcement-section h2,
+.community-section h2,
+.self-study-section h2 {
     font-size: 18px;
     color: #009879;
     margin-bottom: 15px;
@@ -70,28 +77,42 @@
     color: #333;
 }
 
-.announcement-section ul, .community-section ul {
+.announcement-section ul,
+.community-section ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.announcement-section li, .community-section li {
+.announcement-section li,
+.community-section li {
     display: flex;
     justify-content: space-between;
     margin-bottom: 10px;
 }
 
-.announcement-section a, .community-section a {
+.announcement-section a,
+.community-section a {
     color: #009879;
     text-decoration: none;
 }
 
-.announcement-section a:hover, .community-section a:hover {
+.announcement-section a:hover,
+.community-section a:hover {
     text-decoration: underline;
 }
 
 .study-content {
     text-align: center;
     color: #999;
+}
+
+.calendar {
+    width: 70%;
+    height: 95%;
+}
+
+.notice {
+    width: 30%;
+    height: 95%;
 }

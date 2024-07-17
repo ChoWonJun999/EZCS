@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
     setTodayDate();
     preventKeyboardInputOnDate();
 });
@@ -7,13 +7,13 @@ function setTodayDate() {
     var today = new Date();
     var day = ("0" + today.getDate()).slice(-2);
     var month = ("0" + (today.getMonth() + 1)).slice(-2);
-    var todayDate = today.getFullYear() + "-" + (month) + "-" + (day);
+    var todayDate = today.getFullYear() + "-" + month + "-" + day;
     document.getElementById("birthdate").value = todayDate;
 }
 
 function preventKeyboardInputOnDate() {
     var birthdateInput = document.getElementById("birthdate");
-    birthdateInput.addEventListener("keydown", function(event) {
+    birthdateInput.addEventListener("keydown", function (event) {
         event.preventDefault();
     });
 }
@@ -409,7 +409,8 @@ function signup() {
         birthdate: $("#birthdate").val(),
         addressCode: $("#addressCode").val(),
         address: $("#address").val(),
-        addressDetail: addressDetail
+        addressDetail: addressDetail,
+        department: $("#department").val()
     };
 
     var from = $("#signupForm");

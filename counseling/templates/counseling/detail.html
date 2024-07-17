@@ -13,25 +13,25 @@
     }
 </style>
 <!-- 직원용 대시보드 내용 -->
-<div class="dashboard all-div">
+<div class="all-div">
     <div style="height: 100%; width: 30%;">
-        <div class="customer-info">
+        <div class="customer-info" style="height: 446px; max-height: 100vh;">
             <h4>고객 정보</h4>
-            <form id="customer-form">
-                <table>
+            <form id="customer-form" style="text-align-last: left;">
+                <table style="width: 100%; border-collapse: separate; border-spacing: 0 15px;">
                     <tbody>
                         <tr>
                             <td>
                                 <label for="customer-name">고객명</label>
                             </td>
                             <td>
-                                {{ head.customer.name }}
+                                <span style="margin-left: 16px;">{{ head.customer.name }}</span>
                             </td>
                             <td>
                                 <label for="birthdate">생년월일</label>
                             </td>
                             <td>
-                                {{ head.customer.birth_date }}
+                                <span style="margin-left: 15px;">{{ head.customer.birth_date }}</span>
                             </td>
                         </tr>
                         <tr>
@@ -45,7 +45,7 @@
                                 <label for="join-date">가입일</label>
                             </td>
                             <td>
-                                {{ head.customer.joined_date }}
+                                <span style="margin-left: 15px;">{{ head.customer.joined_date }}</span>
                             </td>
                         </tr>
                         <tr>
@@ -53,7 +53,7 @@
                                 <label for="address">주소</label>
                             </td>
                             <td colspan="3">
-                                {{ head.customer.address }}
+                                <span style="margin-left: 30px;">{{ head.customer.address }}</span>
                             </td>
                         </tr>
                     </tbody>
@@ -61,9 +61,9 @@
             </form>
         </div>
 
-        <div class="memo-section">
+        <div class="memo-section" style="height: 263px;">
             <h4>문의/조치 내용</h4>
-            <form id="consultation-form" style="height: 80%;">
+            <form id="consultation-form" style="height: 80%; text-align-last: left;">
                 <div class="memo-content" style="height: 100%;">
                     <table style="width: 100%; height: 100%;">
                         <colgroup>
@@ -76,7 +76,11 @@
                                     <label for="inquiry-text">문의 내용</label>
                                 </td>
                                 <td>
+                                    {% if head.inquiries %}
                                     {{ head.inquiries }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
                                 </td>
                             </tr>
                             <tr>
@@ -84,7 +88,11 @@
                                     <label for="action-text">조치 내용</label>
                                 </td>
                                 <td>
+                                    {% if head.action %}
                                     {{ head.action }}
+                                    {% else %}
+                                    -
+                                    {% endif %}
                                 </td>
                             </tr>
                         </tbody>
@@ -95,8 +103,8 @@
     </div>
 
     <div style="height: 100%; width: 70%;">
-        <div style="display: inline-flex; height: 52.5%; width: 100%;">
-            <div class="stt-content">
+        <div style="display: flex; height: 97%; width: 100%;">
+            <div class="stt-content" style="height: 709px; max-height: 100vh; width: 40%;">
                 <h4>고객-상담원</h4>
                 <div class="stt">
                     <div id="transcription">
@@ -114,14 +122,14 @@
                     </div>
                 </div>
             </div>
-            <div class="stt-content">
+            <div class="stt-content" style="height: 709px; max-height: 100vh; width: 60%;">
                 <h4>고객음성번역-챗봇추천응대멘트</h4>
                 <div class="translation">
                     <div id="translation-content">
                         {% for item in data%}
                         {% if not item.classify %}
                         <div class="output-msg customer">
-                            <strong>번역:</strong> {{ item.message }}
+                            <strong>번역:</strong> {{ item.translate }}
                         </div>
                         <div class="chatbot-response">
                             {{ item.recommend }}

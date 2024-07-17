@@ -82,7 +82,13 @@
                         <td>{{ item.auth_user.username }}</td>
                         <td>{{ item.auth_user.first_name }}</td>
                         <td>{{ item.auth_user.email }}</td>
-                        <td>{{ item.department }}</td>
+                        <td>
+                            {% if item.department %}
+                            {{ item.department }}
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
                         <td>{{ item.auth_user.date_joined }}</td>
                         {% if flag == 'a' %}
                         <td onclick='event.cancelBubble=true;'>

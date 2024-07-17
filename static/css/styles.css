@@ -17,13 +17,19 @@ body {
     flex-direction: column;
     min-height: 100vh; /* Ensures the body takes at least full viewport height */
 }
+
+form {
+    width: 100%;
+}
+
 .main-content {
     /* margin-top: 80px;  */
     padding: 20px;
     margin-left: 40px;
     flex-grow: 1; /* Ensures main content takes available space */
-    display: flex;
-    flex-direction: column;
+    /* display: flex; */
+    display: contents;
+    /* flex-direction: column; */
     height: 100%; /* Adjusted to account for fixed header */
 }
 img.ezcs-logo {
@@ -185,13 +191,6 @@ img.ezcs-logo {
 .logout:hover {
     background-color: #e71d36;
 }
-
-/* .main-content {
-    margin-top: 20px;
-    padding: 20px;
-    margin-left: 40px;
-    flex-grow: 1;
-} */
 
 .footer {
     background-color: #ffffff;

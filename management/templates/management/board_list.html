@@ -2,44 +2,50 @@
 {% block title %}공지 사항 목록{% endblock %}
 
 {% block content %}
-<h2>공지 사항 목록</h2>
-<a href="{% url 'management:board_create' %}" class="btn btn-primary mb-3">공지 사항 작성</a>
-<div>
-    <span style="float: left;">총 {{ boards|length }}건</span>
-</div>
-<div>
-    <table class="styled-table">
-        <thead>
-            <th>순번</th>
-            <th>title</th>
-            <th>일자</th>
-            <th>작성자</th>
-        </thead>
-        <tbody>
-            {% for board in boards %}
-            <tr data-url="{% url 'management:board_detail' board.id %}" class="active-row">
-                <td>{{ forloop.counter }}</td>
-                <td>
-                    {{ board.title }}
-                </td>
-                <td>
-                    <span>{{ board.create_time|date:"Y.m.d" }}</span>
-                </td>
-                <td>
-                    {{ board.auth_user.username }}
-                </td>
-            </tr>
-            {% empty %}
-            <td>등록된 공지 사항이 없습니다.</td>
-            {% endfor %}
+<div class="dashboard">
+    <div>
+        <h2>공지 사항 목록</h2>
+    </div>
+    <div>
+        <a href="{% url 'management:board_create' %}" class="btn btn-primary mb-3" style="float: right;">공지 사항 작성</a>
+    </div>
+    <div>
+        <span style="float: left;">총 {{ boards|length }}건</span>
+    </div>
+    <div>
+        <table class="styled-table">
+            <thead>
+                <th>순번</th>
+                <th>title</th>
+                <th>일자</th>
+                <th>작성자</th>
+            </thead>
+            <tbody>
+                {% for board in boards %}
+                <tr data-url="{% url 'management:board_detail' board.id %}" class="active-row">
+                    <td>{{ forloop.counter }}</td>
+                    <td>
+                        {{ board.title }}
+                    </td>
+                    <td>
+                        <span>{{ board.create_time|date:"Y.m.d" }}</span>
+                    </td>
+                    <td>
+                        {{ board.auth_user.username }}
+                    </td>
+                </tr>
+                {% empty %}
+                <td>등록된 공지 사항이 없습니다.</td>
+                {% endfor %}
 
-            {% if boards %}
-            {% else %}
-            <tr>
-                <td colspan="4">직원 요청 정보가 존재하지 않습니다.</td>
-            </tr>
-            {% endif %}
-        </tbody>
-    </table>
+                {% if boards %}
+                {% else %}
+                <tr>
+                    <td colspan="4">직원 요청 정보가 존재하지 않습니다.</td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

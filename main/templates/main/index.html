@@ -6,9 +6,36 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
 
+<script src='https://cdn.jsdelivr.net/npm/rrule@2.6.4/dist/es5/rrule.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/rrule@6.1.11/index.global.min.js'></script>
+<script>
+    $(document).ready(function () {
+        var eventsData = $("#dataSafe").val();
 
-<div class="dashboard-content">
-    <div class="announcement-section">
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            events: '/mp/',
+            locale: 'ko',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            },
+            events: eventsData.map(event => ({
+                title: `${event.count} events`,
+                start: event.date
+            }))
+        });
+        calendar.render();
+    });
+</script>
+
+<input type="hidden" name="dataSafe" value="{{ events|default:'[]'|safe }}">
+<div class="dashboard dashboard-content">
+    <div id="calendar" class="announcement-section calendar"></div>
+    <div class="announcement-section notice">
         <h2>공지 사항</h2>
         <ul>
             {% for notice in notices %}

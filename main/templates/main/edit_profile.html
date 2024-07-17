@@ -3,6 +3,7 @@
 {% block title %}회원정보 수정{% endblock %}
 
 {% block content %}
+<script src="{% static 'main/js/edit_profile.js' %}"></script> <!-- 수정 -->
 <div class="container-sm my_container">
     <h2>회원정보 수정</h2>
     <form id="editProfileForm" method="POST" data-url="{% url 'main:edit_profile' %}" data-csrf="{{ csrf_token }}">
@@ -50,4 +51,3 @@
 
 <script src="{% static 'main/js/edit_profile.js' %}"></script>
 {% endblock %}
-
