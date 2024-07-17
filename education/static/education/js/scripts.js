@@ -1,4 +1,5 @@
 let lastChatbotMessage = "";
+const loadingDiv = document.querySelector(".loading");
 
 // DOM 콘텐츠가 완전히 로드되면 이 함수를 실행
 document.addEventListener("DOMContentLoaded", function () {
@@ -15,6 +16,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // 카테고리를 선택하는 함수
 function selectCategory(category) {
     console.log("Selected category:", category);
+
+    loadingDiv.style.display = "flex";
 
     // 선택한 순간 버튼 비활성화
     ableCategoryButtons(true);
@@ -35,6 +38,7 @@ function selectCategory(category) {
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
+            loadingDiv.style.display = "none";
             return response.json();
         })
         .then((data) => {
