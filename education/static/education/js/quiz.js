@@ -35,6 +35,10 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!response.ok) {
                 throw new Error('Network response was not ok ' + response.statusText);
             }
+            const endButton = document.querySelector('.end-button');
+            endButton.style.display = 'block';
+            const submitButton = document.querySelector('.submit-button');
+            submitButton.parentNode.removeChild(submitButton);
             return response.json(); // JSON 형식으로 응답을 처리
         })
         .then((data) => {

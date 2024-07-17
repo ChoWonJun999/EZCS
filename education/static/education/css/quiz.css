@@ -135,7 +135,7 @@ h1 {
     justify-content: flex-end;
 }
 
-.submit-button {
+.submit-button, .end-button {
     padding: 10px 20px;
     font-size: 16px;
     background-color: #2ec4b6;
@@ -145,6 +145,10 @@ h1 {
     cursor: pointer;
 }
 
-.submit-button:hover {
+.end-button {
+    text-decoration: none;
+}
+
+.submit-button:hover, .end-button:hover{
     background-color: #007a63;
 }
