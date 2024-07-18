@@ -232,6 +232,10 @@ def quiz(request):
     '''
     퀴즈페이지
     '''
+    # quizzes = Quiz.objects.filter(category = 0)
+    
+    # quizzes = quizzes.order_by('?')[:5]
+    
     quizzes = Quiz.objects.order_by('?')[:5]  # 퀴즈 5개를 랜덤으로 가져오기
 
     if request.method == "POST":  # 폼 제출이 POST 요청으로 이루어질 때
