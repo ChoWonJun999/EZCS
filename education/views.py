@@ -41,7 +41,7 @@ def chat_view(request):
             output = chatbot.chat(message)
 
             evaluation_chatbot = Chatbot(
-                model_id="gpt-4o",
+                # model_id="gpt-4o",
                 category=category,
                 THRESHOLD=2,
                 behavior_policy=prompt.get_messages_for_evaluation(output, message),
@@ -99,7 +99,7 @@ def chat_view(request):
         elif category:
             # Chatbot 객체 초기화
             chatbot = Chatbot(
-                model_id="gpt-4o",
+                # model_id="gpt-4o",
                 category=category,
                 THRESHOLD=2,
                 behavior_policy=prompt.get_behavior_policy(),
@@ -232,6 +232,10 @@ def quiz(request):
     '''
     퀴즈페이지
     '''
+    # quizzes = Quiz.objects.filter(category = 0)
+    
+    # quizzes = quizzes.order_by('?')[:5]
+    
     quizzes = Quiz.objects.order_by('?')[:5]  # 퀴즈 5개를 랜덤으로 가져오기
 
     if request.method == "POST":  # 폼 제출이 POST 요청으로 이루어질 때

@@ -1,12 +1,17 @@
-document.addEventListener("DOMContentLoaded", function () {
-    function BeforeUnloadFunc(event) {
-        event.preventDefault();
-        event.returnValue = '';
-        return '';
-    }
-
+function startQuiz() {
+    const noticeDiv = document.querySelector(".notice")
+    noticeDiv.parentNode.removeChild(noticeDiv);
+    document.querySelector(".dashboard").style.display = "block";
     window.addEventListener('beforeunload', BeforeUnloadFunc);
+}
 
+function BeforeUnloadFunc(event) {
+    event.preventDefault();
+    event.returnValue = '';
+    return '';
+}
+
+document.addEventListener("DOMContentLoaded", function () {
     const form = document.getElementById("quiz-form");
     form.addEventListener("submit", function (event) {
         event.preventDefault(); // 폼 기본 제출 동작 방지

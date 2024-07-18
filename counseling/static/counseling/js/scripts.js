@@ -205,7 +205,8 @@ function stopCounseling() {
 }
 
 function loadAIMessages(classify, message) {
-    if ( classify === "customer") appendAILoading();
+    if (classify === "customer") appendAILoading();
+
 
     const formData = new FormData();
     formData.append("classify", classify);
@@ -352,7 +353,6 @@ function saveCounselingLog() {
             console.error("Error:", error);
             alert("상담 로그 저장 중 오류가 발생했습니다.");
         });
-    
 }
 
 function scrollToBottom() {

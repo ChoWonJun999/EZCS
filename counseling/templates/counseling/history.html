@@ -50,7 +50,7 @@
         </div>
 
         <div>
-            <p>총 {{ data|length }}건</p>
+            <p>총 {{ data.paginator.count }}건</p>
         </div>
 
         <div>
@@ -59,8 +59,11 @@
                     <col width="7%">
                     <col width="10%">
                     <col width="*">
-                    <col width="30%">
-                    <col width="30%">
+                    <col width="25%">
+                    <col width="25%">
+                    {% if request.user.is_superuser %}
+                    <col width="10%">
+                    {% endif %}
                 </colgroup>
                 <thead>
                     <tr>
@@ -69,6 +72,9 @@
                         <th>AI 상담 일자</th>
                         <th>문의 사항</th>
                         <th>조치 사항</th>
+                        {% if request.user.is_superuser %}
+                        <th>사용자</th>
+                        {% endif %}
                     </tr>
                 </thead>
                 <tbody>
@@ -92,6 +98,9 @@
                             -
                             {% endif %}
                         </td>
+                        {% if request.user.is_superuser %}
+                        <td>{{ item.auth_user.username }}</td>
+                        {% endif %}
                     </tr>
                     {% endfor %}
                     {% else %}
