@@ -3,6 +3,7 @@
 {% block title %}회원정보 수정{% endblock %}
 
 {% block content %}
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script> <!-- Daum 우편번호 API -->
 <script src="{% static 'main/js/edit_profile.js' %}"></script> <!-- 수정 -->
 <div class="container-sm my_container">
     <h2>회원정보 수정</h2>
@@ -13,8 +14,18 @@
             <label for="name">이름</label>
         </div>
         <div class="form-floating mb-3 my-form">
-            <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
             <label for="email">이메일</label>
+            <div style="display: flex;">
+                <input type="text" class="form-control" id="emailLocal" name="emailLocal" maxlength="20" value="{{ email_local }}">
+                <span>&nbsp;@&nbsp;</span>
+                <input type="text" class="form-control" name="emailDomain" id="emailDomain" value="{{ email_domain }}" disabled>
+                <select id="emailDomainSelect" name="emailDomainSelect" class="form-control" onchange="emailDomainChange(this);">
+                    {% for domain in email_domains %}
+                        <option value="{{ domain }}" {% if email_domain == domain %}selected{% endif %}>{{ domain }}</option>
+                    {% endfor %}
+                    <option value="">직접입력</option>
+                </select>
+            </div>
         </div>
         <div class="form-floating mb-3 my-form">
             <input type="tel" class="form-control" id="phone_number" name="phone_number" value="{{ profile.phone_number }}">
@@ -31,6 +42,7 @@
         <div class="form-floating mb-3 my-form">
             <input type="text" class="form-control" id="address" name="address" value="{{ profile.address }}">
             <label for="address">주소</label>
+            <button type="button" class="btn btn-primary" onclick="execDaumPostcode()">우편번호 찾기</button> <!-- 주소 찾기 버튼 -->
         </div>
         <div class="form-floating mb-3 my-form">
             <input type="text" class="form-control" id="address_detail" name="address_detail" value="{{ profile.address_detail }}">
@@ -48,6 +60,4 @@
         <button type="button" class="btn btn-outline-primary" onclick="submitProfile()">저장</button>
     </form>
 </div>
-
-<script src="{% static 'main/js/edit_profile.js' %}"></script>
 {% endblock %}
