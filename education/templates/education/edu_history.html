@@ -71,6 +71,7 @@
                     {% if data %}
                     {% for item in data %}
                     <tr data-url="{% url 'education:edu_details' item.id %}">
+                    {% if item.overall_avg_score is not None %}
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.category_display }}</td>
                         <td>{{ item.create_time|date:"Y-m-d H:i" }}</td>
@@ -83,6 +84,7 @@
                         {% if request.user.is_superuser %}
                         <td>{{ item.auth_user__username }}</td>
                         {% endif %}
+                    {% endif %}
                     </tr>
                     {% endfor %}
                     {% else %}
