@@ -198,7 +198,20 @@ def edu_history(request):
         'overall_avg_score'
     )
 
-    paginator = Paginator(data, 10)
+    # 데이터에서 None 값을 가지는 항목 제거
+    filtered_data = []
+    for item in data:
+        if None not in [
+            item['avg_accuracy_score'],
+            item['avg_kind_score'],
+            item['avg_solving_score'],
+            item['avg_add_score'],
+            item['avg_time_score'],
+            item['overall_avg_score']
+        ]:
+            filtered_data.append(item)
+
+    paginator = Paginator(filtered_data, 10)
     page = request.GET.get('page')
     data = paginator.get_page(page)
 
