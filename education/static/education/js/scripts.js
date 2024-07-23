@@ -222,6 +222,7 @@ function startEducation() {
                             removeMessageInterimDiv();
                             appendMessage("bot", data.response);
                             if (data.output) {
+                                textToSpeech(data.response);
                                 const childDiv = document.createElement("div");
                                 childDiv.className = "evaluated-message-bot";
                                 childDiv.innerText = data.output;
