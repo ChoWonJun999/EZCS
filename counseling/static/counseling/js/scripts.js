@@ -120,6 +120,11 @@ function startCounseling(type) {
 
                 console.log("Counseling started");
 
+                // 기본 메시지 제거
+                if (transcription.innerHTML.trim() === "여기에 음성 입력 내용이 표시됩니다...") {
+                    transcription.innerHTML = "";
+                }
+
                 // 기존 interimDiv 제거
                 removeExistingInterimDiv();
 
@@ -158,6 +163,10 @@ function startCounseling(type) {
                 console.log("Counseling ended");
 
                 if (finalTranscript.trim() !== "") {
+                    if (translationContent && translationContent.innerHTML.trim() === "여기에 번역된 내용이 표시됩니다...") {
+                        translationContent.innerHTML = "";
+                    }
+
                     const finalDiv = createFinalDiv(finalTranscript, type);
                     transcription.appendChild(finalDiv);
                     loadAIMessages(type, finalTranscript);
@@ -168,10 +177,6 @@ function startCounseling(type) {
                 // interim 메시지 제거
                 removeExistingInterimDiv();
 
-                // 기본 메시지를 다시 표시하지 않음
-                if (transcription.innerHTML.trim() === "") {
-                    transcription.innerHTML = defaultTranscriptionMessage;
-                }
                 scrollToBottom(); // 항상 하단으로 스크롤
             };
 
