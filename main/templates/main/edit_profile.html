@@ -13,19 +13,17 @@
             <input type="text" class="form-control" id="name" name="name" value="{{ user.first_name }}">
             <label for="name">이름</label>
         </div>
-        <div class="form-floating mb-3 my-form">
-            <label for="email">이메일</label>
-            <div style="display: flex;">
-                <input type="text" class="form-control" id="emailLocal" name="emailLocal" maxlength="20" value="{{ email_local }}">
-                <span>&nbsp;@&nbsp;</span>
-                <input type="text" class="form-control" name="emailDomain" id="emailDomain" value="{{ email_domain }}" disabled>
-                <select id="emailDomainSelect" name="emailDomainSelect" class="form-control" onchange="emailDomainChange(this);">
-                    {% for domain in email_domains %}
-                        <option value="{{ domain }}" {% if email_domain == domain %}selected{% endif %}>{{ domain }}</option>
-                    {% endfor %}
-                    <option value="">직접입력</option>
-                </select>
-            </div>
+        <div class="form-floating mb-3 my-form" style="width: 100%; display: inline-flex;">
+            <input type="text" class="form-control" id="emailLocal" name="emailLocal" maxlength="20" value="{{ email_local }}">
+            <label for="email">E-mail</label>
+            <span style="align-content: center; font-size: 25px;">&nbsp;@&nbsp;</span>
+            <input type="text" class="form-control" name="emailDomain" id="emailDomain" value="{{ email_domain }}" disabled>
+            <select id="emailDomainSelect" name="emailDomainSelect" class="form-control" onchange="emailDomainChange(this);">
+                {% for domain in email_domains %}
+                <option value="{{ domain }}" {% if email_domain == domain %}selected{% endif %}>{{ domain }}</option>
+                {% endfor %}
+                <option value="">직접입력</option>
+            </select>
         </div>
         <div class="form-floating mb-3 my-form">
             <input type="tel" class="form-control" id="phone_number" name="phone_number" value="{{ profile.phone_number }}">
@@ -35,15 +33,14 @@
             <input type="date" class="form-control" id="birth_date" name="birth_date" value="{{ profile.birth_date|date:'Y-m-d' }}">
             <label for="birth_date">생년월일</label>
         </div>
-        <div class="form-floating mb-3 my-form">
-            <input type="text" class="form-control" id="address_code" name="address_code" value="{{ profile.address_code }}">
+        <div class="form-floating mb-3 my-form" style="width: 100%; display: inline-flex;">
+            <input type="text" class="form-control" id="address_code" name="address_code" value="{{ profile.address_code }}"disabled>
             <label for="address_code">우편번호</label>
+            <button type="button" class="btn btn-primary" onclick="execDaumPostcode()" style="width: 20%;">우편번호 찾기</button> <!-- 주소 찾기 버튼 -->
         </div>
         <div class="form-floating mb-3 my-form">
-            <input type="text" class="form-control" id="address" name="address" value="{{ profile.address }}">
-            <label for="address">주소</label>
-            <button type="button" class="btn btn-primary" onclick="execDaumPostcode()">우편번호 찾기</button> <!-- 주소 찾기 버튼 -->
-        </div>
+            <input type="text" class="form-control" id="address" name="address" value="{{ profile.address }}"disabled>
+            <label for="address">주소</label>        </div>
         <div class="form-floating mb-3 my-form">
             <input type="text" class="form-control" id="address_detail" name="address_detail" value="{{ profile.address_detail }}">
             <label for="address_detail">상세 주소</label>
@@ -57,7 +54,7 @@
             <input type="password" class="form-control" id="password_confirm" name="password_confirm">
             <label for="password_confirm">새 비밀번호 확인</label>
         </div>
-        <button type="button" class="btn btn-outline-primary" onclick="submitProfile()">저장</button>
+        <button type="button" class="btn btn-outline-primary" onclick="submitProfile()" style="float: right;">저장</button>
     </form>
 </div>
 {% endblock %}

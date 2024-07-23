@@ -59,20 +59,22 @@
                 </td>
             </tr>
             <tr>
-                <th>활동상태</th>
-                <td>
-                    {% if data.active_status == 0 %}
-                    Inactive
-                    {% elif data.active_status == 1 %}
-                    Active
-                    {% elif data.active_status == 2 %}
-                    On Leave
-                    {% elif data.active_status == 3 %}
-                    Retired
-                    {% else %}
-                    Rejection
-                    {% endif %}
-                </td>
+                {% if flag != 'ad' %}
+                    <th>활동상태</th>
+                    <td>
+                        {% if data.active_status == 0 %}
+                        Inactive
+                        {% elif data.active_status == 1 %}
+                        Active
+                        {% elif data.active_status == 2 %}
+                        On Leave
+                        {% elif data.active_status == 3 %}
+                        Retired
+                        {% else %}
+                        Rejection
+                        {% endif %}
+                    </td>
+                    {% endif %}    
             </tr>
             <tr>
                 <th>가입 일자</th>

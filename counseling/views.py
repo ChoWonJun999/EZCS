@@ -15,10 +15,13 @@ from abuse_filter import AbuseFilter
 from prompt import Prompt
 
 
+
 logger = logging.getLogger(__name__)
 abuse_filter = AbuseFilter()
 
+
 prompt = Prompt()
+
 
 trans_chat_bot = None
 recommend_chat_bot = None
@@ -39,7 +42,9 @@ def counsel(request):
             behavior_policy=prompt.get_behavior_policy_for_trans(),
         )
 
+
         recommend_chat_bot = Chatbot(behavior_policy=prompt.get_behavior_policy_for_recommend(), k=1)
+
 
         return render(request, "counseling/index.html", context)
 
@@ -109,6 +114,11 @@ def ai_model(request):
 
     return JsonResponse({"error": "Invalid request"}, status=400)
 
+def mask_name(full_name):
+    if len(full_name) > 1:
+        return full_name[:-1] + '*'
+    return full_name
+
 
 def history(request):
     """
@@ -155,7 +165,11 @@ def history(request):
     paginator = Paginator(data, 10)
     page = request.GET.get("page")
     data = paginator.get_page(page)
+    
+    for log in data:
+        log.masked_name = mask_name(log.customer.name)
 
+        
     context = {
         "data": data,
         "searchSelect": search_select,

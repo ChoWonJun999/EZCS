@@ -9,6 +9,11 @@
     {{ notice.body|safe }}
 </div>
 {% if notice.file %}
+    {% if is_image %}
+        <div>
+            <img src="{{ notice.file.url }}" alt="공지사항 이미지">
+        </div>
+    {% endif %}
 
 <div>
     <a href="{{ notice.file.url }}" download>첨부 파일 다운로드</a>

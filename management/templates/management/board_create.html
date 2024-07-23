@@ -34,6 +34,7 @@
                 <th>파일</th>
                 <td>
                     <input type="file" class="form-control" name="file" accept=".jpg, .jpeg, .png">
+                    <small class="form-text text-muted">jpg, jpeg, png 파일만 업로드 가능합니다.</small>
                     {% if error %}
                     <div style="color: red;">{{ error }}</div>
                     {% endif %}

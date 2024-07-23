@@ -97,16 +97,19 @@ body {
 }
 
 .content .footer {
-    position: fixed;
-    width: 100%;
-    bottom: 0;
     background-color: #ffffff;
     text-align: center;
-    left: 0;
     padding: 10px;
     border-top: 1px solid #e0e0e0;
+
+ 
+    width: 100%;
+    bottom: 0;
+
     flex-shrink: 0;
+    left: 0;
 }
+
 
 .content .footer .footer-content {
     text-align: center;
@@ -265,4 +268,8 @@ table {
 .content {
     margin-top: -20px;
     padding-top: 0px;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    flex: 1;
 }

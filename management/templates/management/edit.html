@@ -87,6 +87,7 @@
                 </td>
             </tr>
             <tr>
+                {% if flag != 'ad' %}
                 <th>활동상태</th>
                 <td>
                     <input type="hidden" class="form-control form-control-sm" id="active_status" name="active_status" value="{{ user.active_status }}">
@@ -98,13 +99,14 @@
                         <option value="4" {% if user.active_status == 4 %}selected{% endif %}>Rejection</option>
                     </select>
                 </td>
+                {% endif %}  
             </tr>
         </tbody>
     </table>
 
     <div class="mb-3 d-flex justify-content-between">
         <input type="button" class="btn btn-lg btn-primary flex-grow-1 me-2" style="max-width: fit-content;" value="뒤로가기" onclick="history.back();">
-        <input class="btn btn-lg btn-primary flex-grow-1" style="max-width: fit-content;" type="button" value="수정하기" onclick="infoEdit();">
+        <input class="btn btn-lg btn-primary flex-grow-1" style="max-width: fit-content;" type="button" value="저장" onclick="infoEdit();">
     </div>
 </form>
 <script>

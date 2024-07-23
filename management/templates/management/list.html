@@ -55,8 +55,8 @@
                     <col width="5%">
                     <col width="10%">
                     <col width="10%">
-                    <col width="10%">
-                    <col width="10%">
+                    <col width="15%">
+                    <col width="15%">
                     <col width="*">
                     {% if flag == 'a' %}
                     <col width="15%">
@@ -81,7 +81,7 @@
                     <tr data-url="{% url 'management:detail' item.id flag %}" class="active-row">
                         <td>{{ forloop.counter }}</td>
                         <td>{{ item.auth_user.username }}</td>
-                        <td>{{ item.auth_user.first_name }}</td>
+                        <td>{{ item.masked_name }}</td>
                         <td>{{ item.auth_user.email }}</td>
                         <td>
                             {% if item.department %}

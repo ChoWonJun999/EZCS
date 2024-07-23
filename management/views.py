@@ -18,6 +18,12 @@ def validate_image(file):
     if file.content_type not in valid_mime_types:
         raise ValidationError('jpg, jpeg, and png 파일만 업로드 가능합니다.')
 
+
+def mask_name(full_name):
+    if len(full_name) <= 2:
+        return full_name[:-1] + '*'
+    else:
+        return full_name[0] + '*' * (len(full_name) - 2) + full_name[-1]
     
 def list(request, flag):
     search_select = request.GET.get("searchSelect", "")
@@ -28,7 +34,9 @@ def list(request, flag):
 
     if flag == 'm':
         query &= Q(auth_user__is_superuser=False)
-        query &= Q(active_status=1)
+        query |= Q(active_status=1)
+        query |= Q(active_status=2)
+        query |= Q(active_status=3)
     elif flag == 'ad':
         query &= Q(auth_user__is_superuser=True)
     elif flag == 'board':
@@ -76,6 +84,9 @@ def list(request, flag):
     paginator = Paginator(data, 10)
     page = request.GET.get('page')
     data = paginator.get_page(page)
+    
+    for profile in data:
+        profile.masked_name = mask_name(profile.auth_user.first_name)
 
     context = {
         'flag': flag,
@@ -127,13 +138,18 @@ def board_detail(request, id):
 def detail(request, id, flag):
     """
     유저 상세 페이지
+    
     """
+    if flag == 'ad':
+        data = get_object_or_404(AdministratorProfile, id=id)
+    else:
+        data = get_object_or_404(CounselorProfile, id=id)
+
     context = {
         'flag': flag,
-        'data': get_object_or_404(CounselorProfile, id=id)
+        'data': data
     }
-    return render(request, 'management/detail.html', context) 
-
+    return render(request, 'management/detail.html', context)
 
 def update_auth(request, id, status):
     """
@@ -154,28 +170,33 @@ def edit(request, id, flag):
     """
     개인정보 수정
     """
-    user = get_object_or_404(CounselorProfile, id=id)
+    if flag == 'ad':
+        user_profile = get_object_or_404(AdministratorProfile, id=id)
+    else:
+        user_profile = get_object_or_404(CounselorProfile, id=id)
+        
+    auth_user = user_profile.auth_user
+    
     if request.method == 'GET':
         context = {
             'flag': flag,
-            'user': user
+            'user': user_profile
         }
         return render(request, 'management/edit.html', context)
     else:
-        auth_user = User.objects.get(id=user.auth_user)
-        user.auth_user.username = request.POST.get('loginUsername')
-        user.auth_user.name = request.POST.get('name')
-        user.auth_user.email = request.POST.get('emailLocal') + '@' + request.POST.get('emailDomain')
-
-        user.phone_number = request.POST.get('phone')
-        user.department = request.POST.get('department')
-        user.birth_date = request.POST.get('birthdate')
-        user.address_code = request.POST.get('addressCode')
-        user.address = request.POST.get('address')
-        user.address_detail = request.POST.get('addressDetail')
-        user.active_status = request.POST.get('active_status')
-        user.save()
-        return redirect("management:detail", id, flag)
+        auth_user.username = request.POST.get('loginUsername')
+        auth_user.first_name = request.POST.get('name')
+        auth_user.email = request.POST.get('emailLocal') + '@' + request.POST.get('emailDomain')
+        user_profile.phone_number = request.POST.get('phone')
+        user_profile.department = request.POST.get('department')
+        user_profile.birth_date = request.POST.get('birth_date')
+        user_profile.address_code = request.POST.get('addressCode')
+        user_profile.address = request.POST.get('address')
+        user_profile.address_detail = request.POST.get('addressDetail')
+        user_profile.active_status = request.POST.get('active_status')
+        user_profile.save()
+        auth_user.save()
+        return redirect("management:detail", id=id, flag=flag)
 
 @csrf_exempt
 def adminsignup(request):
@@ -191,7 +212,6 @@ def adminsignup(request):
         address_code = request.POST.get('addressCode')
         address = request.POST.get('address')
         address_detail = request.POST.get('addressDetail')
-        department = request.POST.get('department')
         
         user = User.objects.create_user(
             username = username,
@@ -199,16 +219,17 @@ def adminsignup(request):
             first_name = name,
             email = email,
             is_superuser = 1,
+            is_active = 1
         )
         
         AdministratorProfile.objects.create(
-            auth_user=User.objects.get(id=user.id)
+            auth_user=user
             , birth_date=birth_date
             , phone_number=phone_number
             , address_code=address_code
             , address=address
             , address_detail=address_detail
-            , department=department
+            , department='관리자'
         )
 
         result = True

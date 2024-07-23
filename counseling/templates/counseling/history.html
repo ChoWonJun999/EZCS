@@ -82,7 +82,7 @@
                     {% for item in data %}
                     <tr data-url="{% url 'counseling:detail' item.id %}" class="active-row">
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ item.customer.name }}</td>
+                        <td>{{ item.masked_name }}</td>
                         <td>{{ item.create_time }}</td>
                         <td>
                             {% if item.inquiries %}

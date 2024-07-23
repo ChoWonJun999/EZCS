@@ -2,18 +2,76 @@
 {% block title %}공지사항 상세보기{% endblock %}
 
 {% block content %}
-<h2>{{ board.title }}</h2>
-<p>{{ board.create_time|date:"Y.m.d H:i" }}</p>
-<div>
-    {{ board.body|safe }}
+<div class="content" style="background-color: whitesmoke;">
+    <h2>공지사항 상세보기</h2>
+    <!-- <div class="main-content">
+        <div class="log-info">
+            <span>제목: </span><span>{{ board.title }}</span>
+            <span> | </span>
+            <span>날짜: </span><span>{{ board.create_time|date:"Y.m.d H:i" }}</span>
+            <span> | </span>
+            <span>작성자: </span><span>{{ board.auth_user.username }}</span>
+        </div>
+        <div>
+            {{ board.body|safe }}
+        </div> -->
+    <table class="styled-table-deail" style="text-align-last: auto;">
+        <tbody>
+            <tr>
+                <th>제목</th>
+                <td>
+                    <input type="text" class="form-control" name="title" required>
+                </td>
+            </tr>
+            <tr>
+                <th>내용</th>
+                <td>
+                    <div id="editor-container" style="height: 20vh;"></div>
+                    <input type="hidden" id="body" name="body" required>
+                </td>
+            </tr>
+            <tr>
+                <th>상태</th>
+                <td>
+                    <select class="form-control" name="flag" required>
+                        <option value="0">활성화</option>
+                        <option value="1">비활성화</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th>파일</th>
+                <td>
+                    <input type="file" class="form-control" name="file" accept=".jpg, .jpeg, .png">
+                    {% if error %}
+                    <div style="color: red;">{{ error }}</div>
+                    {% endif %}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    {% if board.file %}
+    <div>
+        <a href="{{ board.file.url }}" class="btn btn-primary" download>파일 다운로드</a>
+    </div>
+    {% endif %}
+    <div class="mt-3">
+        <a href="{% url 'management:board_list' %}" class="btn btn-primary">목록으로 돌아가기</a>
+        <a href="{% url 'management:board_delete' board.id %}" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?')">삭제하기</a>
+    </div>
 </div>
-{% if board.file %}
-<div>
-    <a href="{{ board.file.url }}" class="btn btn-primary" download>파일 다운로드</a>
-</div>
-{% endif %}
-<div class="mt-3">
-    <a href="{% url 'management:board_list' %}" class="btn btn-primary">목록으로 돌아가기</a>
-    <a href="{% url 'management:board_delete' board.id %}" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?')">삭제하기</a>
-</div>
+<!-- Quill 에디터 설정 -->
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<script>
+    var quill = new Quill('#editor-container', {
+        theme: 'snow'
+    });
+
+
+    document.querySelector('form').onsubmit = function () {
+        var body = document.querySelector('input[name=body]');
+        body.value = quill.root.innerHTML;
+    };
+</script>
 {% endblock %}

@@ -6,10 +6,12 @@
 <script src="/static/js/execDaumPost.js"></script>
 {% load static %}
 <script src="{% static 'management/js/signup.js' %}"></script>
+<link href="{% static 'management\css\login.css' %}" rel="stylesheet" />
 <style>
     .mb-3 {
         margin-bottom: 0.5rem !important;
     }
+    
 </style>
 <div class="container">
     <div class="input-form-backgroud row">
@@ -84,11 +86,11 @@
                     <input type="hidden" name="phoneChkUrl" id="phoneChkUrl" value="{% url 'management:admincheck-phone' %}">
                 </div>
 
-                <div class="mb-3 my-form">
+                {% comment %} <div class="mb-3 my-form">
                     <label for="department">소속</label>
                     <input type="text" class="form-control form-control-sm" id="department" name="department" maxlength="30">
                     <div id="departmentError" class="invalid-feedback"></div>
-                </div>
+                </div> {% endcomment %}
 
                 <div>
                     <div>
@@ -114,7 +116,7 @@
 
                 <hr class="mb-4">
                 <div style="text-align: center;">
-                    <input type="button" value="관리자 생성" class="btn btn-outline-primary" onclick="signup()">
+                    <input type="button" value="관리자 생성" class="btn btn-outline-primary" style="width: 188.97px;" onclick="signup()">
                     <!-- </div> -->
                 </div>
                 <div>

@@ -25,6 +25,7 @@ prompt = Prompt()
 prompt.set_initial_behavior_policy_for_education()
 
 
+@csrf_exempt
 def chat_view(request):
     '''
     교육 페이지
@@ -41,7 +42,7 @@ def chat_view(request):
             output = chatbot.chat(message)
 
             evaluation_chatbot = Chatbot(
-                # model_id="gpt-4o",
+                model_id="gpt-4o",
                 category=category,
                 THRESHOLD=2,
                 behavior_policy=prompt.get_messages_for_evaluation(output, message),
@@ -99,7 +100,7 @@ def chat_view(request):
         elif category:
             # Chatbot 객체 초기화
             chatbot = Chatbot(
-                # model_id="gpt-4o",
+                model_id="gpt-4o",
                 category=category,
                 THRESHOLD=2,
                 behavior_policy=prompt.get_behavior_policy(),

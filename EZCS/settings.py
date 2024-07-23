@@ -25,10 +25,8 @@ SECRET_KEY = "django-insecure-uqq*r93rmw$um61%h3xs*zt%^2cv%n84^-sx0k&dx1tt!@s4d*
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-# DEBUG = False
 
-ALLOWED_HOSTS = ['*']
-# ALLOWED_HOSTS = ['localhost', '127.0.0.1', '13.125.209.92']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '43.202.66.155', 'ezcstest.ddns.net']
 
 # Application definition
 
@@ -88,12 +86,10 @@ WSGI_APPLICATION = "EZCS.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'EZCS',
-        # 'NAME': 'ezcs',
+        'NAME': 'ezcs',
         'USER': os.environ['MySQL_ID'],
         'PASSWORD': os.environ['MySQL_PW'],
-        'HOST': 'localhost',
-        # 'HOST': 'database-1.cf6gigmokj2d.ap-northeast-2.rds.amazonaws.com',
+        'HOST': 'database-1.cf6gigmokj2d.ap-northeast-2.rds.amazonaws.com',
         'PORT': '3306',
     }
 }
@@ -166,8 +162,7 @@ LOGGING = {
     }
 }
 
-CSRF_TRUSTED_ORIGINS = ['https://db03-59-26-32-139.ngrok-free.app']
-# CSRF_TRUSTED_ORIGINS = ['http://13.125.209.92']
+CSRF_TRUSTED_ORIGINS = ['http://43.202.66.155', 'https://43.202.66.155', 'http://ezcstest.ddns.net', 'https://ezcstest.ddns.net']
 
 CSRF_COOKIE_SECURE = True
 
