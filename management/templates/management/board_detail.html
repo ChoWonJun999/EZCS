@@ -15,11 +15,9 @@
             <tr>
                 <th>내용</th>
                 <td>
-                    <div id="editor-container" style="min-height: 20vh; text-align-last: left; font-size: 20px; width: 100%; word-wrap: break-word; word-break: break-all;">
+                    <div id="editor-container" style="min-height: 20vh; max-height: 45vh; height:45vh; overflow-y: auto; text-align-last: left; font-size: 20px; width: 100%; word-wrap: break-word; word-break: break-all;">
                         {% if board.file %}
                         <div class="image-container" style="text-align: center;">
-                            {{ board.file }}
-                            {{ board.file.url }}
                             <img src="{{ board.file.url }}" alt="게시된 이미지" style="max-width: 100%; height: auto;">
                         </div>
                         {% endif %}
@@ -44,6 +42,17 @@
                 <td>
                     <input type="file" class="form-control" name="file" accept=".jpg, .jpeg, .png" disabled>
                     <small class="form-text text-muted">jpg, jpeg, png 파일만 업로드 가능합니다.</small>
+
+                    {% if board.file %}
+                    <div>
+                        <strong>파일명:</strong> {{ board.file.name }}
+                    </div>
+                    {% else %}
+                    <div>
+                        <strong>파일명:</strong> 파일이 첨부되어 있지 않습니다.
+                    </div>
+                    {% endif %}
+
                     {% if error %}
                     <div style="color: red;">{{ error }}</div>
                     {% endif %}
@@ -60,7 +69,7 @@
             <a href="{{ board.file.url }}" class="btn btn-lg btn-primary flex-grow-1 me-2" style="max-width: fit-content;" download>파일 다운로드</a>
             {% endif %}
             <input type="button" class="btn btn-lg btn-primary flex-grow-1 me-2" style="max-width: fit-content;" id="edit-button" value="수정">
-            <input type="submit" class="btn btn-lg btn-primary flex-grow-1 me-2" style="max-width: fit-content;" id="save-button" value="저장" style="display: none;">
+            <input type="submit" class="btn btn-lg btn-primary flex-grow-1 me-2" style="max-width: fit-content; display: none" id="save-button" value="저장">
             <a href="{% url 'management:board_delete' board.id %}" class="btn btn-lg btn-danger flex-grow-1 me-2" style="max-width: fit-content;" onclick="return confirm('정말로 삭제하시겠습니까?')">삭제</a>
         </div>
     </div>
@@ -74,10 +83,26 @@
         readOnly: true
     });
 
+    document.querySelector('#edit-button').onclick = function () {
+        quill.enable();
+        document.querySelector('input[name=title]').readOnly = false;
+        document.querySelector('select[name=flag]').disabled = false;
+        document.querySelector('input[name=file]').disabled = false;
+        document.querySelector('#edit-button').style.display = 'none';
+        document.querySelector('#save-button').style.display = 'inline-block';
+    };
 
     document.querySelector('form').onsubmit = function () {
         var body = document.querySelector('input[name=body]');
         body.value = quill.root.innerHTML;
+        console.log('Body content:', body.value);
+
+        document.querySelector('input[name=title]').readOnly = true;
+        document.querySelector('select[name=flag]').disabled = true;
+        document.querySelector('input[name=file]').disabled = true;
+        quill.disable();
+        document.querySelector('#edit-button').style.display = 'inline-block';
+        document.querySelector('#save-button').style.display = 'none';
     };
 </script>
 {% endblock %}

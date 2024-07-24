@@ -1,3 +1,40 @@
+function check_login_pass(obj) {
+    if (obj) {
+        username = "admin";
+        password = "admin";
+    } else {
+        username = "test";
+        password = "test";
+    }
+    let param = {
+        username: username,
+        password: password,
+        remember_me: "off",
+        flag: obj
+    };
+
+    var from = $("#loginForm");
+    var url = from.data("url");
+    var csrf = from.data("csrf");
+
+    $.ajax({
+        url: url,
+        type: "post",
+        data: param,
+        dataType: "json",
+        headers: {
+            "X-CSRFToken": csrf
+        },
+        success: function (data) {
+            if (data.result) {
+                location.href = data.url;
+            } else {
+                alert(data.message);
+            }
+        }
+    });
+}
+
 function check_login(obj) {
     username = $("#loginUsername");
     password = $("#loginPassword");

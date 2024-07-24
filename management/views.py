@@ -41,10 +41,6 @@ def list(request, flag):
         query |= Q(active_status=3)
     elif flag == 'ad':
         query &= Q(auth_user__is_superuser=True)
-    elif flag == 'board':
-        boards = Board.objects.all()
-        context = {'boards': boards}
-        return render(request, 'management/board_list.html', context)
     else:
         query &= Q(auth_user__is_superuser=False)
         query &= Q(active_status=0)
@@ -135,12 +131,12 @@ def board_list(request):
     search_query = Q()
     if search_select:
         valid_fields = {
-            '0': 'title__icontains',
-            '1': 'body__icontains',
-            '2': 'auth_user__first_name__icontains',
+            '1': 'title__icontains',
+            '2': 'body__icontains',
+            '3': 'auth_user__first_name__icontains',
         }
 
-        if search_select == 'all':
+        if search_select == '0':
             for val in valid_fields.values():
                 search_query |= Q(**{val: search_text})
         else:
@@ -164,6 +160,7 @@ def board_list(request):
     page = request.GET.get('page')
     data = paginator.get_page(page)
     
+    
     for item in data:
         item.masked_name = mask_name(item.auth_user.first_name)
         soup = BeautifulSoup(item.body, 'html.parser')
@@ -172,6 +169,7 @@ def board_list(request):
         if len(text) > 10:
             item.body = text[:10]
             item.body += "..."
+  
 
     context = {
         'data': data,
@@ -185,6 +183,10 @@ def board_list(request):
     return render(request, 'management/board_list.html', context)
 
 def board_detail(request, id):
+    board = get_object_or_404(Board, id=id)
+    return render(request, 'management/board_detail.html', {'board': board})
+
+def board_edit(request, id):
     board = get_object_or_404(Board, id=id)
     return render(request, 'management/board_detail.html', {'board': board})
 

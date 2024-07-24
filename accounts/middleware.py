@@ -9,6 +9,9 @@ import time
 
 class BlockedMiddleware(MiddlewareMixin):
     def process_request(self, request):
+        if request.user.username == "test" or request.user.username == "admin":
+            return None
+        
         if request.session.get('blocked'):
             messages.info(request, '다른 기기에서 동일아이디로 로그인되어 자동으로 로그아웃 되었습니다.')
             request.session.pop('blocked')
