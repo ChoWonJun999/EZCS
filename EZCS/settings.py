@@ -89,7 +89,8 @@ DATABASES = {
         'NAME': 'ezcs',
         'USER': os.environ['MySQL_ID'],
         'PASSWORD': os.environ['MySQL_PW'],
-        'HOST': 'database-1.cf6gigmokj2d.ap-northeast-2.rds.amazonaws.com',
+        # 'HOST': 'database-1.cf6gigmokj2d.ap-northeast-2.rds.amazonaws.com',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }

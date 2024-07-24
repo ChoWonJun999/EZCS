@@ -33,11 +33,11 @@ body {
 img.ezcs-logo {
     width: 100px;
     height: auto;
-    margin: 20px 20px 20px 0px;
+    margin: 10px 20px 20px 20px;
 }
 
 .sidebar {
-    width: 200px;
+    width: 250px;
     background-color: #ffffff;
     padding: 0px 20px 20px 20px;
     border-right: 1px solid #e0e0e0;
@@ -48,11 +48,38 @@ img.ezcs-logo {
     top: 0;
     bottom: 0;
     overflow-y: auto;
-    transition: transform 0.3s ease;
+    transition: width 0.3s ease-in-out;
     z-index: 1000;
-    min-width: fit-content;
+    overflow-x: hidden;
 }
-
+.sidebar.collapsed {
+    width: 100px;
+}
+.sidebar .menu .text {
+    display: inline;
+    white-space: nowrap;
+}
+.sidebar.collapsed .text {
+    display: none;
+}
+.sidebar.expanding .text {
+    display: inline;
+    /* opacity: 0;
+    transition: opacity 0.3s ease; */
+}
+.sidebar .icon {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    text-align: center;
+    line-height: 40px; /* 아이콘 수직 정렬 */
+    font-size: 20px; /* 아이콘 크기 고정 */
+    transition: none; /* 아이콘 크기나 위치의 변화 애니메이션 제거 */
+}
+.sidebar, .sidebar .icon {
+    /* transition: all 0.3s ease-in-out; */
+    transition: width 0.3s ease-in-out, margin-left 0.3s ease-in-out; /* 아이콘 위치의 변화를 부드럽게 */
+}
 .sidebar.hidden {
     transform: translateX(-100%);
 }
@@ -96,6 +123,27 @@ img.ezcs-logo {
     margin-right: 10px;
 }
 
+.icon {
+    padding-right: 5px;
+    padding-left: 5px;
+}
+.submenu {
+    height: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+.has-submenu:hover .submenu {
+    height: auto;
+    opacity: 1;
+    padding: 10px;
+}
+.menu > li {
+    position: relative;
+}
+.submenu {
+    position: relative; /* 다른 메뉴를 밀어내도록 설정 */
+}
+
 .sidebar .menu .submenu {
     list-style: none;
     padding: 0 0 0 20px;
@@ -128,19 +176,21 @@ img.ezcs-logo {
 
 .content {
     flex-grow: 1;
-    margin-left: 200px;
+    margin-left: 250px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     transition: margin-left 0.3s ease;
 }
-
+.content.expanded {
+    margin-left: 100px; /* 사이드바가 축소되었을 때의 크기 */
+}
 .header {
-    display: flex;
+    /* display: flex; */
     justify-content: flex-end;
-    align-items: center;
-    padding: 20px;
-    background-color: #ffffff;
+    /* align-items: center; */
+    /* padding: 0px; */
+    /* background-color: #ffffff; */
     border-bottom: 1px solid #e0e0e0;
 }
 
@@ -150,13 +200,21 @@ img.ezcs-logo {
     justify-content: space-between;
     width: 100%;
 }
+.header-right.expanded {
+    /* width: calc(100% - 100px); 사이드바가 축소되었을 때의 크기 */
+    width: 100%; /* 사이드바가 축소되었을 때의 크기 */
+}
 
 .profile-info {
     font-size: 16px;
     margin-right: auto;
     padding: 0px 0px 0px 30px;
 }
-
+.admin-page,
+.logout {
+    display: flex;
+    align-self: center;
+}
 .admin-page {
     background-color: #58b0e3;
     color: white;
@@ -226,8 +284,13 @@ img.ezcs-logo {
 .footer-content p {
     margin: 5px 0;
 }
-
 .sidebar-toggle {
+    background-color: white;
+    color: black;
+    border: none;
+    padding: 15px 15px 15px 15px;    
+}
+/* .sidebar-toggle {
     display: none;
     cursor: pointer;
     background-color: #007bff;
@@ -241,19 +304,19 @@ img.ezcs-logo {
 
 .sidebar-toggle:hover {
     background-color: #0056b3;
-}
+} */
 
 @media (max-width: 1366px) {
     .sidebar {
-        width: 160px;
+        width: 250px;
     }
 
     .content {
-        margin-left: 180px;
+        margin-left: 250px;
     }
 
     .main-content {
-        margin-left: 20px;
+        margin-left: 0px;
     }
 
     .footer {

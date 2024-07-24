@@ -7,6 +7,7 @@
     <title>{% block title %}EZCS{% endblock %}</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="{% static 'css/bootstrap/bootstrap.min.css' %}" rel="stylesheet" />
     <script src="{% static 'js/bootstrap/bootstrap.bundle.min.js' %}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -27,42 +28,55 @@
             window.open("{% url 'main:privacy' %}", "Privacy Policy", "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left);
         }
 
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('hidden');
-        }
-
         document.addEventListener('DOMContentLoaded', function () {
-            const sidebarToggle = document.getElementById('sidebarToggle');
-            if (sidebarToggle) {
-                sidebarToggle.addEventListener('click', toggleSidebar);
+            var sidebar = document.getElementById('sidebar');
+            var btnCollapse = document.getElementById('btn-collapse');
+            var btnExpand = document.getElementById('btn-expand');
+            var content = document.querySelector('.content');
+            var headerRight = document.querySelector('.header-right');
+        
+            function toggleSidebar() {
+                sidebar.classList.toggle('collapsed');
+                content.classList.toggle('expanded');
+                headerRight.classList.toggle('expanded');
+                btnCollapse.style.display = btnCollapse.style.display === 'none' ? 'block' : 'none';
+                btnExpand.style.display = btnExpand.style.display === 'none' ? 'block' : 'none';
             }
+        
+            btnCollapse.addEventListener('click', toggleSidebar);
+            btnExpand.addEventListener('click', toggleSidebar);
         });
+
     </script>
 </head>
 
 <body>
     <div class="sidebar" id="sidebar">
         <div>
-            <a href="{% url 'main:user_dashboard' %}"><img src="{% static 'main/images/EZCS.png' %}" alt="EZCS Logo" class="ezcs-logo"></a>
-            <p class="menu-title">MAIN MENU</p>
+            {% comment %} <a href="{% url 'main:user_dashboard' %}"><img src="{% static 'main/images/EZCS.png' %}" alt="EZCS Logo" class="ezcs-logo"></a>
+            <p class="menu-title">MAIN MENU</p> {% endcomment %}
+            <div class="sidebar-toggle-wrapper" style="height: 80px; padding-left: 10px; border-bottom: 1px solid #e0e0e0; display: flex; align-items: center;">
+                {% comment %} <i class="fas fa-bars sidebar-toggle"></i> {% endcomment %}
+                <button id="btn-collapse" class="fas fa-bars sidebar-toggle" style="display: none;"></button>
+                <button id="btn-expand" class="fa fa-chevron-left sidebar-toggle" style="display: block;"></button>
+            </div>
             <ul class="menu">
                 <li class="has-submenu">
-                    <a href="{% url 'main:user_dashboard' %}" class="{% if request.path == '/' %}active{% endif %}">대시보드</a>
+                    <a href="{% url 'main:user_dashboard' %}" class="{% if request.path == '/' %}active{% endif %}"><i class="fa fa-home icon"></i><span class="text">대시보드</span></a>
                 </li>
                 <li class="has-submenu">
-                    <a href="{% url 'counseling:counsel' %}" class="{% if request.path == '/counseling/' %}active{% endif %}">AI 상담</a>
+                    <a href="{% url 'counseling:counsel' %}" class="{% if request.path == '/counseling/' %}active{% endif %}"><i class="fas fa-comments icon"></i><span class="text">AI 상담</span></a>
                     <ul class="submenu">
-                        <li><a href="{% url 'counseling:history' %}" class="{% if request.path == '/counseling/history/' %}active{% endif %}">AI 상담 이력</a></li>
+                        <li><a href="{% url 'counseling:history' %}" class="{% if request.path == '/counseling/history/' %}active{% endif %}"><span class="text">AI 상담 이력</span></a></li>
                     </ul>
                 </li>
                 <li class="has-submenu">
-                    <a href="{% url 'education:chat_view' %}" class="{% if request.path == '/education/' %}active{% endif %}">AI 트레이너</a>
+                    <a href="{% url 'education:chat_view' %}" class="{% if request.path == '/education/' %}active{% endif %}"><i class="fas fa-chalkboard-teacher icon"></i><span class="text">AI 트레이너</span></a>
                     <ul class="submenu">
-                        <li><a href="{% url 'education:edu_history' %}" class="{% if request.path == '/education/edu_history/' %}active{% endif %}">AI 트레이너 이력</a></li>
+                        <li><a href="{% url 'education:edu_history' %}" class="{% if request.path == '/education/edu_history/' %}active{% endif %}"><span class="text">AI 트레이너 이력</span></a></li>
                         {% comment %} <li><a href="{% url 'education:edu_details' %}" class="{% if request.path == '/education/edu_details/' %}active{% endif %}">AI 트레이너 이력 상세(개발용)</a></li> {% endcomment %}
-                        <li><a href="{% url 'education:quiz' %}" class="{% if request.path == '/education/quiz/' %}active{% endif %}">퀴즈</a></li>
-                        <li><a href="{% url 'education:quiz_history' %}" class="{% if request.path == '/education/quiz_history/' %}active{% endif %}">퀴즈 이력</a></li>
+                        <li><a href="{% url 'education:quiz' %}" class="{% if request.path == '/education/quiz/' %}active{% endif %}"><span class="text">퀴즈</span></a></li>
+                        <li><a href="{% url 'education:quiz_history' %}" class="{% if request.path == '/education/quiz_history/' %}active{% endif %}"><span class="text">퀴즈 이력</span></a></li>
                         {% comment %} <li><a href="{% url 'education:quiz_details' %}" class="{% if request.path == '/education/quiz_details/' %}active{% endif %}">퀴즈 이력 상세</a></li> {% endcomment %}
                     </ul>
                 </li>
@@ -71,17 +85,18 @@
         {% if not request.user.is_superuser %}
         <div>
             <ul class="menu">
-                <li><a href="#" id="profileLink">내 정보</a></li>
+                <li><a href="{% url 'main:edit_profile' %}" class="{% if request.path == '/edit_profile/' %}active{% endif %}"><i class="fa fa-user icon" aria-hidden="true"></i><span class="text">내 정보</span></a></li>
             </ul>
         </div>
         {% endif %}
     </div>
     <div class="content">
         <div class="header">
-            <button class="sidebar-toggle" id="sidebarToggle">☰</button>
+            {% comment %} <button class="sidebar-toggle" id="sidebarToggle">☰</button> {% endcomment %}
             <div class="header-right">
                 {% comment %} <div class="profile-info">{{ request.session.user }}님, 오늘 하루도 화이팅 하세요.</div> {% endcomment %}
-                <div class="profile-info">{{ request.user }}님, 오늘 하루도 화이팅 하세요.</div>
+                <div class="profile-info"><a href="{% url 'main:user_dashboard' %}"><img src="{% static 'main/images/EZCS.png' %}" alt="EZCS Logo" class="ezcs-logo"></a>{{ request.user }}님, 오늘 하루도 화이팅 하세요.</div>
+                {% comment %} <div class="profile-info">{{ request.user }}님, 오늘 하루도 화이팅 하세요.</div> {% endcomment %}
                 {% if request.user.is_superuser %}
                 <div class="admin-page">
                     <a href="{% url 'management:list' 'm' %}">관리자 페이지</a>
